@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Fondamentaux pour l’utilisation de R – Evaluation d'impact de politiques et projets</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./03_geodata.html" rel="next">
+<link href="./01_introduction.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02_bases_R.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Fondamentaux pour l’utilisation de R</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Evaluation d’impact de politiques et projets</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/BETSAKA/mapme_impact_training" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00_programme.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Programme</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_bases_R.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Fondamentaux pour l’utilisation de R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_geodata.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Données spatiales : types et importation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_mapme_biodiversity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">L’outil mapme.biodiversity</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_experimentations_aleatoires.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Expérimentations par assignation aléatoire</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_avant_apres.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Comparaisons avant-après</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_unites_analyse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Clarification sur les unités d’analyse</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_appariement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Méthodes d’appariement</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09_double_difference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Double différence</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_synthese.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Synthèse</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliographie</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#lenvironnement" id="toc-lenvironnement" class="nav-link active" data-scroll-target="#lenvironnement"><span class="header-section-number">2.1</span> L’environnement</a>
+  <ul class="collapse">
+  <li><a href="#différences-r-et-rstudio" id="toc-différences-r-et-rstudio" class="nav-link" data-scroll-target="#différences-r-et-rstudio"><span class="header-section-number">2.1.1</span> Différences R et Rstudio</a></li>
+  <li><a href="#sources-dapprentissage" id="toc-sources-dapprentissage" class="nav-link" data-scroll-target="#sources-dapprentissage"><span class="header-section-number">2.1.2</span> Sources d’apprentissage</a></li>
+  <li><a href="#interface-rstudio" id="toc-interface-rstudio" class="nav-link" data-scroll-target="#interface-rstudio"><span class="header-section-number">2.1.3</span> Interface Rstudio</a></li>
+  </ul></li>
+  <li><a href="#introduction-au-langage-r" id="toc-introduction-au-langage-r" class="nav-link" data-scroll-target="#introduction-au-langage-r"><span class="header-section-number">2.2</span> Introduction au langage R</a>
+  <ul class="collapse">
+  <li><a href="#la-lisibilité-du-code" id="toc-la-lisibilité-du-code" class="nav-link" data-scroll-target="#la-lisibilité-du-code"><span class="header-section-number">2.2.1</span> La lisibilité du code</a></li>
+  <li><a href="#lassignation-création-dobjets" id="toc-lassignation-création-dobjets" class="nav-link" data-scroll-target="#lassignation-création-dobjets"><span class="header-section-number">2.2.2</span> L’assignation (création d’objets)</a></li>
+  <li><a href="#les-différents-types-dobjets-en-r" id="toc-les-différents-types-dobjets-en-r" class="nav-link" data-scroll-target="#les-différents-types-dobjets-en-r"><span class="header-section-number">2.2.3</span> Les différents types d’objets en R</a></li>
+  <li><a href="#les-tableaux-de-données-data.frame" id="toc-les-tableaux-de-données-data.frame" class="nav-link" data-scroll-target="#les-tableaux-de-données-data.frame"><span class="header-section-number">2.2.4</span> Les tableaux de données (<code>data.frame</code>)</a></li>
+  <li><a href="#les-noms-dobjets" id="toc-les-noms-dobjets" class="nav-link" data-scroll-target="#les-noms-dobjets"><span class="header-section-number">2.2.5</span> Les noms d’objets</a></li>
+  <li><a href="#les-fonctions" id="toc-les-fonctions" class="nav-link" data-scroll-target="#les-fonctions"><span class="header-section-number">2.2.6</span> Les fonctions</a></li>
+  <li><a href="#les-structures-de-contrôle-if-else-et-les-boucles" id="toc-les-structures-de-contrôle-if-else-et-les-boucles" class="nav-link" data-scroll-target="#les-structures-de-contrôle-if-else-et-les-boucles"><span class="header-section-number">2.2.7</span> Les structures de contrôle : <code>if</code>, <code>else</code>, et les boucles</a></li>
+  <li><a href="#les-valeurs-manquantes" id="toc-les-valeurs-manquantes" class="nav-link" data-scroll-target="#les-valeurs-manquantes"><span class="header-section-number">2.2.8</span> Les valeurs manquantes</a></li>
+  </ul></li>
+  <li><a href="#librairies-r" id="toc-librairies-r" class="nav-link" data-scroll-target="#librairies-r"><span class="header-section-number">2.3</span> Librairies R</a>
+  <ul class="collapse">
+  <li><a href="#le-tidyverse" id="toc-le-tidyverse" class="nav-link" data-scroll-target="#le-tidyverse"><span class="header-section-number">2.3.1</span> Le tidyverse</a></li>
+  <li><a href="#lopérateur-pipeline" id="toc-lopérateur-pipeline" class="nav-link" data-scroll-target="#lopérateur-pipeline"><span class="header-section-number">2.3.2</span> L’opérateur pipeline</a></li>
+  <li><a href="#la-préparation-des-données-avec-dplyr" id="toc-la-préparation-des-données-avec-dplyr" class="nav-link" data-scroll-target="#la-préparation-des-données-avec-dplyr"><span class="header-section-number">2.3.3</span> La préparation des données avec dplyr</a></li>
+  <li><a href="#les-jointures" id="toc-les-jointures" class="nav-link" data-scroll-target="#les-jointures"><span class="header-section-number">2.3.4</span> Les jointures</a></li>
+  </ul></li>
+  <li><a href="#import-de-données" id="toc-import-de-données" class="nav-link" data-scroll-target="#import-de-données"><span class="header-section-number">2.4</span> Import de données</a>
+  <ul class="collapse">
+  <li><a href="#utilisation-du-menu-interactif-de-rstudio" id="toc-utilisation-du-menu-interactif-de-rstudio" class="nav-link" data-scroll-target="#utilisation-du-menu-interactif-de-rstudio"><span class="header-section-number">2.4.1</span> Utilisation du menu interactif de RStudio</a></li>
+  <li><a href="#types-de-fichiers-et-comment-les-importer-en-ligne-de-code" id="toc-types-de-fichiers-et-comment-les-importer-en-ligne-de-code" class="nav-link" data-scroll-target="#types-de-fichiers-et-comment-les-importer-en-ligne-de-code"><span class="header-section-number">2.4.2</span> Types de fichiers et comment les importer en ligne de code</a></li>
+  <li><a href="#exercice-pratique" id="toc-exercice-pratique" class="nav-link" data-scroll-target="#exercice-pratique"><span class="header-section-number">2.4.3</span> Exercice pratique</a></li>
+  </ul></li>
+  <li><a href="#exploration-des-données-importées" id="toc-exploration-des-données-importées" class="nav-link" data-scroll-target="#exploration-des-données-importées"><span class="header-section-number">2.5</span> Exploration des données importées</a>
+  <ul class="collapse">
+  <li><a href="#exercice-supplémentaire" id="toc-exercice-supplémentaire" class="nav-link" data-scroll-target="#exercice-supplémentaire"><span class="header-section-number">2.5.1</span> Exercice supplémentaire</a></li>
+  </ul></li>
+  <li><a href="#production-de-tableaux-avec-r" id="toc-production-de-tableaux-avec-r" class="nav-link" data-scroll-target="#production-de-tableaux-avec-r"><span class="header-section-number">2.6</span> Production de tableaux avec R</a>
+  <ul class="collapse">
+  <li><a href="#exemple-dutilisation-de-gt" id="toc-exemple-dutilisation-de-gt" class="nav-link" data-scroll-target="#exemple-dutilisation-de-gt"><span class="header-section-number">2.6.1</span> Exemple d’utilisation de <code>gt</code></a></li>
+  <li><a href="#superficie-cumulée-par-année-de-création" id="toc-superficie-cumulée-par-année-de-création" class="nav-link" data-scroll-target="#superficie-cumulée-par-année-de-création"><span class="header-section-number">2.6.2</span> Superficie cumulée par année de création</a></li>
+  <li><a href="#exercice-créer-un-tableau-synthétique" id="toc-exercice-créer-un-tableau-synthétique" class="nav-link" data-scroll-target="#exercice-créer-un-tableau-synthétique"><span class="header-section-number">2.6.3</span> Exercice : Créer un tableau synthétique</a></li>
+  </ul></li>
+  <li><a href="#production-de-graphiques-avec-ggplot2" id="toc-production-de-graphiques-avec-ggplot2" class="nav-link" data-scroll-target="#production-de-graphiques-avec-ggplot2"><span class="header-section-number">2.7</span> Production de graphiques avec ggplot2</a>
+  <ul class="collapse">
+  <li><a href="#philosophie-de-la-grammaire-des-graphiques" id="toc-philosophie-de-la-grammaire-des-graphiques" class="nav-link" data-scroll-target="#philosophie-de-la-grammaire-des-graphiques"><span class="header-section-number">2.7.1</span> Philosophie de la “grammaire des graphiques”</a></li>
+  <li><a href="#introduction-à-ggplot2" id="toc-introduction-à-ggplot2" class="nav-link" data-scroll-target="#introduction-à-ggplot2"><span class="header-section-number">2.7.2</span> Introduction à ggplot2</a></li>
+  <li><a href="#exercice-créer-un-graphique-avec-ggplot2" id="toc-exercice-créer-un-graphique-avec-ggplot2" class="nav-link" data-scroll-target="#exercice-créer-un-graphique-avec-ggplot2"><span class="header-section-number">2.7.3</span> Exercice : Créer un graphique avec ggplot2</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-fondamentaux" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Fondamentaux pour l’utilisation de R</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="lenvironnement" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="lenvironnement"><span class="header-section-number">2.1</span> L’environnement</h2>
+<section id="différences-r-et-rstudio" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="différences-r-et-rstudio"><span class="header-section-number">2.1.1</span> Différences R et Rstudio</h3>
+<p>R est un <strong>langage de programmation</strong> open source spécialisé dans la statistique et l’analyse des données. Il a été créé pour fournir un environnement convivial pour la manipulation, l’analyse et la visualisation des données.Il existe d’autres langages de programmation comme Python, JavaScript, Java, C++, etc.</p>
+<p>R est utilisé pour effectuer des opérations statistiques, faire de la modélisation, créer des graphiques et effectuer des analyses de données complexes.</p>
+<p>R est extrêmement flexible et extensible grâce à des packages R, qui ajoutent des fonctionnalités supplémentaires.</p>
+<p>RStudio est un <strong>environnement de développement intégré (IDE)</strong> conçu spécifiquement pour travailler avec le langage R. C’est un logiciel qui fournit une interface utilisateur plus conviviale pour écrire, exécuter et gérer des scripts R. Il existe d’autres IDE, comme Visual Studio Code ou Jupyter Notebook.</p>
+<p>RStudio inclut un éditeur de texte avec coloration syntaxique, un gestionnaire de packages, des fenêtres pour l’affichage des graphiques et des données, et bien d’autres fonctionnalités pour améliorer la productivité des utilisateurs R.</p>
+<p>En somme, R est le langage de programmation sous-jacent pour l’analyse des données, tandis que RStudio est un environnement de développement qui facilite l’utilisation de R.</p>
+</section>
+<section id="sources-dapprentissage" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="sources-dapprentissage"><span class="header-section-number">2.1.2</span> Sources d’apprentissage</h3>
+<p>Il existe de plusieurs ressources en français pour apprendre à coder sur R. Nous vous recommandons en particulier :</p>
+<ul>
+<li><a href="https://juba.github.io/tidyverse/index.html">Introduction à R et au Tidyverse</a> <span class="citation" data-cites="barnier2022">(<a href="11_references.html#ref-barnier2022" role="doc-biblioref">Barnier 2022</a>)</span> <a href="https://larmarange.github.io/guide-R/">Guide-R: Guide pour l’analyse de données d’enquêtes avec R</a> <span class="citation" data-cites="larmarange2024">(<a href="11_references.html#ref-larmarange2024" role="doc-biblioref">Larmarange 2024</a>)</span></li>
+<li><a href="https://www.book.utilitr.org/index.html">utilitR: documentation collaborative sur R de l’INSEE</a> <span class="citation" data-cites="utilitr:2022">(<a href="11_references.html#ref-utilitr:2022" role="doc-biblioref">Galiana and Meslin 2022</a>)</span></li>
+</ul>
+<p>Les bonnes ressources anglophones gratuites sont très nombreuses et faciles à trouver sur Internet. Le grand classique est <strong>R for data science</strong>, de Grolemund et Wickham <span class="citation" data-cites="grolemund2022">(<a href="11_references.html#ref-grolemund2022" role="doc-biblioref">2022</a>)</span>. On se focalise ici avec deux autres qui sont le plus en lien avec nos sujets :</p>
+<ul>
+<li><a href="https://r.geocompx.org/">Geocomputation with R, a book on geographic data analysis,visualization and modeling</a> <span class="citation" data-cites="lovelace2022">(<a href="11_references.html#ref-lovelace2022" role="doc-biblioref">Lovelace, Nowosad, and Muenchow 2022</a>)</span>.</li>
+<li><a href="https://mapme-initiative.github.io/mapme.biodiversity/index.html">Mapme.biodiversity: Efficient Monitoring of Global Biodiversity Portfolios</a> <span class="citation" data-cites="görgen2022">(<a href="11_references.html#ref-görgen2022" role="doc-biblioref">Görgen and Bhandari 2022</a>)</span></li>
+</ul>
+<p>N’hésitez pas à chercher directement sur le Web en cas de problème. Vous serez souvent conduits vers les forums stackoverflow ou RStudio, qui sont aussi des ressources très précieuses pour résoudre des problèmes très spécifiques.</p>
+<p>Pour un apprentissage interactif, vous pouvez également utiliser <strong>ChatGPT</strong>. Cet outil basé sur l’intelligence artificielle s’avère particulièrement utile pour les débutants qui ont besoin de support personnalisé ou pour les utilisateurs avancés comme assistant de programmation pour structurer des chaînes de traitement ou aider avec les problèmes les plus courants. Attention toutefois car il arrive régulièrement à ChatGPT “d’halluciner” des réponses lorsqu’il s’agit de questions très spécifiques.</p>
+<p>Pour vous retrouver parmi la multitude de packages existants, il existe une ressource précieuse en ligne : <strong>CRAN Task View</strong> (https://cran.r-project.org/web/views/). Ce registre fournit des recommandations sur les packages présents sur CRAN adaptés à un sujet spécifique.</p>
+<p>Il existe également de superbes cheat-sheet (“antisèches”) qui récapitulent les principales ressource :</p>
+<ul>
+<li>https://iqss.github.io/dss-workshops/R/Rintro/base-r-cheat-sheet.pdf</li>
+<li>https://rstudio.github.io/cheatsheets/</li>
+</ul>
+</section>
+<section id="interface-rstudio" class="level3" data-number="2.1.3">
+<h3 data-number="2.1.3" class="anchored" data-anchor-id="interface-rstudio"><span class="header-section-number">2.1.3</span> Interface Rstudio</h3>
+<p><img src="figs/R_interface_colored.png" class="img-fluid"></p>
+<p>A : fenêtre script/source B : console C : environnement D : explorateur</p>
+<p>La <strong>fenêtre de script</strong> permet d’éditer les fichiers scripts en vue d’éxécuter le code.</p>
+<p>La <strong>console</strong> est la fênetre où s’éxécute le code et où on peut directement taper des commandes. Il n’est pas obligatoire de passer par la fenêtre de script.</p>
+<p>Le signe “&gt;” dans votre console est appelé “invite de commande” ou “prompt”. C’est le symbole que la console utilise pour indiquer qu’elle est prête à recevoir des commandes ou des instructions de l’utilisateur. Une fois que vous voyez cet invite, vous pouvez commencer à entrer des commandes en utilisant le langage R. Après avoir entré une commande, vous appuyez sur Entrée pour l’exécuter.</p>
+<p>L’<strong>environnement</strong> rassemble des fonctionnalités pour suivre le fonctionnement de R, en faisant notamment apparaître les différents objets générés par notre script.</p>
+<p>L’<strong>explorateur</strong> permet de connaître les fichiers de notre ordinateur, de visualiser les rendus graphiques et cartographiqus, les différentes librairies et l’aide pour l’utilisation de ces dernières.</p>
+</section>
+</section>
+<section id="introduction-au-langage-r" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="introduction-au-langage-r"><span class="header-section-number">2.2</span> Introduction au langage R</h2>
+<p>R est un langage de programmation puissant et flexible, particulièrement adapté pour l’analyse de données et la statistique. Cette section couvre les bases du langage R, en fournissant une introduction aux concepts fondamentaux tels que les objets, les types de données, les fonctions, et les bonnes pratiques de codage. Ce guide est conçu pour vous aider à acquérir les bases nécessaires pour écrire du code efficace et lisible.</p>
+<section id="la-lisibilité-du-code" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="la-lisibilité-du-code"><span class="header-section-number">2.2.1</span> La lisibilité du code</h3>
+<p>La lisibilité du code est cruciale pour comprendre ce qu’un script fait, surtout après une certaine période ou lorsqu’on travaille en équipe.</p>
+<ul>
+<li><strong>Espaces autour des opérateurs</strong> : Utilisez des espaces autour des opérateurs pour améliorer la lisibilité.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mauvaise lisibilité</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>total<span class="ot">&lt;-</span><span class="dv">10</span><span class="sc">+</span><span class="dv">2</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Bonne lisibilité</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>total <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><strong>Commentaires clairs</strong> : En R, un commentaire commence par le symbole <code>#</code>. Tout ce qui est écrit après <code>#</code> sur la même ligne ne sera pas exécuté. Utilisez des commentaires pour expliquer des parties de code complexes ou des étapes importantes.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul du total des deux valeurs</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>total <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="dv">2</span>  <span class="co"># Ajout de 10 et 2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><strong>Utilisation des parenthèses</strong> : Pour les expressions complexes, utilisez des parenthèses afin de rendre l’ordre des opérations explicite.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Utilisation des parenthèses pour clarifier l'ordre des opérations</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>resultat <span class="ot">&lt;-</span> (<span class="dv">10</span> <span class="sc">+</span> <span class="dv">2</span>) <span class="sc">*</span> (<span class="dv">5</span> <span class="sc">/</span> <span class="dv">14</span>) <span class="sc">-</span> (<span class="dv">2</span> <span class="sc">*</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="exercice" class="level4" data-number="2.2.1.1">
+<h4 data-number="2.2.1.1" class="anchored" data-anchor-id="exercice"><span class="header-section-number">2.2.1.1</span> Exercice</h4>
+<ul>
+<li><strong>Améliorer la lisibilité</strong> : Reprenez le code suivant et améliorez sa lisibilité en ajoutant des espaces et des commentaires appropriés.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>resultat<span class="ot">&lt;-</span><span class="dv">5</span><span class="sc">*</span>(<span class="dv">3</span><span class="sc">+</span><span class="dv">2</span>)<span class="sc">-</span><span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="lassignation-création-dobjets" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="lassignation-création-dobjets"><span class="header-section-number">2.2.2</span> L’assignation (création d’objets)</h3>
+<p>En R, on utilise <code>&lt;-</code> pour assigner une valeur à un objet. Cette assignation permet de créer des variables et de les réutiliser plus tard. L’opérateur <code>&lt;-</code> est spécifique à R, mais il est possible d’utiliser <code>=</code> dans certains cas. Cependant, <code>&lt;-</code> est la convention généralement acceptée en R pour éviter toute ambiguïté.</p>
+<ul>
+<li><strong>Nommer les objets de manière explicite</strong> : Choisissez des noms explicites pour les objets afin de comprendre leur rôle dans le code.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assignation d'une valeur</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>moyenne_hauteur <span class="ot">&lt;-</span> <span class="dv">170</span>  <span class="co"># Hauteur moyenne en cm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><strong>Réassignation des valeurs</strong> : Lorsque vous réassignez une valeur à un objet, la valeur précédente est perdue.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">5</span>  <span class="co"># La valeur de x est maintenant 5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><strong>Suppression d’un objet</strong> : Pour libérer la mémoire, vous pouvez supprimer un objet avec <code>rm()</code>.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(x)  <span class="co"># Supprime l'objet x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="exercice-1" class="level4" data-number="2.2.2.1">
+<h4 data-number="2.2.2.1" class="anchored" data-anchor-id="exercice-1"><span class="header-section-number">2.2.2.1</span> Exercice</h4>
+<ul>
+<li><strong>Créer et réassigner des objets</strong> : Créez un objet <code>age</code> et assignez-lui une valeur, puis modifiez cette valeur. Supprimez ensuite l’objet.</li>
+</ul>
+</section>
+</section>
+<section id="les-différents-types-dobjets-en-r" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="les-différents-types-dobjets-en-r"><span class="header-section-number">2.2.3</span> Les différents types d’objets en R</h3>
+<p>R utilise différents types d’objets pour stocker des données, chacun ayant ses spécificités.</p>
+<ul>
+<li><strong>Chaînes de caractères</strong> : Les chaînes de caractères sont délimitées par des guillemets.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>nom <span class="ot">&lt;-</span> <span class="st">"Alice"</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(nom)  <span class="co"># Affiche "Alice"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Alice"</code></pre>
+</div>
+</div>
+<ul>
+<li><strong>Vecteurs</strong> : Les vecteurs sont des objets qui contiennent plusieurs valeurs de même type.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Création d'un vecteur de tailles</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>tailles <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">156</span>, <span class="dv">164</span>, <span class="dv">197</span>, <span class="dv">147</span>, <span class="dv">173</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>tailles_m <span class="ot">&lt;-</span> tailles <span class="sc">/</span> <span class="dv">100</span>  <span class="co"># Conversion en mètres</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Les opérations peuvent être appliquées à l’ensemble des valeurs d’un vecteur.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tailles_m <span class="sc">+</span> <span class="fl">0.1</span>  <span class="co"># Ajoute 0,1 m à chaque valeur du vecteur</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.66 1.74 2.07 1.57 1.83</code></pre>
+</div>
+</div>
+<section id="exercice-2" class="level4" data-number="2.2.3.1">
+<h4 data-number="2.2.3.1" class="anchored" data-anchor-id="exercice-2"><span class="header-section-number">2.2.3.1</span> Exercice</h4>
+<ul>
+<li><strong>Manipuler des vecteurs</strong> : Créez un vecteur de 5 poids en kilogrammes. Convertissez-les en grammes.</li>
+</ul>
+</section>
+</section>
+<section id="les-tableaux-de-données-data.frame" class="level3" data-number="2.2.4">
+<h3 data-number="2.2.4" class="anchored" data-anchor-id="les-tableaux-de-données-data.frame"><span class="header-section-number">2.2.4</span> Les tableaux de données (<code>data.frame</code>)</h3>
+<p>Les <code>data.frame</code> sont des structures de données très courantes qui permettent de stocker des colonnes de types variés.</p>
+<ul>
+<li><strong>Création d’un <code>data.frame</code></strong> : Combinez des vecteurs de même longueur pour créer un tableau de données.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>noms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Alice"</span>, <span class="st">"Bob"</span>, <span class="st">"Charlie"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">35</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>tableau <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(noms, ages)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tableau)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     noms ages
+1   Alice   25
+2     Bob   30
+3 Charlie   35</code></pre>
+</div>
+</div>
+<ul>
+<li><strong>Accéder aux colonnes</strong> : Utilisez <code>$</code> pour accéder à une colonne spécifique d’un <code>data.frame</code>.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tableau<span class="sc">$</span>ages  <span class="co"># Accède à la colonne 'ages'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 25 30 35</code></pre>
+</div>
+</div>
+<section id="exercice-3" class="level4" data-number="2.2.4.1">
+<h4 data-number="2.2.4.1" class="anchored" data-anchor-id="exercice-3"><span class="header-section-number">2.2.4.1</span> Exercice</h4>
+<ul>
+<li><strong>Créer un <code>data.frame</code></strong> : Créez un <code>data.frame</code> avec des noms, des âges et des tailles, puis affichez uniquement la colonne des tailles.</li>
+</ul>
+</section>
+</section>
+<section id="les-noms-dobjets" class="level3" data-number="2.2.5">
+<h3 data-number="2.2.5" class="anchored" data-anchor-id="les-noms-dobjets"><span class="header-section-number">2.2.5</span> Les noms d’objets</h3>
+<p>Les noms des objets doivent être choisis avec soin pour qu’ils soient compréhensibles et explicites.</p>
+<ul>
+<li><strong>Convention d’écriture</strong> : Utilisez le <code>snake_case</code> pour nommer vos objets (par exemple, <code>moyenne_age</code>).</li>
+<li><strong>Éviter les majuscules et caractères spéciaux</strong> : Les majuscules peuvent prêter à confusion, car R est sensible à la casse.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mauvaise pratique</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>T1 <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Bonne pratique</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>temperature_moyenne <span class="ot">&lt;-</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="exercice-4" class="level4" data-number="2.2.5.1">
+<h4 data-number="2.2.5.1" class="anchored" data-anchor-id="exercice-4"><span class="header-section-number">2.2.5.1</span> Exercice</h4>
+<ul>
+<li><strong>Nommer des objets</strong> : Créez des objets pour représenter la température et la pression, en respectant les bonnes pratiques de nommage.</li>
+</ul>
+</section>
+</section>
+<section id="les-fonctions" class="level3" data-number="2.2.6">
+<h3 data-number="2.2.6" class="anchored" data-anchor-id="les-fonctions"><span class="header-section-number">2.2.6</span> Les fonctions</h3>
+<p>Les fonctions sont des ensembles d’instructions qui effectuent des tâches spécifiques. Elles permettent de réutiliser du code facilement.</p>
+<ul>
+<li><strong>Créer une fonction</strong> : Utilisez le mot-clé <code>function</code> pour créer une fonction.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fonction qui additionne deux nombres</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>addition <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y) {</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x <span class="sc">+</span> y)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>resultat <span class="ot">&lt;-</span> <span class="fu">addition</span>(<span class="dv">3</span>, <span class="dv">4</span>)  <span class="co"># Appel de la fonction</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(resultat)  <span class="co"># Affiche 7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+</div>
+<ul>
+<li><strong>Fonctions natives et packages</strong> : De nombreuses fonctions sont intégrées à R, et d’autres sont disponibles via des packages additionnels.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Utilisation d'une fonction native</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>somme <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="dv">5</span>, <span class="dv">10</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(somme)  <span class="co"># Affiche 15</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 15</code></pre>
+</div>
+</div>
+<section id="exercice-5" class="level4" data-number="2.2.6.1">
+<h4 data-number="2.2.6.1" class="anchored" data-anchor-id="exercice-5"><span class="header-section-number">2.2.6.1</span> Exercice</h4>
+<ul>
+<li><strong>Créer une fonction</strong> : Créez une fonction qui calcule le carré d’un nombre et testez-la avec différentes valeurs.</li>
+</ul>
+</section>
+</section>
+<section id="les-structures-de-contrôle-if-else-et-les-boucles" class="level3" data-number="2.2.7">
+<h3 data-number="2.2.7" class="anchored" data-anchor-id="les-structures-de-contrôle-if-else-et-les-boucles"><span class="header-section-number">2.2.7</span> Les structures de contrôle : <code>if</code>, <code>else</code>, et les boucles</h3>
+<p>Les structures de contrôle permettent d’exécuter du code conditionnellement ou de manière répétitive.</p>
+<ul>
+<li><strong>Conditions avec <code>if</code> et <code>else</code></strong> : Les instructions <code>if</code> et <code>else</code> sont utilisées pour exécuter du code en fonction de conditions.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (x <span class="sc">&gt;</span> <span class="dv">5</span>) {</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"x est supérieur à 5"</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"x est inférieur ou égal à 5"</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "x est supérieur à 5"</code></pre>
+</div>
+</div>
+<p>Dans cet exemple, le message “x est supérieur à 5” sera affiché car la condition <code>x &gt; 5</code> est vraie.</p>
+<ul>
+<li><strong>Boucles <code>for</code></strong> : Les boucles <code>for</code> permettent de répéter une série d’instructions un certain nombre de fois.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) {</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Itération :"</span>, i))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Itération : 1"
+[1] "Itération : 2"
+[1] "Itération : 3"
+[1] "Itération : 4"
+[1] "Itération : 5"</code></pre>
+</div>
+</div>
+<p>Ici, la boucle <code>for</code> va exécuter l’instruction <code>print()</code> pour chaque valeur de <code>i</code> allant de 1 à 5.</p>
+<section id="exercice-6" class="level4" data-number="2.2.7.1">
+<h4 data-number="2.2.7.1" class="anchored" data-anchor-id="exercice-6"><span class="header-section-number">2.2.7.1</span> Exercice</h4>
+<ul>
+<li><strong>Utiliser une boucle <code>for</code></strong> : Créez une boucle qui affiche les carrés des nombres de 1 à 10.</li>
+</ul>
+</section>
+</section>
+<section id="les-valeurs-manquantes" class="level3" data-number="2.2.8">
+<h3 data-number="2.2.8" class="anchored" data-anchor-id="les-valeurs-manquantes"><span class="header-section-number">2.2.8</span> Les valeurs manquantes</h3>
+<p>Les valeurs manquantes (<code>NA</code>) sont courantes dans les jeux de données réels. Il est essentiel de savoir comment les gérer pour éviter des erreurs.</p>
+<ul>
+<li><strong>Gérer les valeurs manquantes</strong> : Utilisez <code>na.rm = TRUE</code> pour ignorer les <code>NA</code> dans des opérations.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">30</span>, <span class="cn">NA</span>, <span class="dv">40</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(ages) <span class="co"># Renvoie une valeur manquante </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>moyenne_ages <span class="ot">&lt;-</span> <span class="fu">mean</span>(ages, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="librairies-r" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="librairies-r"><span class="header-section-number">2.3</span> Librairies R</h2>
+<p>Les librairies R sont communément appelées “packages”. Plusieurs packages R sont utilisés pour ce projet. Les packages dans R sont des extensions de logiciels qui ajoutent des fonctionnalités spécifiques au langage R de base.</p>
+<p>Ils sont conçus pour faciliter l’analyse de données, la visualisation, la modélisation statistique, et bien plus encore. Les packages sont comme des boîtes à outils virtuelles qui permettent aux utilisateurs d’effectuer des tâches analytiques avancées sans avoir à réinventer la roue à chaque fois. Ils permettent de gagner du temps et de se concentrer sur la résolution de problèmes spécifiques à son domaine d’étude, au lieu de vous soucier de la programmation de fonctions de base.</p>
+<p>Lors de la rédaction de publications scientifiques, il est important de citer correctement les packages R utilisés dans votre analyse. Assurez-vous d’inclure le nom complet du package ainsi que le nom de son auteur ou des auteurs. Zotero et RStudio permettent aisément d’inclure ces citations dans votre analyse.</p>
+<p>Les autres packages mobilisés pour ce cours sont listés dans le bloc de code ci-dessous :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tidyverse"</span>) <span class="co"># Une série de packages pour faciliter la manipulation de données</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"readxl"</span>) <span class="co"># Pour lire les fichiers Excel (Carvalho et al. 2018)</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"gt"</span>) <span class="co"># Pour des rendus graphiques harmonisés HTML et PDF/LaTeX</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"wdpar"</span>) <span class="co"># Pour télécharger simplement la base d'aires protégées WDPA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="le-tidyverse" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="le-tidyverse"><span class="header-section-number">2.3.1</span> Le tidyverse</h3>
+<p>Le “tidyverse” est un ensemble cohérent de packages R conçus pour la manipulation, la visualisation et l’analyse de données de manière cohérente et efficace. Il a été développé pour simplifier le flux de travail de l’analyse de données et pour rendre le code plus lisible et plus facile à comprendre.</p>
+</section>
+<section id="lopérateur-pipeline" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="lopérateur-pipeline"><span class="header-section-number">2.3.2</span> L’opérateur pipeline</h3>
+<p>Le signe <code>%&gt;%</code> est un “tuyau”. On peut le lire à haute voix comme “ensuite”. Par exemple :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> a <span class="sc">%&gt;%</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addition</span>(b) <span class="sc">%&gt;%</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addition</span>(c)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="la-préparation-des-données-avec-dplyr" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="la-préparation-des-données-avec-dplyr"><span class="header-section-number">2.3.3</span> La préparation des données avec dplyr</h3>
+<p>Le “tidyverse” comprend plusieurs packages populaires, notamment <strong>dplyr</strong>. Ce dernier est très utile pour épurer les données lorsque vous travaillez sur des tableaux (et donc sur des tables attributaires).</p>
+<p>Il est utilisé pour la manipulation de données, notamment le filtrage, la sélection, le regroupement et la création de nouvelles variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On commence par créer les variables (les colonnes du tableau)</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>noms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"John"</span>, <span class="st">"Jack"</span>, <span class="st">"Cindy"</span>, <span class="st">"Samantha"</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>sexe <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"homme"</span>, <span class="st">"homme"</span>, <span class="st">"femme"</span>, <span class="st">"femme"</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">42</span>, <span class="dv">57</span>, <span class="dv">24</span>, <span class="cn">NA</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>poids <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">87</span>, <span class="dv">73</span>, <span class="cn">NA</span>, <span class="cn">NA</span>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>tailles <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">174</span>, <span class="dv">198</span>, <span class="dv">192</span>, <span class="dv">164</span>)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="co"># On les rassemble dans un tableau </span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>ma_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(noms, sexe, ages, poids, tailles)</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>ma_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      noms  sexe ages poids tailles
+1     John homme   42    87     174
+2     Jack homme   57    73     198
+3    Cindy femme   24    NA     192
+4 Samantha femme   NA    NA     164</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Un exemple qui combine ces opérations</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>ma_table <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ages))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   noms  sexe ages poids tailles
+1  John homme   42    87     174
+2  Jack homme   57    73     198
+3 Cindy femme   24    NA     192</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>ma_table <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ages)) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sexe, ages, tailles, poids)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   sexe ages tailles poids
+1 homme   42     174    87
+2 homme   57     198    73
+3 femme   24     192    NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>ma_table <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ages)) <span class="sc">%&gt;%</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sexe, ages, tailles, poids) <span class="sc">%&gt;%</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sexe) <span class="sc">%&gt;%</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">nb_pers =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  sexe  nb_pers
+  &lt;chr&gt;   &lt;int&gt;
+1 femme       1
+2 homme       2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>ma_table <span class="sc">%&gt;%</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ages)) <span class="sc">%&gt;%</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sexe, ages, tailles, poids) <span class="sc">%&gt;%</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sexe) <span class="sc">%&gt;%</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">nb_pers =</span> <span class="fu">n</span>(),</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">somme_poids =</span> <span class="fu">sum</span>(poids, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">taille_max =</span> <span class="fu">max</span>(tailles, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">age_moy =</span> <span class="fu">mean</span>(ages, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  sexe  nb_pers somme_poids taille_max age_moy
+  &lt;chr&gt;   &lt;int&gt;       &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;
+1 femme       1           0        192    24  
+2 homme       2         160        198    49.5</code></pre>
+</div>
+</div>
+<p>Voici certaines des fonctions fondamentales de dplyr : - <code>select</code> : choisir des colonnes - <code>filter</code> : choisir des lignes - <code>mutate</code> : modifier des valeurs - <code>group_by</code> : regrouper les données par une ou plusieurs variables - <code>summarise</code> : créer des résumés sur les données</p>
+<blockquote class="blockquote">
+<p><strong>Exercice en groupe</strong> : à partir du tableau <code>ventes_magasin</code>, utilisez les fonctions précédentes et l’opérateur pipe pour réaliser les opérations suivantes :</p>
+<ol type="1">
+<li>Sélectionnez uniquement les colonnes <code>produit</code>, <code>quantite</code>, et <code>prix_unitaire</code> du data frame <code>ventes_magasin</code>.</li>
+<li>Ne conservez que les ventes où la quantité vendue est supérieure à 5 unités.</li>
+<li>Ajoutez une nouvelle colonne nommée <code>montant</code> qui représente le montant total de chaque vente (quantité multipliée par le prix unitaire) et ajoutez-la au data frame.</li>
+<li>Créez un nouveau tableau <code>ventes_par_produit</code>, regroupez les données par <code>produit</code> pour calculer la quantité totale vendue de chaque produit.</li>
+<li>Complétez ce tableau avec le montant total et le nombre de ventes.</li>
+</ol>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Création du data frame ventes_magasin</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>ventes_magasin <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">produit =</span> <span class="fu">c</span>(<span class="st">"Produit A"</span>, <span class="st">"Produit B"</span>, <span class="st">"Produit A"</span>, <span class="st">"Produit C"</span>, <span class="st">"Produit B"</span>,</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Produit A"</span>, <span class="st">"Produit C"</span>, <span class="st">"Produit B"</span>, <span class="st">"Produit A"</span>),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantite =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">4</span>, <span class="dv">12</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="dv">3</span>, <span class="dv">11</span>, <span class="dv">5</span>),</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">prix_unitaire =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">8</span>, <span class="dv">12</span>, <span class="dv">20</span>, <span class="dv">10</span>, <span class="dv">18</span>, <span class="dv">14</span>, <span class="dv">9</span>),</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">date_vente =</span> <span class="fu">ymd</span>( <span class="co"># Cette fonction interprète des dates year-month-day</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"2023-01-05"</span>, <span class="st">"2023-01-08"</span>, <span class="st">"2023-01-09"</span>, <span class="st">"2023-01-10"</span>, <span class="st">"2023-01-15"</span>,</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"2023-01-20"</span>, <span class="st">"2023-01-25"</span>, <span class="st">"2023-01-30"</span>, <span class="st">"2023-02-02"</span>))</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="les-jointures" class="level3" data-number="2.3.4">
+<h3 data-number="2.3.4" class="anchored" data-anchor-id="les-jointures"><span class="header-section-number">2.3.4</span> Les jointures</h3>
+<p>Les jointures permettent de fusionner deux tableaux par une variable d’identification (“clé”).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tableau clients</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>clients <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nom_client =</span> <span class="fu">c</span>(<span class="st">"Alice"</span>, <span class="st">"Bob"</span>, <span class="st">"Charlie"</span>, <span class="st">"David"</span>))</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Tableau commandes</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>commandes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>),</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">montant =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">150</span>, <span class="dv">50</span>, <span class="dv">200</span>))</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Jointure par ID</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>resultat <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(clients, commandes, <span class="at">by =</span> <span class="st">"ID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Cette opération exige toutefois que la <strong>variable d’identification soit écrite de manière identique</strong> dans les deux jeux de données.</p>
+<p>Supposons que l’on travaille sur les aires protégées à Madagascar et que l’on dispose de deux jeux de données provenant de sources différentes. On a alors des informations complémentaires que l’on souhaite fusionner en un seul tableau via le nom de l’aire protégée.</p>
+<p>Il faudra veiller à ce que les noms aient la même écriture (pas de différences avec des majuscules, des abréviations ou des noms raccourcis).</p>
+</section>
+</section>
+<section id="import-de-données" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="import-de-données"><span class="header-section-number">2.4</span> Import de données</h2>
+<p>Pour cette section, nous allons développer l’importation de différents types de fichiers couramment utilisés dans R pour la manipulation et l’analyse de données. R permet d’importer et de manipuler divers formats de fichiers, notamment CSV, Excel et fichiers texte.</p>
+<section id="utilisation-du-menu-interactif-de-rstudio" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="utilisation-du-menu-interactif-de-rstudio"><span class="header-section-number">2.4.1</span> Utilisation du menu interactif de RStudio</h3>
+<p>Avant de passer à l’importation via du code, il est recommandé de se familiariser avec le menu interactif de RStudio pour importer des fichiers.</p>
+<ul>
+<li>Pour importer un fichier, allez dans le panneau Files en bas à droite de l’interface RStudio.</li>
+<li>Naviguez vers le fichier <code>data/AP_Vahatra.csv</code>, faites un clic droit et sélectionnez Import Dataset.</li>
+<li>Un assistant d’import s’ouvrira, vous permettant de vérifier les données et de définir les options d’importation (séparateur, types de colonnes, etc.).</li>
+<li>Une fois satisfait, cliquez sur Import et examinez le code automatiquement généré par RStudio. Ce code pourra être utilisé et modifié par la suite pour automatiser l’importation des données.</li>
+</ul>
+</section>
+<section id="types-de-fichiers-et-comment-les-importer-en-ligne-de-code" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="types-de-fichiers-et-comment-les-importer-en-ligne-de-code"><span class="header-section-number">2.4.2</span> Types de fichiers et comment les importer en ligne de code</h3>
+<ol type="1">
+<li>Fichiers CSV : Les fichiers CSV sont très populaires pour leur simplicité. Pour importer un fichier CSV, vous pouvez utiliser la fonction read.csv() ou read_csv() (package readr, partie du tidyverse).</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/AP_Vahatra.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>2. Fichiers Excel</strong> : Pour importer des fichiers Excel, on peut utiliser le package readxl. La fonction read_xlsx() permet d’importer un fichier au format .xlsx.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>Mon_objet_R <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">"data/mon_fichier.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>3. Fichiers texte</strong> : Les fichiers texte peuvent être importés avec read.table() ou read_delim() (pour des délimiteurs personnalisés).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"data/mon_fichier.txt"</span>, <span class="at">delim =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="exercice-pratique" class="level3" data-number="2.4.3">
+<h3 data-number="2.4.3" class="anchored" data-anchor-id="exercice-pratique"><span class="header-section-number">2.4.3</span> Exercice pratique</h3>
+<p>Pour vous familiariser avec ces différents formats, voici un petit exercice :</p>
+<ol type="1">
+<li>Importez un fichier CSV présent dans le dossier <code>data</code>. Le fichier s’appelle <code>AP_Vahatra.csv</code>. Utilisez read_csv() pour l’importer dans un objet R.</li>
+<li>Importez un fichier Excel présent dans le dossier <code>data</code>. Le fichier s’appelle <code>AP_Vahatra.xlsx</code>. Utilisez read_xlsx() pour l’importer dans un objet R.</li>
+<li>Importez un fichier texte présent dans le dossier <code>data</code>. Le fichier s’appelle <code>AP_Vahatra.txt</code>. Utilisez read_delim() pour l’importer dans un objet R.</li>
+<li>Affichez les premières lignes avec la fonction <code>head()</code> des jeux de données pour vérifier l’importation correcte.</li>
+</ol>
+</section>
+</section>
+<section id="exploration-des-données-importées" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="exploration-des-données-importées"><span class="header-section-number">2.5</span> Exploration des données importées</h2>
+<p>Nous allons maintenant explorer le contenu d’<code>AP_Vahatra</code>.</p>
+<ul>
+<li>Afficher les noms des colonnes :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(AP_Vahatra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "nom"                "cat_iucn"           "creation"          
+ [4] "date_creation"      "date_modification"  "mention_changement"
+ [7] "hectares"           "num_atlas_"         "full_name"         
+[10] "province"           "region"             "district"          
+[13] "gest_1"             "gest_2"             "type_ap"           
+[16] "an_creation"        "nom_wdpa"           "geometry"          
+[19] "rownum"            </code></pre>
+</div>
+</div>
+<ul>
+<li>Sélectionner les 10 premières aires protégées et leur catégorie IUCN :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, cat_iucn) <span class="sc">%&gt;%</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">&lt;=</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   nom                                     cat_iucn
+   &lt;chr&gt;                                   &lt;chr&gt;   
+ 1 Agnakatrika                             VI      
+ 2 Agnalazaha                              VI      
+ 3 Ambatofotsy                             V       
+ 4 Ambatotsirongorongo                     V       
+ 5 Ambatovaky                              IV      
+ 6 Ambohidray                              &lt;NA&gt;    
+ 7 Ambohijanahary                          IV      
+ 8 Ambohitantely                           IV      
+ 9 Ambohitr'Antsingy Montagne des Français V       
+10 Amoron'i Onilahy                        V       </code></pre>
+</div>
+</div>
+<ul>
+<li>Explorer les dates de création et de modification :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, date_creation, date_modification) <span class="sc">%&gt;%</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(date_creation)) <span class="sc">%&gt;%</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date_creation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 98 × 3
+   nom            date_creation       date_modification  
+   &lt;chr&gt;          &lt;dttm&gt;              &lt;dttm&gt;             
+ 1 Lokobe         1927-12-31 00:00:00 2011-07-06 00:00:00
+ 2 Analamerana    1956-02-20 00:00:00 2015-04-21 00:00:00
+ 3 Ankarana       1956-02-20 00:00:00 2015-04-21 00:00:00
+ 4 Bora           1956-02-20 00:00:00 NA                 
+ 5 Manongarivo    1956-02-20 00:00:00 NA                 
+ 6 Marotandrano   1956-02-20 00:00:00 2015-04-28 00:00:00
+ 7 Bemarivo       1956-09-10 00:00:00 NA                 
+ 8 Kasijy         1956-09-10 00:00:00 NA                 
+ 9 Ambatovaky     1958-10-28 00:00:00 2015-04-28 00:00:00
+10 Ambohijanahary 1958-10-28 00:00:00 NA                 
+# ℹ 88 more rows</code></pre>
+</div>
+</div>
+<ul>
+<li>Calculer la superficie totale des aires protégées :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_totale =</span> <span class="fu">sum</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  superficie_totale
+              &lt;dbl&gt;
+1          6372482.</code></pre>
+</div>
+</div>
+<ul>
+<li>Lister les aires protégées gérées par “Madagascar National Parks” :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gest_1 <span class="sc">==</span> <span class="st">"Madagascar National Parks"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, gest_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 38 × 2
+   nom              gest_1                   
+   &lt;chr&gt;            &lt;chr&gt;                    
+ 1 Ambatovaky       Madagascar National Parks
+ 2 Ambohitantely    Madagascar National Parks
+ 3 Analamazaotra    Madagascar National Parks
+ 4 Analamerana      Madagascar National Parks
+ 5 Andohahela       Madagascar National Parks
+ 6 Andranomena      Madagascar National Parks
+ 7 Anjanaharibe Sud Madagascar National Parks
+ 8 Ankarafantsika   Madagascar National Parks
+ 9 Ankarana         Madagascar National Parks
+10 Baie de Baly     Madagascar National Parks
+# ℹ 28 more rows</code></pre>
+</div>
+</div>
+<ul>
+<li>Obtenir des statistiques descriptives sur la superficie des aires protégées :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_moyenne =</span> <span class="fu">mean</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_mediane =</span> <span class="fu">median</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_max =</span> <span class="fu">max</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_min =</span> <span class="fu">min</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+  superficie_moyenne superficie_mediane superficie_max superficie_min
+               &lt;dbl&gt;              &lt;dbl&gt;          &lt;dbl&gt;          &lt;dbl&gt;
+1             65025.             24963.        426594.           225.</code></pre>
+</div>
+</div>
+<section id="exercice-supplémentaire" class="level3" data-number="2.5.1">
+<h3 data-number="2.5.1" class="anchored" data-anchor-id="exercice-supplémentaire"><span class="header-section-number">2.5.1</span> Exercice supplémentaire</h3>
+<p>Pour cet exercice, utilisez les données AP_Vahatra que vous avez importées pour produire les statistiques suivantes :</p>
+<ol type="1">
+<li>Filtrez les aires protégées dont la catégorie IUCN est “II” et affichez uniquement leurs noms.</li>
+<li>Ajoutez une colonne superficie_km2 à AP_Vahatra en convertissant la valeur hectares en kilomètres carrés.</li>
+<li>Triez les données par superficie_km2 de manière décroissante.</li>
+<li>Trouvez le nom des 3 plus grandes aires protégées</li>
+<li>Calculez la superficie totale de toutes les aires protégées</li>
+<li>Produisez un résumé statistique (summary()) des valeurs de superficie_km2.</li>
+<li>Filtrez les aires protégées ayant une superficie supérieure ou égale au 3ème quartile et calculez leur nombre.</li>
+</ol>
+</section>
+</section>
+<section id="production-de-tableaux-avec-r" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="production-de-tableaux-avec-r"><span class="header-section-number">2.6</span> Production de tableaux avec R</h2>
+<p>La fonction <code>gt()</code> permet d’obtenir des tableaux bien formatés, idéals pour présenter des résultats de manière claire et esthétique. Elle est particulièrement utile pour la création de rapports et la présentation de données tabulaires de manière attrayante. Voici quelques-unes des fonctions essentielles de <code>gt</code> :</p>
+<ul>
+<li><strong><code>cols_label()</code></strong> : Cette fonction permet de renommer les colonnes pour leur donner des titres plus explicites.</li>
+<li><strong><code>tab_header()</code></strong> : Elle permet d’ajouter un titre et un sous-titre au tableau, facilitant ainsi la compréhension de ce que le tableau représente.</li>
+<li><strong><code>fmt_number()</code></strong> : Cette fonction permet de formater les nombres, par exemple en définissant le nombre de décimales.</li>
+<li><strong><code>tab_source_note()</code></strong> : Elle permet d’ajouter une note de source au tableau, indiquant d’où proviennent les données.</li>
+</ul>
+<section id="exemple-dutilisation-de-gt" class="level3" data-number="2.6.1">
+<h3 data-number="2.6.1" class="anchored" data-anchor-id="exemple-dutilisation-de-gt"><span class="header-section-number">2.6.1</span> Exemple d’utilisation de <code>gt</code></h3>
+<p>Voici un exemple d’utilisation de <code>gt</code> pour résumer les superficies des aires protégées par catégorie IUCN.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On va dabord convertir les superficies en hectares dans une nouvelle colonne</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>)</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul des superficies totales pour chaque catégorie IUCN</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(cat_iucn)) <span class="sc">%&gt;%</span></span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cat_iucn) <span class="sc">%&gt;%</span></span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_totale =</span> <span class="fu">sum</span>(superficie_km2))</span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Production du tableau</span></span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="sc">%&gt;%</span></span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">cat_iucn =</span> <span class="st">"Catégorie IUCN"</span>,</span>
+<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">superficie_totale =</span> <span class="st">"Superficie totale (km²)"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Aires protégées de Madagascar : superficies par catégorie IUCN"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : données de l'association Vahatra"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="pdakrdhgxp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#pdakrdhgxp table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#pdakrdhgxp thead, #pdakrdhgxp tbody, #pdakrdhgxp tfoot, #pdakrdhgxp tr, #pdakrdhgxp td, #pdakrdhgxp th {
+  border-style: none;
+}
+
+#pdakrdhgxp p {
+  margin: 0;
+  padding: 0;
+}
+
+#pdakrdhgxp .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#pdakrdhgxp .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#pdakrdhgxp .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#pdakrdhgxp .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#pdakrdhgxp .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pdakrdhgxp .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pdakrdhgxp .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pdakrdhgxp .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#pdakrdhgxp .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#pdakrdhgxp .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#pdakrdhgxp .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#pdakrdhgxp .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#pdakrdhgxp .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#pdakrdhgxp .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#pdakrdhgxp .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pdakrdhgxp .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#pdakrdhgxp .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#pdakrdhgxp .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#pdakrdhgxp .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pdakrdhgxp .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#pdakrdhgxp .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#pdakrdhgxp .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#pdakrdhgxp .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pdakrdhgxp .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#pdakrdhgxp .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#pdakrdhgxp .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pdakrdhgxp .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pdakrdhgxp .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#pdakrdhgxp .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pdakrdhgxp .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#pdakrdhgxp .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pdakrdhgxp .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pdakrdhgxp .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pdakrdhgxp .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pdakrdhgxp .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pdakrdhgxp .gt_left {
+  text-align: left;
+}
+
+#pdakrdhgxp .gt_center {
+  text-align: center;
+}
+
+#pdakrdhgxp .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#pdakrdhgxp .gt_font_normal {
+  font-weight: normal;
+}
+
+#pdakrdhgxp .gt_font_bold {
+  font-weight: bold;
+}
+
+#pdakrdhgxp .gt_font_italic {
+  font-style: italic;
+}
+
+#pdakrdhgxp .gt_super {
+  font-size: 65%;
+}
+
+#pdakrdhgxp .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#pdakrdhgxp .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#pdakrdhgxp .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#pdakrdhgxp .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#pdakrdhgxp .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#pdakrdhgxp .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#pdakrdhgxp .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#pdakrdhgxp .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#pdakrdhgxp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_heading">
+<th colspan="2" class="gt_heading gt_title gt_font_normal gt_bottom_border">Aires protégées de Madagascar : superficies par catégorie IUCN</th>
+</tr>
+<tr class="odd gt_col_headings">
+<th id="cat_iucn" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Catégorie IUCN</th>
+<th id="superficie_totale" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Superficie totale (km²)</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="cat_iucn">I</td>
+<td class="gt_row gt_right" headers="superficie_totale">22.40</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="cat_iucn">II</td>
+<td class="gt_row gt_right" headers="superficie_totale">25,380.56</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="cat_iucn">III</td>
+<td class="gt_row gt_right" headers="superficie_totale">44.17</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="cat_iucn">IV</td>
+<td class="gt_row gt_right" headers="superficie_totale">4,138.88</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="cat_iucn">V</td>
+<td class="gt_row gt_right" headers="superficie_totale">22,752.70</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="cat_iucn">VI</td>
+<td class="gt_row gt_right" headers="superficie_totale">8,265.72</td>
+</tr>
+</tbody><tfoot class="gt_sourcenotes">
+<tr class="even">
+<td colspan="2" class="gt_sourcenote">Source : données de l'association Vahatra</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="superficie-cumulée-par-année-de-création" class="level3" data-number="2.6.2">
+<h3 data-number="2.6.2" class="anchored" data-anchor-id="superficie-cumulée-par-année-de-création"><span class="header-section-number">2.6.2</span> Superficie cumulée par année de création</h3>
+<p>Avant de créer un graphique en nuages de points, nous devons préparer un tableau qui résume la superficie cumulée des aires protégées en fonction de leur année de création.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>AP_superficie_annees <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(an_creation) <span class="sc">%&gt;%</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_annuelle =</span> <span class="fu">sum</span>(superficie_km2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(an_creation) <span class="sc">%&gt;%</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(superficie_cumulée <span class="ot">=</span> <span class="fu">cumsum</span>(superficie_annuelle))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="exercice-créer-un-tableau-synthétique" class="level3" data-number="2.6.3">
+<h3 data-number="2.6.3" class="anchored" data-anchor-id="exercice-créer-un-tableau-synthétique"><span class="header-section-number">2.6.3</span> Exercice : Créer un tableau synthétique</h3>
+<ol type="1">
+<li><p><strong>Résumer la superficie cumulée par année de création</strong> : Utilisez <code>gt()</code> pour présenter les résultats de <code>AP_superficie_annees</code> de manière claire et lisible.</p></li>
+<li><p><strong>Ajouter des colonnes d’explication</strong> : Créez des colonnes qui expliquent chaque étape du processus (par exemple, année de création, superficie annuelle ajoutée, superficie cumulée).</p></li>
+<li><p><strong>Ajouter un titre et une note de source</strong> : Le tableau devrait inclure un titre explicite et une note de source, similaire à l’exemple précédent.</p></li>
+</ol>
+<p>Ces étapes vous aideront à présenter les données de manière élégante et à faciliter la compréhension des tendances liées à la création des aires protégées.</p>
+</section>
+</section>
+<section id="production-de-graphiques-avec-ggplot2" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="production-de-graphiques-avec-ggplot2"><span class="header-section-number">2.7</span> Production de graphiques avec ggplot2</h2>
+<p>Pour produire des graphiques de qualité avec R, nous utilisons souvent le package <code>ggplot2</code>. Ce package repose sur une approche appelée “la grammaire des graphiques”. Cette grammaire est une façon systématique de construire des visualisations, en combinant différents composants graphiques, comme des axes, des légendes, des points, des lignes, etc. Elle offre une grande flexibilité et permet de créer des graphiques complexes de manière progressive.</p>
+<section id="philosophie-de-la-grammaire-des-graphiques" class="level3" data-number="2.7.1">
+<h3 data-number="2.7.1" class="anchored" data-anchor-id="philosophie-de-la-grammaire-des-graphiques"><span class="header-section-number">2.7.1</span> Philosophie de la “grammaire des graphiques”</h3>
+<p>La grammaire des graphiques est une méthode de pensée pour créer des visualisations. Elle repose sur l’idée que tout graphique peut être décomposé en une série de couches. Par exemple :</p>
+<ol type="1">
+<li><strong>Données</strong> : La première étape consiste à spécifier les données à utiliser pour le graphique.</li>
+<li><strong>Aesthetic mappings (Mappings esthétiques)</strong> : Cela consiste à indiquer comment les variables des données seront représentées visuellement, par exemple, quel axe représente quelle variable, ou quelles couleurs représentent quelles catégories.</li>
+<li><strong>Geometries (Géométries)</strong> : Chaque graphique est composé de formes géométriques, comme des points, des lignes, des barres, etc. Ces géométries déterminent la manière dont les données seront visualisées.</li>
+<li><strong>Facettes</strong> : Cette étape permet de subdiviser le graphique en plusieurs sous-graphiques basés sur une variable, facilitant ainsi la comparaison entre catégories.</li>
+<li><strong>Statistiques</strong> : Certaines visualisations nécessitent des transformations statistiques, comme l’ajout de moyennes, de tendances ou d’intervalles de confiance.</li>
+<li><strong>Coordonnées</strong> : Il s’agit de définir les systèmes de coordonnées, tels que les axes cartésiens ou polaires.</li>
+<li><strong>Thème</strong> : Enfin, le thème est utilisé pour définir l’apparence générale du graphique, par exemple, les couleurs de fond, la taille des polices, etc.</li>
+</ol>
+<p>En combinant ces différentes couches, <code>ggplot2</code> permet de construire des visualisations claires et personnalisées, adaptées aux besoins spécifiques de l’analyse.</p>
+</section>
+<section id="introduction-à-ggplot2" class="level3" data-number="2.7.2">
+<h3 data-number="2.7.2" class="anchored" data-anchor-id="introduction-à-ggplot2"><span class="header-section-number">2.7.2</span> Introduction à ggplot2</h3>
+<p>Le package <code>ggplot2</code> suit cette logique en permettant d’ajouter chaque composant graphique avec le signe <code>+</code>. Voici une approche progressive pour comprendre <code>ggplot2</code> :</p>
+<ol type="1">
+<li><strong>Importer le package et les données</strong> :</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="co"># On suppose que AP_superficie_annees est déjà créé</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li><strong>Créer la base du graphique</strong> :</li>
+</ol>
+<p>La première étape consiste à spécifier les données et les mappings esthétiques. Par exemple, nous allons indiquer que l’axe des abscisses (<code>x</code>) représente l’année de création (<code>an_creation</code>) et l’axe des ordonnées (<code>y</code>) représente la superficie cumulée (<code>superficie_cumulée</code>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="3" type="1">
+<li><strong>Ajouter des géométries</strong> :</li>
+</ol>
+<p>Pour visualiser les données, nous ajoutons des points (<code>geom_point()</code>) et des lignes (<code>geom_line()</code>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="4" type="1">
+<li><strong>Ajouter des labels</strong> :</li>
+</ol>
+<p>Pour rendre le graphique plus compréhensible, nous ajoutons des labels pour les axes et un titre.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="5" type="1">
+<li><strong>Appliquer un thème</strong> :</li>
+</ol>
+<p>Le thème permet de personnaliser l’apparence générale du graphique. Ici, nous utilisons <code>theme_minimal()</code> pour une apparence épurée.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>) <span class="sc">+</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exercice-créer-un-graphique-avec-ggplot2" class="level3" data-number="2.7.3">
+<h3 data-number="2.7.3" class="anchored" data-anchor-id="exercice-créer-un-graphique-avec-ggplot2"><span class="header-section-number">2.7.3</span> Exercice : Créer un graphique avec ggplot2</h3>
+<ol type="1">
+<li><p><strong>Créer un graphique en nuages de points</strong> : Utilisez <code>ggplot2</code> pour créer un graphique qui montre la superficie annuelle des aires protégées en fonction de leur année de création.</p></li>
+<li><p><strong>Ajouter des lignes de tendance</strong> : Ajoutez une ligne de tendance (<code>geom_smooth()</code>) pour montrer l’évolution générale de la superficie annuelle au fil du temps.</p></li>
+<li><p><strong>Facetter par catégorie IUCN</strong> : Utilisez <code>facet_wrap()</code> pour créer des sous-graphiques qui montrent la superficie cumulée par année de création pour chaque catégorie IUCN.</p></li>
+</ol>
+<p>Ces étapes vous permettront de comprendre progressivement comment construire des graphiques en utilisant la grammaire des graphiques, et d’explorer différentes façons de visualiser vos données.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-barnier2022" class="csl-entry" role="listitem">
+Barnier, Julien. 2022. <span>“Introduction à <span>R</span> Et Au Tidyverse.”</span> <a href="https://juba.github.io/tidyverse/index.html">https://juba.github.io/tidyverse/index.html</a>.
+</div>
+<div id="ref-utilitr:2022" class="csl-entry" role="listitem">
+Galiana, Lino, and Olivier Meslin, eds. 2022. <span>“utilitR: Documentation Collaborative Sur r.”</span> <a href="https://www.book.utilitr.org/">https://www.book.utilitr.org/</a>.
+</div>
+<div id="ref-görgen2022" class="csl-entry" role="listitem">
+Görgen, Darius A., and Om Prakash Bhandari. 2022. <em>Mapme.biodiversity: Efficient Monitoring of Global Biodiversity Portfolios</em>. <a href="https://CRAN.R-project.org/package=mapme.biodiversity">https://CRAN.R-project.org/package=mapme.biodiversity</a>.
+</div>
+<div id="ref-grolemund2022" class="csl-entry" role="listitem">
+Grolemund, Garrett, and Hadley Wickham. 2022. <em>R for Data Science: Import, Tidy, Transform, Visualize, and Model Data</em>. 1st edition. Sebastopol, CA: O’Reilly Media. <a href="https://r4ds.had.co.nz/">https://r4ds.had.co.nz/</a>.
+</div>
+<div id="ref-larmarange2024" class="csl-entry" role="listitem">
+Larmarange, Joseph. 2024. <em>Guide-r : Guide Pour l’analyse de Données d’enquêtes Avec r</em>. <a href="https://larmarange.github.io/guide-R/">https://larmarange.github.io/guide-R/</a>.
+</div>
+<div id="ref-lovelace2022" class="csl-entry" role="listitem">
+Lovelace, Robin, Jakub Nowosad, and Jannes Muenchow. 2022. <em>Geocomputation with R</em>. Boca Raton London New York: Routledge. <a href="https://geocompr.robinlovelace.net/">https://geocompr.robinlovelace.net/</a>.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/betsaka\.github\.io\/impact_training_mapme\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./01_introduction.html" class="pagination-link" aria-label="Introduction">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./03_geodata.html" class="pagination-link" aria-label="Données spatiales : types et importation">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Données spatiales : types et importation</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

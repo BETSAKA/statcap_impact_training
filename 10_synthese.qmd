@@ -1,0 +1,5 @@
+# Synthèse
+
+D'autres méthodes quantitatives existent : RDD, synthetic controls.
+
+Enjeux de croisement des méthodes.

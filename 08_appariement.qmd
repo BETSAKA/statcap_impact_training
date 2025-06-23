@@ -1,0 +1,320 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Méthodes d'appariement
+
+
+<iframe src="slides/fr/matching.html" width="100%" height="400px">
+
+</iframe>
+
+<a href="slides/fr/matching.html" download>Cliquer ici pour télécharger la présentation</a>.
+
+## La question de la comparabilité des groupes
+
+On a vu dans le chapitre précédent que les comparaisons simples réalisées entre les premières et les dernières aires à avoir été formellement protégées pose problème.
+
+On va maintenant chercher à renforcer la comparabilité entre le groupe de traitement et le groupe de contrôle en réalisant un appariemment (cf. diapos de présentation).
+
+On va utiliser le package {MatchIt} : ne pas hésiter à se référer à [la documentation du package](https://kosukeimai.github.io/MatchIt/index.html).
+
+On va commencer par réaliser quelques ajustements, car {MatchIt} requiert qu'aucune valeur des variables mobilisées ne soit manquante. On va donc retirer les observations comportant des `NA`.
+
+```{r, output = FALSE}
+library(tidyverse) # Simplifie la manipulation de données
+library(lubridate) # Simplifie les opérations sur des dates
+library(sf) # Pour traiter les données spatiales
+library(MatchIt) # Pour réaliser les appariements.
+library(cobalt) # Pour les tests d'équilibre sur l'appariement
+library(gt) # Pour faire de jolies tables
+library(stargazer) # Pour présenter les résultats de régressions
+library(mapme.biodiversity)
+library(htmltools)
+
+# Désactiver les notations scientifiques
+options(scipen = 999)
+
+# Charger les données
+AP_Vahatra <- read_rds("data/AP_Vahatra_mapme.rds") %>%
+  portfolio_wide() %>%
+  mutate(Groupe = ifelse(year(date_creation) < 2015, "Traitement", "Contrôle"))
+
+# Préparer les données sans valeurs manquantes
+Vahatra_defor_noNA <- AP_Vahatra %>%
+  mutate(surface_ha = as.numeric(st_area(AP_Vahatra)) / 10000, 
+         couv_foret_2000 = `treecover_area_2000-01-01_treecover_ha` / surface_ha * 100,
+         altitude = `elevation_2000-02-01_elevation_mean_m`,
+         pente = `slope_2000-02-01_slope_mean_degrees`,
+         dist_ville = `traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes`,
+         traitement = ifelse(year(date_creation) < 2015, 1, 0),
+         taux_deforestation_2000_2014 = 
+           -((`treecover_area_2014-01-01_treecover_ha` / 
+              `treecover_area_2000-01-01_treecover_ha`)^(1/14) - 1) * 100) %>%
+  filter(!is.na(couv_foret_2000), !is.na(dist_ville), !is.na(altitude), !is.na(pente))
+
+summary(Vahatra_defor_noNA)
+
+Vahatra_defor_noNA %>%
+  st_drop_geometry() %>%
+  group_by(Groupe, traitement) %>%
+  summarise(effectif = n())
+```
+```{r}
+Vahatra_defor_noNA %>%
+  st_drop_geometry() %>%
+  group_by(Groupe) %>%
+  summarize(`Nombre d'aires protégées` = n()) %>%
+  gt() %>%
+  tab_header("Observations par groupe avant appariemment") %>%
+  tab_source_note("Source : Association Vahatra et données GFC")
+```
+
+## Mesure de la propension
+
+Pour commencer, nous allons spécifier le modèle probit qui estime dans quelle mesure la propension pour une aire d'avoir été protégée avant 2015 dépend de sa taille, de son taux de couverture forestière en 2000, de son altitude, de son caractère accidenté et de sa distance d'une ville d'au moins 5000 habitants.
+
+Cette spécification peut se représenter selon l'équation suivante qui représente un modèle probit. Un modèle probit, tout comme le logit, est un modèle de choix binaire.
+
+```{r}
+# Spécification du modèle probit
+pscor <- traitement ~  surface_ha + 
+                       couv_foret_2000 + 
+                       altitude +
+                       pente + 
+                       dist_ville
+```
+
+On va maintenant réaliser une régression pour connaître l'influence de ces facteurs dans la désignation des aires comme protégées.
+
+```{r, output = FALSE}
+# Régression probit
+reg_select <- glm(formula = pscor,
+                  family = binomial(link = "probit"),
+                  data = Vahatra_defor_noNA)
+
+match_out1 <- stargazer(reg_select, type = "html") 
+```
+```{r, echo = FALSE}
+# On fait un rendu en html (en 2 fois pour régler la largeur)
+out_html1 <- browsable(HTML(paste(match_out1, collapse = "")))
+browsable(div(style = "width: 300px;", out_html1))
+```
+
+> Exercice : analysez ce résultat. Quels facteurs sont corrélés avec la désignation précoce comme aire protégée ?
+
+## Appariement sur score de propension
+
+On va maintenant utiliser ce modèle pour comparer les aires protégées traitées en premier par rapport à celles traitées plus récemment.
+
+```{r}
+# Calcul du matching
+def_00_14_match <- matchit(formula = pscor,
+                           family = binomial(link = "probit"),
+                           method = "nearest",
+                           discard = "both",
+                           replace = FALSE,
+                           distance = "glm",
+                           data = Vahatra_defor_noNA)
+
+print(def_00_14_match)
+```
+
+On peut maintenant observer les équilibres entre les groupes traités et contrôle avant et après l'appariement.
+
+```{r}
+summary(def_00_14_match)
+```
+
+> **Exercice** : Étudiez les tables ci-dessus. Quel effet a eu l'appariement sur l'équilibre des variables entre le groupe de traitement et le groupe de contrôle ? Combien d'observations ont été écartées ?
+
+On peut observer la distance entre groupe de traitement et de contrôle.
+
+```{r}
+plot(def_00_14_match, type = "jitter", interactive = FALSE)
+```
+
+On peut également représenter l'équilibre entre les variables avant et après traitement avec les graphiques suivants.
+
+```{r}
+bal.plot(def_00_14_match, var.name = "dist_ville", which = "both")
+```
+
+> Exercice : Quel effet a eu l'appariement sur la variable de distance à la ville ? Les autres variables d'appariement produisent-elles un effet aussi visible ?
+
+## Estimation du résultat en contrôlant pour les variables d'appariement
+
+Le modèle qu'on utilise pour estimer l'impact est très proche de celui exposé ci-dessus, à la différence que la variable de traitement passe dans la partie droite, et qu'elle est remplacée par la déforestation.
+
+```{r}
+# Spécification du modèle pour l'impact
+estimp <- taux_deforestation_2000_2014 ~   
+                          traitement +
+                          surface_ha + 
+                          couv_foret_2000 + 
+                          altitude +
+                          pente + 
+                          dist_ville
+```
+
+On va donc réaliser une régression, en tenant compte des pondérations générées par l'algorithme d'appariement (variable "weight").
+
+```{r, output = FALSE}
+# On extrait les données de l'appariement
+def_00_14_match_data <- match.data(def_00_14_match)
+
+# Régression avec pondérations
+def_00_14_match_est <- lm(formula = estimp,
+                          data = def_00_14_match_data,
+                          weights = weights)
+
+# Présentation des résultats
+match_out2 <- stargazer(def_00_14_match_est, type = "html")
+```
+```{r, echo = FALSE}
+# On fait un rendu en html (en 2 fois pour régler la largeur)
+out_html2 <- browsable(HTML(paste(match_out2, collapse = "")))
+browsable(div(style = "width: 500px;", out_html2))
+```
+
+## Exercices
+
+### Exercice simple
+
+Analysez, interprétez et critiquez les résultats ci-dessus.
+
+### Exercice intermédiaire
+
+Ajoutez des variables d'intérêt et modifiez les paramètres de la fonction de matching.
+
+### Exercice avancé
+
+Réalisez une analyse analogue avec les données de feux. Rédigez une analyse interprétative.
+
+## Application sur les données en mailles
+
+L'exercice ci-dessous consiste à réaliser un appariement sur des données d'une taille relativement grande. Cet exercice comporte des limites, car on dispose d'un nombre limité d'observations à comparer.
+
+Une approche plus appropriée consiste à utiliser le maillage du territoire effectué dans la section @sec-mailles pour comparer des parcelles d'aires passées sous protection pendant la période d'étude (2000-2023) à des zones d'ayant jamais été protégées.
+
+Les données ne peuvent pas contenir de données manquantes sur les variables d'appariement, donc on les écarte.
+
+```{r}
+library(tidyverse)
+library(mapme.biodiversity)
+library(MatchIt)
+library(stargazer)
+library(sf)
+library(cobalt)
+library(tmap)
+library(htmltools) # Pour avoir de plus jolies tables
+library(geodata) # Pour les frontières de Madagascar
+
+grille_mada_summary_AP <- read_rds("data/grille_mada_summary_AP.rds")
+
+# On référence le nom des variables qui vont servir à l'analyse
+variables_analyse <- c("assetid",
+                       "traitement",
+                       "couv_foret_2000",
+                       "pop_km2",
+                       "altitude",
+                       "pente",
+                       "dist_ville",
+                       "taux_deforestation_2000_2023")
+
+# On renomme le ficher 'df' (dataframe) : plus concis dans les commandes ensuite
+df <- grille_mada_summary_AP %>%
+  # On supprime toutes les lignes pour lesquelles au moins 1 valeur variable 
+  # est manquante parmi les variables d'analyse
+  mutate(traitement = position_ap == "Intérieur") %>% 
+  drop_na(any_of(variables_analyse))
+
+```
+
+On analyse maintenant le score de propension.
+
+```{r, output = FALSE}
+# Get propensity scores
+glm_out <- glm(traitement ~ couv_foret_2000 + 
+                           pop_km2 + 
+                           altitude + 
+                           pente + 
+                           dist_ville,  
+               family = binomial(link = "probit"),
+               data = df)
+
+cellmatch_out1 <- stargazer(glm_out,
+                            summary = TRUE,
+                            type = "html",
+                            title = "Score de propension")
+```
+```{r, echo = FALSE}
+out_html3 <- browsable(HTML(paste(cellmatch_out1, collapse = "")))
+browsable(div(style = "width: 300px;", out_html3))
+```
+
+> Exercice : interpréter le résultat du score de propension. 
+
+
+```{r}
+m_out <- matchit(traitement ~ couv_foret_2000 + 
+                           pop_km2 + 
+                           altitude + 
+                           pente + 
+                           dist_ville,
+                 data = df,
+                 method = "nearest",
+                 replace = TRUE,
+                 distance = "glm", 
+                 discard = "both", # common support: drop units from both groups 
+                 link = "probit")
+
+print(m_out)
+# print(summary(m_out, un = FALSE))
+bal_table <- bal.tab(m_out, un = TRUE)
+print(bal_table)
+grille_matched <- match.data(m_out) %>%
+  st_sf()
+
+if (!file.exists("data/grille_matched.rds")) {
+  write_rds(grille_matched, "data/grille_matched.rds")
+}
+
+contour_mada <- gadm("Madagascar", level = 0, path = "data") %>% st_as_sf()
+# On visualise les données appareillées
+tm_shape(contour_mada) +
+  tm_borders() +
+  tm_shape(grille_matched) +
+  tm_fill(col = "traitement", palette = "Set1", title = "Groupes d'appariement",
+          labels = c("Contrôle", "Traitement")) +
+  tm_layout(legend.outside = TRUE,
+            main.title = "Localisation des groupes de traitement et de contrôle",
+            main.title.position = c("center", "top"),
+            main.title.size = 1)
+```
+
+> Exercice: Réaliser des tests d'équilibre
+
+
+On réalise la régression.
+
+```{r, output = FALSE}
+modele <- lm(formula = taux_deforestation_2000_2023 ~
+               traitement +
+               couv_foret_2000 + 
+               pop_km2 + 
+               altitude + 
+               pente + 
+               dist_ville,
+             data = m_data,
+             weights = weights)
+cellmatch_out2 <- stargazer(modele, type = "html") 
+```
+```{r, echo = FALSE}
+out_html4 <- browsable(HTML(paste(cellmatch_out2, collapse = "")))
+browsable(div(style = "width: 300px;", out_html4))
+```
+
+> Exercice : interpréter le résultat

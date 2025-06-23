@@ -1,0 +1,382 @@
+---
+title: "Expérimentations par assignation aléatoire"
+subtitle: "Atelier Mapme : Evaluation d'impact sur données spatiales"
+author: "Florent Bédécarrats"
+date: "Octobre 2024"
+format: 
+  clean-revealjs:
+    slide-number: true
+    self-contained: true
+    pdf: true
+class: small-text
+editor_options: 
+  chunk_output_type: console
+---
+
+
+## Le problème principal du modèle de Rubin
+
+Le problème principal soulevé par le modèle de Rubin lors de l'évaluation des effets d'une intervention est l'impossibilité d'observer :
+
+$$\mathbb{E}(Y_{0i} \mid T_i = 1)$$
+
+### Problème du contrefactuel
+
+- **Question clé** : Quel aurait été le **résultat observé** sur les unités traitées **en l'absence du traitement** ?
+  
+- **Enjeu** : Trouver un contrefactuel valide / pertinent.
+  
+- **Menaces** :
+    - Éligibilité au programme
+    - Auto-sélection ⟹ biais entre traités et non-traités
+  
+- **Une solution** : Les essais randomisés contrôlés (ERC)
+
+
+## Pourquoi la randomisation ?
+
+**Randomisation** : Le fait de participer au projet ou non est défini de **façon aléatoire** (exemple = à l’aide d’une loterie).
+
+- Deux groupes sont aléatoirement choisis au sein d’une population "homogène" :
+    - Un groupe bénéficie de l’intervention (vaccin, prêt, formation, statut d’aire protégée) = **groupe de traitement**.
+    - L’autre groupe ne bénéficie pas de l’intervention = **groupe de contrôle**.
+
+- L’assignation aléatoire permet d’obtenir deux groupes probablement très similaires (dispersion des observables et inobservables statistiquement identiques)... **si les groupes sont suffisamment importants !**
+
+## Pourquoi la randomisation ?
+
+Si on tire au sort un grand nombre d'individus, la distribution dans l'échantillon est très proche de celle de la population totale :
+
+```{r}
+# Charger les librairies nécessaires
+library(ggplot2)
+options(scipen = 999)
+
+
+# Fonction pour générer les données et comparer deux groupes
+generate_comparison_plot <- function(sample_size_per_group, prob_zero = 0.1, use_facets = TRUE) {
+  # Paramètres de la distribution Weibull
+  shape_parameter <- 1  # Paramètre de forme pour la distribution Weibull
+  scale_parameter <- 1  # Paramètre d'échelle pour la distribution Weibull
+  
+  # Calcul du nombre de zéros
+  total_sample_size <- 2 * sample_size_per_group
+  num_zeros <- round(total_sample_size * prob_zero)
+  zeros <- rep(0, num_zeros)
+  
+  # Générer les données non nulles à partir de la distribution Weibull
+  non_zeros <- rweibull(total_sample_size - num_zeros, shape = shape_parameter, scale = scale_parameter)
+  
+  # Combiner les zéros et les valeurs non nulles
+  data <- c(zeros, non_zeros)
+  
+  # Créer les groupes de contrôle et de traitement
+  group <- rep(c("Groupe de contrôle", "Groupe de traitement"), each = sample_size_per_group)
+  
+  # Combiner les données dans un data frame
+  df <- data.frame(value = data, group = group)
+  
+  if (use_facets) {
+    # Si les facettes sont activées, on calcule les moyennes par groupe
+    means <- aggregate(value ~ group, data = df, mean)
+  } else {
+    # Si les facettes sont désactivées, on calcule une seule moyenne globale
+    means <- data.frame(value = mean(df$value), group = "Global")
+  }
+  
+  # Créer le graphique de base
+  plot <- ggplot(df, aes(x = value)) +
+    geom_histogram(binwidth = 0.2, fill = "gray", color = "black") +
+    geom_vline(data = means, aes(xintercept = value), color = "red", linetype = "dashed", size = 1) +
+    geom_text(data = means, aes(x = value + 0.1, y = 5, label = paste("Moyenne =", round(value, 2))), 
+              color = "red", hjust = 0, vjust = 0) +  # Fixer une position verticale pour le label
+    labs(title = paste("Comparaison des groupes avec", 2 * sample_size_per_group, "observations"),
+         x = "% de perte annuelle de couvert forestier",
+         y = "Fréquence") +
+    theme_minimal()
+  
+  # Ajouter des facettes si l'option est activée
+  if (use_facets) {
+    plot <- plot + facet_wrap(~ group, ncol = 2)
+  }
+  
+  return(plot)
+}
+
+generate_comparison_plot(50000, prob_zero = 0.1, use_facets = FALSE) +
+  ggtitle("Distribution avec 100 000 unités")
+
+```
+
+## Pourquoi la randomisation ?
+
+Si maintenant on tire au sort un échantillon beaucoup plus petit, il y a de fortes chances pour que nos distributions diffèrent fortement de celle de la population totale.
+
+```{r}
+generate_comparison_plot(10)
+```
+
+## Pourquoi la randomisation ?
+
+Plus la taille de l'échantillon grandit, plus la distribution ressemble à celle de la population totale et la moyenne ou la médiane des groupes de traitement et de contrôle se rapprochent (avec une dimension aléatoire toutefois).
+
+```{r}
+generate_comparison_plot(100)
+```
+
+## Pourquoi la randomisation ?
+
+A partir de 1000 unités, on commence à avoir une relative similitude.
+
+```{r}
+generate_comparison_plot(1000)
+```
+
+## Pourquoi la randomisation?
+
+- En s’appuyant sur le tirage aléatoire de deux sous-échantillons de la population cible, nous devrions observer une distribution similaire des caractéristiques observables et inobservables :
+  
+  $$ E(X \mid T = 1) = E(X \mid T = 0) = E(X) $$
+
+- De même, en l’absence du programme, la distribution des variables de résultats devrait être identique (absence de biais de sélection).
+
+- Ainsi, le groupe de contrôle devient un **contrefactuel pertinent**. L’hypothèse suivante devient beaucoup plus réaliste :
+
+  $$ E(Y_0 \mid T = 0) = E(Y_0 \mid T = 1) = E(Y_0) $$
+
+## Pourquoi la randomisation?
+
+- **Attention !** L’hypothèse faite sur la validité du contrefactuel n’est valable qu’en moyenne (impossible de dire que \(X_i(1) = X_i(0)\) et que \(Y_i(1) = Y_i(0)\)).
+
+- Nous pouvons uniquement essayer de mesurer l’**effet moyen** du programme qui est obtenu par :
+
+  $$ E(Y_i \mid T_i = 1) - E(Y_i \mid T_i = 0) $$
+
+## Estimation de l’effet moyen du traitement
+
+- **Différence de moyennes** : 
+  $$ E(Y_{1i} \mid T_i = 1) - E(Y_{0i} \mid T_i = 0) \longrightarrow \overline{Y}_1 - \overline{Y}_0 $$
+
+- **Régression linéaire** : 
+  $$ Y_i = \alpha + \beta T_i + \epsilon_i $$
+  avec :
+  
+  - \( \beta \) : l’effet moyen du traitement
+  - \( \alpha \) : la moyenne de \( Y_i \) pour les non-traités
+  - \( \epsilon \) : le terme d’erreur
+
+## Comment randomiser?
+
+Quel est le processus à suivre pour "randomiser" un projet/programme/intervention? Plusieurs étapes :
+
+1. **Identification des unités éligibles** au programme (individus, ménages, écoles, villages, aires géographiques) : les unités pour lesquelles nous voulons connaître l’impact du programme.
+
+2. **Sélection de l’échantillon soumis à l’évaluation** (extraction de la population d’intérêt).
+
+3. **Assignation aléatoire** du traitement (quel groupe bénéficie de l’intervention?).
+
+
+## Processus d'échantillonage aléatoire
+
+::: {.columns}
+
+::: {.column width="40%"}
+
+```{mermaid, echo=FALSE}
+
+flowchart TD
+    A["Population éligible"] ---> AB(Faisabilité)
+    AB ---> B["Échantillon étudié"]
+    B ---> C("3. Assignation aléatoire")
+    C ---> D["Groupe de traitement"]
+    C ---> E["Groupe de contrôle"]
+
+    style A fill:#d3d3d3,stroke:#000000
+    style B fill:#d3d3d3,stroke:#000000
+    style D fill:#3cb371,stroke:#000000
+    style E fill:#ff6347,stroke:#000000
+```
+
+:::
+
+::: {.column width="60%"}
+
+```{r, echo=FALSE, fig.height=10}
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(ggplot2))
+
+# Create base grid for x and y (1 to 30)
+grid_size <- 30
+base_grid <- expand.grid(x = 1:grid_size, y = 1:grid_size)
+
+# Duplicate the base grid for each stage
+dataset <- bind_rows(
+  base_grid %>% mutate(stage = "Population éligible", size = 0.1, color = "darkgrey"),
+  base_grid %>% mutate(
+    stage = "Échantillon d'étude",
+    size = ifelse(y <= 10, 0.2, 0.1),
+    color = ifelse(y <= 10, "black", "darkgrey")),
+  base_grid %>% mutate(
+    stage = "Assignation aléatoire",
+    size = ifelse(y <= 10, 0.2, 0.1),
+    color = ifelse(y <= 10, sample(c("red", "green"), n(), replace = TRUE), 
+                   "darkgrey")))
+
+# Plotting the dataset with facets for each stage
+ggplot(dataset, aes(x = x, y = y)) +
+  geom_point(aes(size = size, color = color), alpha = 0.7) +
+  scale_size_continuous(range = c(0.5, 1.5)) +
+  scale_color_identity() +  # Use the specified colors without altering them
+  facet_wrap(~ factor(stage, levels = c("Population éligible", "Échantillon d'étude", "Assignation aléatoire")), ncol = 1) +
+  theme_minimal() +
+  theme(legend.position = "none",
+    strip.text = element_text(size = 20, face = "bold"),
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid.major = element_blank(),
+     panel.grid.minor = element_blank())
+```
+
+:::
+:::
+
+## A quel niveau effectuer le tirage ?
+
+::: {.columns}
+
+::: {.column width="40%"}
+
+Dans les faits, les unités sont souvent imbriquées :
+
+- Niveau 1 : ex. région, académie...
+- Niveau 2 : ex. aire protégée, classe...
+- Niveau individuel : parcelle, élève...
+
+:::
+
+::: {.column width="60%"}
+
+```{r, echo=FALSE, fig.height=10}
+# Créer un data frame avec les combinaisons de x et y
+grid_data <- expand.grid(x = seq(0.25, 3.75, by = 0.5), y = seq(0.25, 3.75, by = 0.5))
+
+# Dupliquer la grille de données pour les trois modes de tirage
+grid_data_niveau1 <- grid_data %>%
+  mutate(
+    `Mode de tirage` = "Par niveau 1",
+    color = ifelse((ceiling(ceiling(x) / 2) + ceiling(ceiling(y) / 2)) %% 2 == 1, "green", "red")
+  )
+
+grid_data_niveau2 <- grid_data %>%
+  mutate(
+    `Mode de tirage` = "Par niveau 2",
+    color = ifelse((ceiling(x) + ceiling(y)) %% 2 == 1, "green", "red")
+  )
+
+grid_data_au_sein_niveau2 <- grid_data %>%
+  mutate(
+    `Mode de tirage` = "Au sein du niveau 2",
+    color = ifelse((x + y) %% 1 == 0.5, "green", "red")
+  )
+
+# Combiner les trois grilles en une seule
+grid_data_all <- bind_rows(grid_data_niveau1, grid_data_niveau2, grid_data_au_sein_niveau2)
+
+# Modifier l'ordre des niveaux de "Mode de tirage"
+grid_data_all$`Mode de tirage` <- factor(grid_data_all$`Mode de tirage`, 
+                                         levels = c("Par niveau 1", "Par niveau 2", "Au sein du niveau 2"))
+
+# Créer le graphique avec facettes
+ggplot(grid_data_all, aes(x = x, y = y, color = color)) +
+  geom_point(size = 3) +  # Taille des points
+  scale_color_identity() +  # Utiliser les couleurs définies directement
+  coord_cartesian(xlim = c(0, 4), ylim = c(0, 4)) +  # Limites des axes
+  facet_wrap(~ `Mode de tirage`, ncol = 1) +  # Facettes verticales, avec 1 colonne
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_line(color = ifelse(seq(0, 4) %% 2 == 0, "black", 
+                                                   "lightgrey"), 
+                                    size = ifelse(seq(0, 4) %% 2 == 0, 1, 0.5)),
+    panel.grid.minor = element_blank(),  # Pas de lignes de grille mineures
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    strip.text = element_text(size = 20, face = "bold"))
+```
+
+:::
+:::
+
+## A quel niveau faut-il effectuer le tirage?
+
+Le niveau du tirage dépend de celui de l’intervention : le niveau de randomisation ne peut être inférieur au niveau auquel est assigné le programme.
+
+La randomisation n’est pas la panacée : sa pertinence dépend du type d’intervention ⟶ **arbitrages** :
+
+- Un niveau trop agrégé de l’assignation (régions, pays, provinces) diminue la puissance statistique et augmente le risque de facteurs confondants.
+
+- Assigner une intervention à un niveau très désagrégé (individu, ménage) augmente les risques de contamination du groupe de contrôle.
+
+## Validité interne
+
+**Validité interne** : La différence observée sur les variables de résultats entre traités et non-traités est attribuable à l’intervention et à l’intervention seulement.
+
+- **Validité interne** : assignation aléatoire du traitement
+
+  - Le groupe de contrôle est similaire au groupe de traitement (en moyenne) avant l’intervention.
+
+  - Une fois l’intervention commencée, les deux groupes sont exposés au même environnement et aux mêmes évolutions temporelles.
+
+  - Groupe de contrôle : bonne représentation de ce qu’il serait arrivé aux “traités” en l’absence de traitement.
+
+  - La différence de résultats entre traités et non-traités après l’intervention est donc due à cette dernière.
+
+## Difficultés avec les ERC
+
+1. Validité externe
+
+**Validité externe** : Les résultats de l’évaluation sont généralisables à l’ensemble des unités éligibles (dans le temps, dans d’autres contextes).
+
+- La validité externe des ERC est faible. En effet, ils conduisent à l’obtention de résultats...
+  - Qui sont spécifiques à un pays, une population spécifique (celle de l’étude), à un moment donné.
+  - Qui ne peuvent être extrapolés à d’autres endroits du monde et sur d’autres populations.
+  - Qui nous permettent néanmoins de comprendre les effets d’une intervention dans un contexte spécifique.
+  
+## Difficultés avec les ERC
+
+1. Validité externe
+2. Enjeux éthiques 
+
+**Enjeux éthiques** : les gens ne sont pas des hamsters
+
+  - La sélection aléatoire conduit à refuser le traitement à un ensemble de personnes à l’instant T.
+  - Questionnable lorsque les interventions évaluées par ERC portent sur les besoins humains.
+  - Les ERC comme étalon-or de l’évaluation des politiques de développement? ⟶ Décrédibilisation des autres approches évaluatives.
+  
+## Difficultés avec les ERC
+
+1. Validité externe
+2. Enjeux éthiques 
+3. Enjeux statistiques
+
+**Enjeux statistiques** : être sûr de pouvoir détecter un effet
+
+- Les enquêtes sur un grand nombre d’individus, et la mise en place de l’attribution aléatoire de l’intervention sont coûteuses.
+- Arbitrage entre précision de l’évaluation et moyens financiers.
+- Tout ne peut pas être testé avec les ERC.
+
+## Difficultés avec les ERC
+
+1. Validité externe
+2. Enjeux éthiques 
+3. Enjeux statistiques
+4. Contamination et externalités
+
+**Contamination et externalités** : menaces sur la validité interne
+
+  - Certains non-traités peuvent en réalité bénéficier de manière indirecte de l’intervention (ex : Kremer & Miguel, 2004).
+  - L’intervention peut avoir des conséquences sur des facteurs environnementaux qui vont impacter les variables de résultats (changement de prix).
+  - Ajustement des comportements (Hawthorne effect, John Henry effect, Découragement).
+
+# Discussion et mise en pratique

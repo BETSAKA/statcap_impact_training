@@ -1,0 +1,303 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Clarification sur les unités d'analyse {#sec-mailles}
+
+## Quelles unités d'analyse
+
+On souhaite définir une stratégie empirique pour évaluer une politique publique avec des méthodes quantitatives, trois choix principaux doivent être définis : 
+
+1. Quel types d'unités allons-nous comparer ? (Quelles lignes dans mon tableau ?)
+2. Quelles variables prendre en compte ? (Quelles colonnes dans mon tableau ?)
+3. Comment constituer une comparaison crédible ? (Quelle méthode d'analyse et quelles spécifications ?)
+
+On se focalise souvent sur les questions 2. et 3, mais la question 1. est souvent considérée comme évidente. Cette question 1. suscite pourtant beaucoup de confusion quand on apprend l'économétrie. 
+
+Nous allons illuster cette question avec le cas de la conservation. Typiquement, les évaluations de l'impact des politiques de conservation prennent habituellement comme référence (comme ligne du tableau) : 
+
+- Des pays, pour voir comment la présence d'aires protégées à l'échelle nationale influence la distribution d'autres variables également à l'échelle nationale
+- Des unités administratives, comme des communes
+- Des zones géographiques d'une échelle assez fine (par exemple, 1 km2), cf. par exemple Wolf et al. [@wolf_forest_2021]
+- Des pixels à l'échelle la plus fine où ils sont disponible, généralement en effectuant un tirage alétaoire, cf. par exemple Devenish et al. [-@devenish_track_2022]
+
+Une approche courante consiste à diviser le territoires en mailles, carrées ou en forme d'alvéoles d'abeilles (hexagones), et à calculer des indicateurs pour chacune de ces mailles.
+
+## Constitution d'un maillage
+
+On montre ci-dessous comment cette approche fonctionne. La première étape consiste à dessiner un carré autour des aires protégées malgaches, puis à subdiviser ce grand carré en un damier de formes hexagonales. Enfin, on ne garde que les hexagones qui se trouvent dans les frontières terrestres de Madagascar.
+
+```{r Données satellitaires}
+library(tidyverse)
+library(tmap)
+library(sf)
+library(mapme.biodiversity)
+library(geodata)
+library(terra)
+library(future)
+library(tictoc)
+library(progressr)
+
+contour_mada <- gadm(country = "Madagascar", resolution = 1, level = 0,
+                     path = "data") %>%
+  st_as_sf() %>%
+  st_transform("EPSG:29739") # On utilise la projecton officielle pour Mada
+  
+  # Création d'un maillage du territoire émergé --------------------------------
+  
+  # On crée un cadre autour des frontières nationales
+cadre_autour_mada = st_as_sf(st_as_sfc(st_bbox(contour_mada))) %>%
+  st_make_valid()
+
+# Surface des hexagones en km2
+taille_hex <- 5
+
+# Cellules de 5km de rayon
+surface_cellule <- taille_hex * (1e+6)
+taille_cellule <- 2 * sqrt(surface_cellule / ((3 * sqrt(3) / 2))) * sqrt(3) / 2
+grille_mada <- st_make_grid(x = cadre_autour_mada,
+                            cellsize = taille_cellule,
+                            square = FALSE) 
+# On découpe la grille pour ne garder que les terres émergées
+cellules_emergees <- contour_mada %>%
+  st_intersects(grille_mada) %>%
+  unlist()
+grille_mada <- grille_mada[sort(cellules_emergees)] %>%
+  st_sf()
+```
+
+Le maillage produit est trop fin pour être visible à l'échelle du pays, mais on peut l'observer en zoomant sur une zone spécifique.
+
+```{r Carte grille mada}
+## Carte de droite : zoom sur une zone spécifique-----------------------------
+# On crée une boîte de 100km autour de Maroantsetra
+zoom_boite <- st_point(c(49.74229,-15.43487)) %>% # Coordonnées de Maroantsetra
+  st_sfc(crs = "EPSG:4326") %>% # On précise que c'est du GPS initalement
+  st_transform(crs = "EPSG:29739") %>% # On passe en projeté
+  st_buffer(dist = 50000) %>% # On crée un cercle de 50km de rayon
+  st_make_grid(n = 1) 
+
+# On filtre les alvéoles pour ne garder que celles qui sont dans le zoom
+grille_zoom <- st_intersection(grille_mada, zoom_boite)
+
+tmap_mode("view")
+# On génère la carte de droite
+tm_shape(grille_zoom) + 
+  tm_borders() +
+  tm_basemap("OpenStreetMap")
+```
+
+## Récupération des données pour le maillage
+
+On va ensuite utiliser [le package mapme.biodiversity](https://mapme-initiative.github.io/mapme.biodiversity/index.html) pour calculer, pour chaque hexagones, une série d'indicateurs : temps de parcours jusqu'à la ville (définie comme toute localité de 5000 habitants) la plus proche en 2015, teneur du sol en argile et couvert forestier par année).
+
+``` {r grille_mada}
+
+if (file.exists("data/grille_mada_mapme.rds")) {
+  grille_mada <- read_rds("data/grille_mada_mapme.rds")
+} else {
+  
+  # Traitement des données satellitaires avec {mapme.bidiversity}---------------
+  my_outdir <- "/vsis3/fbedecarrats/diffusion/mapme_impact_training/data/mapme"
+
+  # Définir le répertoire de sortie
+  mapme_options(outdir = my_outdir)
+  
+  # Acquisition des données satellitaires requises (rasters)
+  grille_mada <-  get_resources(x = grille_mada, 
+                                get_nelson_et_al(ranges = "5k_110mio"),
+                                get_gfw_treecover(),
+                                get_gfw_lossyear(),
+                                get_worldpop(),
+                                get_nasa_srtm())
+  
+  plan(sequential)
+  # Calcul des indicateurs
+  plan(cluster, workers = 8)
+  
+  tic()
+  with_progress({
+    grille_mada <- calc_indicators(x = grille_mada,
+                                   calc_slope())
+  }) # 2881.928 sec elapsed
+  toc()
+  tic()
+  with_progress({
+    grille_mada <- calc_indicators(x = grille_mada,
+                                   calc_elevation())
+  })
+  toc() # 3043.628 sec elapsed
+  tic()
+  with_progress({
+    grille_mada <- calc_indicators(x = grille_mada,
+                                   calc_traveltime())
+  })
+  toc() # 2092.765 sec elapsed
+  tic()
+  with_progress({
+    grille_mada <- calc_indicators(x = grille_mada,
+                                   calc_population_count())
+  })
+  toc() # 2411.423 sec elapsed
+  tic()
+  with_progress({
+    grille_mada <- calc_indicators(x = grille_mada,
+                                   calc_treecover_area())
+  })
+  toc() # 2851.659 sec elapsed
+  plan(sequential)
+  
+  # Sauvegarde du résultat
+  write_rds(grille_mada, "data/grille_mada_mapme.rds")
+}
+```
+
+On peut représenter sous forme de cartes et d'histogrammes les différentes valeurs des indicateurs générés à partir des données satellitaires.
+
+```{r}
+if (!file.exists("data/carte_mailles.png")) {
+  grille_mada_summary <- grille_mada %>%
+    portfolio_long() %>%
+    filter(!(variable == "treecover" & year(datetime) %in% 2001:2022)) %>%
+    mutate(datetime = year(datetime)) %>%
+    pivot_wider(names_from = c(indicator, datetime, variable, unit), values_from = value)
+
+  grille_mada_summary <- grille_mada_summary   %>%
+    mutate(couv_foret_2000 = `treecover_area_2000_treecover_ha` / 5,
+           pop_km2 = population_count_2000_population_sum_count / 5,
+           altitude = `elevation_2000_elevation_mean_m`,
+           pente = `slope_2000_slope_mean_degrees`,
+           dist_ville = `traveltime_2015_5k_110mio_traveltime_mean_minutes`,
+           taux_deforestation_2000_2023 = 
+             -((`treecover_area_2023_treecover_ha` - 
+                `treecover_area_2000_treecover_ha`)/`treecover_area_2000_treecover_ha`) * 100) 
+  
+  
+  tmap_mode("plot")
+  carte_acces <- tm_shape(grille_mada_summary) +
+    tm_fill("dist_ville",
+            title = "Distance ville (>5K hab)",
+            palette = "Oranges",
+            style = "fisher",
+            n = 8,
+            legend.hist = TRUE) +
+    tm_layout(legend.outside = TRUE,
+              legend.hist.width = 1,
+              legend.hist.height = 1)
+  
+  carte_pop <- tm_shape(grille_mada_summary) +
+    tm_fill("pop_km2",
+            title = "Population par km2",
+            palette = "YlOrBr",
+            n = 8,
+            legend.hist = TRUE) +
+    tm_layout(legend.outside = TRUE,
+              legend.hist.width = 1,
+              legend.hist.height = 1)
+  
+  carte_pente <- tm_shape(grille_mada_summary) +
+    tm_fill("pente",
+            title = c("Pente"),
+            palette = "Blues",
+            n = 8,
+            legend.hist = TRUE) +
+    tm_layout(legend.outside = TRUE,
+              legend.hist.width = 1,
+              legend.hist.height = 1)
+  
+  carte_alt <- tm_shape(grille_mada_summary) +
+    tm_fill("altitude",
+            title = "Altitude",
+            palette = "Purples",
+            n = 8,
+            legend.hist = TRUE) +
+    tm_layout(legend.outside = TRUE,
+              legend.hist.width = 1,
+              legend.hist.height = 1)
+  
+  carte_cover <- graph_alt <- tm_shape(grille_mada_summary) +
+    tm_fill("couv_foret_2000",
+            title = "Couvert arboré en 2000",
+            palette = "Greens",
+            n = 8,
+            legend.hist = TRUE) +
+    tm_layout(legend.outside = TRUE,
+              legend.hist.width = 1,
+              legend.hist.height = 1)
+  
+  carte_loss <- graph_alt <- tm_shape(grille_mada_summary) +
+    tm_fill("taux_deforestation_2000_2023",
+            title = "Perte couvert (2000-2023)",
+            palette = "Reds",
+            n = 8,
+            legend.hist = TRUE) +
+    tm_layout(legend.outside = TRUE,
+              legend.hist.width = 1,
+              legend.hist.height = 1)
+  
+  carte_mailles <- tmap_arrange(carte_acces, carte_pop, 
+                                carte_alt, carte_pente, 
+                                carte_cover, carte_loss,
+                                ncol = 2, nrow = 3)
+  
+  tmap_save(carte_mailles, "data/carte_mailles.png")
+}
+```
+![](data/carte_mailles.png)
+Les cartes et histogrammes ci-dessus illustrent la distribution des variables spatiales calculées par hexagones. 
+
+## Croisement des données d'aires protégées et satellitaires
+
+On peut maintenant associer les données d'aires protégées aux hexagones afin de les croiser avec les indicateurs issus des données satellitaires déjà calculés pour ces hexagones.
+
+```{r}
+if (file.exists("data/grille_mada_summary_AP.rds")) {
+  grille_mada_AP <- read_rds("data/grille_mada_summary_AP.rds")
+} else {
+  # Load the protected areas data
+  AP_Vahatra <- st_read("data/AP_Vahatra.geojson", quiet = TRUE)
+  
+  # Prépare les attributs liés aux données d'AP
+  AP_info <- AP_Vahatra %>%
+    st_drop_geometry() %>%
+    select(nom, an_creation, cat_iucn, gestionnaire = gest_2)
+  
+  # Une fonction qui extrait le premier élément ou retourne NA
+  get_first_or_na <- function(indices, names_vector) {
+    if (length(indices) == 0) {
+      return(NA_character_)
+    }
+    names_vector[indices[1]]
+  }
+  
+  # On assigne le statut d'AP aux hexagones
+  grille_mada_summary_AP <- grille_mada_summary %>%
+    mutate(
+      AP_touche = map_chr(st_intersects(., AP_Vahatra), get_first_or_na, AP_info$nom),
+      AP_inclus = map_chr(st_within(., AP_Vahatra), get_first_or_na, AP_info$nom),
+      position_ap = case_when(
+        is.na(AP_touche) ~ "Extérieur",
+        !is.na(AP_inclus) ~ "Intérieur",
+        TRUE ~ "Frontière"),
+      ref_AP = if_else(position_ap == "Intérieur", AP_inclus, AP_touche)) %>%
+    left_join(AP_info, by = c("ref_AP" = "nom")) %>%
+    st_sf()
+  
+  # On sauve le résultat pour s'en servir plus tard (matching)
+  write_rds(grille_mada_summary_AP, "data/grille_mada_summary_AP.rds")
+}
+
+tmap_mode("plot")
+# Plot the classified map
+tm_shape(grille_mada_AP) +
+  tm_fill("position_ap", title = "par rapport aux aires protégées") +
+  tm_layout(
+    main.title = "Localisation des hexagones",
+    main.title.position = c("center", "top"),
+    main.title.size = 1,
+    legend.position = c("left", "top"),
+    legend.outside = FALSE)
+```
+

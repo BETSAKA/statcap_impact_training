@@ -1,0 +1,121 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Double différence
+
+## Méthode des doubles différences
+
+```{=html}
+<iframe src="slides/fr/TVM_Double_difference.pdf" width="100%" height="400px"></iframe>
+```
+
+[Cliquer ici pour télécharger la présentation](slides/fr/TVM_Double_difference.pdf).
+
+Pour cette analyse, nous allons appliquer la méthode des doubles différences pour estimer l'impact des aires protégées sur la déforestation à Madagascar entre 2000 et 2021. Cette méthode est particulièrement utile lorsque l'intervention (la création des aires protégées) a lieu à des dates différentes pour chaque unité d'observation, ce que l'on appelle un échelonnement (staggered diff-in-diff). La méthode proposée par Callaway et Sant'Anna [-@callaway2021] permet de gérer cette situation en utilisant une approche qui tient compte de ces dates de mise en œuvre différentes. Le package {did} [@did] en R permet d'appliquer cette méthode facilement.
+
+## Application aux mailles de territoire
+
+Dans cette section, nous appliquons la méthode des doubles différences aux mailles de territoire pour évaluer l'effet des aires protégées sur la réduction de la déforestation. Nous allons d'abord préparer les données afin de les rendre conformes aux exigences de la fonction `att_gt()` du package {did}.
+
+Nous travaillons avec un jeu de données spatial qui représente des mailles de 1 km² chacune, et nous avons des informations sur la couverture forestière pour chaque année. Le traitement consiste à identifier les mailles qui sont "intérieures" aux aires protégées (traitées) par rapport aux autres (non traitées).
+
+```{r}
+library(did) # Pour des doubles-différences échelonnées
+library(tidyverse) # Pur faciliter la manipulation de données
+library(lubridate) # Pour modifier les dates
+library(gt) # Pour de jolis tableaux
+library(mapme.biodiversity) # Pour réutiliser des fonctions portfolio_long
+library(sf) # Pour des opérations spatiales sur vecteurs
+
+# On charge les données par mailles créées précédemment
+grille_matched <- read_rds("data/grille_matched.rds")
+# Dans la version ci-dessus, on n'a gardé que les données de déforestation
+# par année. On va récupérer dans la version précédente, le calcul qu'on avait pour toutes les années
+grille_mada_mapme <- read_rds("data/grille_mada_mapme.rds")
+# On isole l'identifiant de la cellule et les indicateurs de perte de couvert forestier
+treecover_data <- grille_mada_mapme %>%
+  st_drop_geometry() %>%
+  select(assetid, treecover_area)
+# On incorpore les données détaillées de couvert forestier dans les données matchées
+grille_matched <- grille_matched %>%
+  left_join(treecover_data, by = "assetid")
+```
+
+Ici, nous avons associé les données sur la perte de couverture forestière à chaque maille correspondant aux aires protégées et aux zones non protégées.
+
+Ensuite, nous transformons les données en format long pour pouvoir suivre l'évolution de la couverture forestière au fil du temps. Cela permet de calculer le taux de déforestation annuel comme un pourcentage du couvert forestier initial pour chaque maille.
+
+```{r}
+# On va utiliser matchit pour "déplier" en mode long l'évolution du couvert forestier
+# On indique qu'il s'agit d'un objet de type mapme.biodiversity pour pouvoir 
+# utiliser la fonction portfolio_long
+class(grille_matched) <- class(grille_mada_mapme) 
+# On passe maintenant en format long
+grille_matched <- grille_matched %>%
+  portfolio_long() %>%
+  rename(treecover = value) %>%
+  mutate(years = year(datetime)) %>%
+  arrange(assetid, years) %>% # On remet bien dans l'ordre pour que les années se suivent
+  # On calcule le taux de déforestation en %
+  mutate(tx_defor = ifelse(assetid!= lag(assetid), NA, 
+                           -((treecover - lag(treecover)) / 
+                               lag(treecover))*100))
+```
+
+
+
+> **Exercice** : 
+- pour explorer le jeu de données grilles_matched, groupez les données par statut de traitement `traitement` et année de création `an_creation`. Que remarquez-vous ?
+
+### Estimation des effets moyens du traitement
+
+Nous utilisons la fonction att_gt() pour estimer l'effet moyen du traitement (ATT) sur le taux de déforestation au fil du temps. Les poids provenant du processus de matching sont utilisés pour ajuster les estimations.
+
+La fonction `ggdid()` permet de visualiser les résultats obtenus. Les graphiques suivants montrent l'évolution de l'ATT au fil du temps, ce qui nous permet d'observer l'impact des aires protégées sur la déforestation. **Attention** : il s'agit ici d'une première estimation à des fins didactiques, sans variables de contrôle.
+
+```{r}
+#| fig-height: 20
+# Les mailles en dehors des aires protégées sont considérées comme jamais traitées
+grille_matched <- grille_matched %>%
+  mutate(time_treated = ifelse(position_ap == "Intérieur", an_creation, 0))
+
+# Calculer le DID en utilisant la fonction `att_gt`
+did_result <- att_gt(yname = "tx_defor", # variable de résultat
+                     tname = "years", # Variable de temps
+                     idname = "assetid", # ID des unités
+                     gname = "time_treated", # Temps de traitement 
+                     weightsname = "weights", # Poids issus du matching
+                     data = grille_matched,
+                     panel = TRUE) # panel veut dire qu'on suit les mêmes unités
+
+# Plot the results to visualize the ATT over time
+ggdid(did_result) +
+  theme(axis.text.x =  element_text(angle = 45, hjust = 1))
+```
+
+> **Exercice** : Analysez et commentez ce résultat.
+
+### Agrégation des résultats
+
+Nous pouvons également agréger les résultats pour obtenir une estimation globale des effets moyens du traitement par "cohorte" d'année de création des aires protégées.
+
+```{r}
+# Aggregate the ATT results
+agg_att_mailles <- aggte(did_result, type = "group")
+
+# Display the aggregated results
+summary(agg_att_mailles)
+
+# Visualisation du résultat
+ggdid(agg_att_mailles)
+```
+
+> **Exercice** : Analysez et commentez ce résultat
+
+L'analyse précédente ne tient pas compte de certains facteurs dont on a vu qu'ils pouvaient influencer à la fois la sélection, mais aussi la déforestation, en particulier l'altitude, la pente, le temps de parcours à la ville la plus proche, ou encore la densité de population. 
+
+> **Exercice** reprenez la fonction att_gt() ci-dessus et consultez la documentation pour voir comment ajouter des covariables. Ajoutez les covariables qui vous semblent pertinente et calculez puis interprétez les résultats.
+

@@ -1,0 +1,24 @@
+# Preface {.unnumbered}
+
+## Démarche
+
+Ce contenu est un support de formation conçu pour initier à l'économétrie spatiale chercheurs, doctorants et étudiants s'orientant vers une thèse. Le cas d’étude choisi pour servir de fil rouge à ces travaux est l’impact des aires protégées sur la déforestation, mais les méthodes décrites sont appropriées pour évaluer de nombreux types d'intervention ayant une dimension spatiale, que ce soit en matière d'environnement, d'agriculture, de gestion des risques ou de développement urbain. Le document a été élaboré avec les priorités suivantes :
+
+-   Compréhension des enjeux théoriques et méthodologiques soulevés par les évaluations d'impact ;
+-   Identification des spécificités et opportunités liées à l'évaluation d'interventions spatialisées ;
+-   Obtention de données spatiale permettant de démontrer et de quantifier l'impact ;
+-   Compréhension des différentes approches pour constituer un contrefactuel : randomisation, appariement, comparaison avant-après, différence de différences ;
+-   Familiarisation avec l'outil de traitement statistique R;
+-   Développement d'un regard critique sur la pertinence et la fiabilité des données mobilisées.
+
+## Tany Vao et BETSAKA
+
+Ce contenu a été initialement développé afin de servir de support pédagogique pour l’atelier “évaluation des politiques” de la session 2022 des Universités en sciences sociales Tany Vao. Les universités Tany Vao visent à dispenser une formation à la recherche de haut niveau à l’attention de doctorants et jeunes chercheurs de Madagascar et d’Afrique de l’Ouest. Cet atelier a été réitéré à l'Université d'Antananarivo en 2023 et 2024 dans le cadre du projet BETSAKA. Le projet BETSAKA vise à évaluer l'impact environnemental et socioéconomique des politiques de conservation à Madagascar, en priorisant le renforcement des capacités locales de rercherche et le dialogue chercheurs-décideurs-opérationnels.
+
+## Contributions
+
+Cet ouvrage a bénéficié de nombreuses contributions :
+
+- Pour la première édition : Marc Bouvier, Kenneth Houngbedji, Jeanne de Montalembert et Marin Ferry ;
+- Pour la seconde édition : Lenaïg Moign et Clément Sambandahy ;
+- Pour la troisième édition : Ingrid Dallmann et Melvin Wong.

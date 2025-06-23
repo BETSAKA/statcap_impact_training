@@ -1,0 +1,201 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+execute:
+  timeout: 1000 
+---
+
+# L'outil mapme.biodiversity
+
+## Démarche
+
+Le package [*mapme.biodiversity*](https://mapme-initiative.github.io/mapme.biodiversity/index.html) facilite l'analyse statistique de la biodiversité ou d'autres politiques et projets spatialisés. Il propose divers indicateurs pour évaluer la préservation de l'environnement et les activités humaines. Le package est conçu pour permettre des extensions futures grâce à des ressources et des indicateurs personnalisés.
+
+![](figs/logo_mapme.png){fig-align="left" width="30%"}
+
+Le package fournit une interface unifiée pour télécharger et analyser différents jeux de données spatiales, gérant la complexité liée aux divers formats. Il simplifie l'accès aux données en interagissant avec plusieurs backends utilisés par les organisations qui distribuent ces données. Les utilisateurs peuvent contrôler l'analyse en sélectionnant les indicateurs à calculer, permettant ainsi un ajustement précis des processus.
+
+Pour commencer, les utilisateurs saisissent un objet sf contenant uniquement des géométries de type polygone. Le package télécharge ensuite les données raster et vecteur spatiales et temporelles nécessaires correspondant à l'étendue du portefeuille. Les résultats sont ajoutés sous forme de colonnes de listes imbriquées dans l'objet portefeuille, permettant une utilisation aisée d'une large gamme d'indicateurs dans R.
+
+Le processus d'utilisation est le suivant :
+
+```{r diagram_mapme}
+library(DiagrammeR) # Package R pour produire des diagrammes Mermaid
+
+#| fig-cap: "Processus de traitement avec mapme.biodiversity"
+
+mermaid("
+graph TB
+    AA(Définition des polygones d'analyse)
+    A(Définition des options)
+    B(Acquisition des ressources)
+    C(Calcul des indicateurs)
+    D(Analyse statistique avec R)
+    E(Export vers QGIS ou autre)
+    AA-->A
+    A-->B
+    B-->C
+    C-->D
+    C-->E
+")
+```
+
+## Tutoriel pratique avec mapme.biodiversity
+
+Nous allons maintenant découvrir comment utiliser le package *mapme.biodiversity* de manière pratique. Pour cela, nous allons travailler avec le jeu de données `data/AP_Vahatra.geojson`, qui contient des informations sur les aires protégées à Madagascar.
+
+### Charger les données d'aires protégées
+
+Nous allons commencer par charger notre jeu de données d'aires protégées, qui est stocké au format GeoJSON.
+
+```{r load_data}
+library(mapme.biodiversity)
+library(sf)
+library(tidyverse)
+library(tmap)
+library(progressr) # Pour avoir des bares de progression
+library(tictoc) # Pour minuter des temps d'exécution
+library(future) # Pour permettre du calcul parallèle
+
+# Charger le jeu de données AP_Vahatra
+AP_Vahatra <- st_read("data/AP_Vahatra.geojson", quiet = TRUE)
+```
+
+### Définir les options standard avec `mapme_options`
+
+Avant d'acquérir les ressources, nous devons définir certaines options pour le package, comme le répertoire de sortie.
+
+```{r set_options}
+# Définir le répertoire de sortie
+mapme_options(outdir = "data/mapme")
+```
+
+### Exploration des indicateurs et des ressources disponibles
+
+Avant de se lancer dans l'acquisition des ressources, il est important de comprendre ce que le package peut faire. Utilisons les fonctions `available_indicators()` et `available_resources()` pour explorer les indicateurs et ressources disponibles.
+
+```{r explore_resources}
+# Explorer les indicateurs disponibles
+available_indicators()
+
+# Explorer les ressources disponibles
+available_resources()
+```
+
+Ces fonctions permettent de voir la liste des indicateurs et ressources que le package propose. Vous pouvez également consulter l'aide en ligne pour chaque indicateur ou ressource afin de mieux comprendre leur utilité.
+
+> **Exercice :** Quelles ressources sont disponibles pour calculer la pente, l'altitude, la distance aux villes, le couvert forestier annuel et la densité de population ? Consultez régulièrement cette liste, car elle peut évoluer au fil des mises à jour du package.
+
+### Acquisition des ressources nécessaires
+
+Nous allons maintenant acquérir les ressources spatiales nécessaires pour nos analyses. Le package *mapme.biodiversity* propose un large éventail de ressources, notamment des données d'altitude, de couvert forestier, et de temps de déplacement jusqu'à une ville.
+
+```{r acquire_resources, eval=FALSE}
+# Acquérir les ressources pour l'élévation
+AP_Vahatra <- get_resources(
+  x = AP_Vahatra,
+  get_nasa_srtm()
+)
+
+# Calculer l'indicateur d'élévation
+
+tic() # On lance un minuteur
+with_progress({
+  AP_Vahatra <- AP_Vahatra %>%
+    calc_indicators(calc_elevation())
+})
+toc() # On relève le minuteur, 123 secondes sur mon test
+```
+
+### Parallélisation avec {future}
+
+Le package *mapme.biodiversity* suit le paradigme de calcul parallèle du package {future}. Cela signifie que vous, en tant qu'utilisateur, pouvez décider de configurer le calcul en parallèle ou non. Depuis la version 0.9 de {mapme.biodiversity}, un pré-découpage est appliqué à tous les actifs du portefeuille, ce qui permet de diviser les actifs en composantes de taille approximativement égale. Ces composantes peuvent ensuite être itérées en parallèle afin d'accélérer le traitement. Les valeurs des indicateurs seront ensuite agrégées automatiquement.
+
+Voici un exemple d'utilisation de la parallélisation avec le plan cluster, qui permet de répartir les calculs sur plusieurs cœurs de votre machine :
+
+```{r parallel_processing, eval=FALSE}
+plan(cluster, workers = 6)
+
+# tic() # On lance un minuteur
+with_progress({
+  AP_Vahatra <- AP_Vahatra %>%
+    calc_indicators(calc_elevation())
+})
+
+plan(sequential) # On libère les processus parallèles réservés
+# toc() # On relève le minuteur, 69 secondes sur mon test
+```
+
+### Acquisition des autres ressources
+
+```{r acquire_other_resources, eval=FALSE}
+# Acquérir les ressources pour la pente, le couvert forestier et le temps de déplacement
+with_progress({
+  AP_Vahatra <- AP_Vahatra %>%
+    get_resources(get_gfw_treecover(),
+                  get_gfw_lossyear(),
+                  get_nelson_et_al(ranges = "5k_110mio")
+  )
+})
+```
+
+### Calcul des indicateurs
+
+Après l'acquisition des ressources, nous allons calculer les indicateurs pour chaque polygone de notre portefeuille. Les indicateurs permettent de synthétiser les informations spatiales pour chaque entité géographique (aire protégée) de notre jeu de données.
+
+```{r calculate_indicators, eval=FALSE}
+plan(cluster, workers = 6)
+# tic()
+with_progress({
+  AP_Vahatra <- AP_Vahatra %>%
+    calc_indicators(
+      calc_slope(),
+      calc_treecover_area(years = 2000:2023, min_size = 1, min_cover = 30),
+      calc_traveltime()
+    )
+})
+plan(sequential)
+# toc() # 331 secondes
+```
+```{r echo=FALSE, eval=FALSE}
+write_rds(AP_Vahatra, "data/AP_Vahatra_mapme.rds")
+```
+
+```{r echo=FALSE}
+AP_Vahatra <- read_rds("data/AP_Vahatra_mapme.rds")
+```
+
+### Visualisation des résultats
+
+Pour visualiser les résultats, nous allons utiliser le package *tmap*. Cela nous permettra de cartographier certaines des valeurs d'indicateurs calculées, telles que l'élévation moyenne ou la couverture forestière des aires protégées.
+
+```{r visualize_results}
+# Visualiser les aires protégées colorées par l'élévation moyenne
+tmap_mode("view")
+AP_Vahatra %>%
+  portfolio_long() %>%
+  filter(variable == "elevation_mean") %>%
+  tm_shape() +
+  tm_polygons(col = "value", title = "Altitude Moyenne (m)")
+```
+
+Nous avons maintenant une carte interactive qui nous permet de voir les différences d'élévation entre les différentes aires protégées de notre portefeuille.
+
+### Transformation des résultats en format long ou large
+
+Les résultats des indicateurs calculés par *mapme.biodiversity* sont stockés dans des colonnes de listes imbriquées. Pour faciliter l'exportation vers d'autres logiciels ou pour certaines analyses spécifiques, il peut être utile de transformer ces résultats en format long ou large.
+
+- Le format **long** est utile pour des analyses dans R, en particulier lorsqu'on utilise des outils comme *ggplot2* qui requièrent une observation par ligne.
+- Le format **large** est plus intuitif pour une visualisation dans des tableurs comme Excel ou pour un export vers des SIG comme QGIS.
+
+Pour transformer les résultats en format long :
+
+```{r transform_long, eval=FALSE}
+portfolio_long(AP_Vahatra)
+```
+
+### Exercice
+- Consulter la documentation pour identifier la source et l'indicateur correspondant à la population vivant dans la zone
+- Obtenez la donnée de population et calculez l'indicateur de population
+- Représentez la sur une carte

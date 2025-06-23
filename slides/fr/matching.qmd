@@ -1,0 +1,464 @@
+---
+title: "Méthodes d'appariement"
+subtitle: "Atelier Mapme : Evaluation d'impact sur données spatiales"
+author: "Melvin Wong, Florent Bédécarrats (sur une base élaborée par Jeanne de Montalembert et Marin Ferry"
+date: "Octobre 2024"
+format: 
+  clean-revealjs:
+    slide-number: true
+    self-contained: true
+class: small-text
+editor_options: 
+  chunk_output_type: console
+---
+
+## Principe des méthodes d'appariement 
+
+Est-ce que le statut d'Aire Protégée a un impact sur le couvert forestier ?
+
+C'est à dire :
+
+$$E[CF1|AP = 1] - E[CF1|AP = 0]$$
+
+avec $CF1$ le couvert forestier d'une zone si c'est une AP et $CF0$ le couvert forestier s’il n’y a pas d’AP, **pour la même zone et au même moment**.
+
+. . .
+
+Quel est le problème ?
+
+. . .
+
+Le problème évident est qu'on n’observe pas simultanément les deux états : **quel contrefactuel ?**
+
+. . .
+
+-   Comparer des zones différentes ?
+
+## Principe des méthodes d'appariement 
+
+:::: {.columns}
+
+::: {.column}
+
+ Exemple sur une aire protégée :
+
+| Zone       | Couvert forestier |
+|------------|-------------------|
+| **Makira** | $$CF_M = M + AP$$ |
+| **Autre**  | $$CF_A = A$$      |
+*Note :* $M$ représente l'effet fixe Makira et $A$ l'effet fixe de l'Autre.
+
+:::
+
+::: {.column}
+
+Effet causal :
+
+$$CF_M - CF_A = M + \underbrace{AP}_{effet} - A$$
+
+$$ \Rightarrow M - A $$
+
+$M - A$ correspond aux différences de couvert forestier sans AP
+
+$\Rightarrow$ [biais]{style="color:red;"}
+
+:::
+
+::::
+
+
+
+
+## Principe des méthodes d'appariement {}
+
+Le principe de la méthode d’appariement est de minimiser la différence entre $M$ et $A$, c’est-à-dire de trouver un espace qui ressemble le plus possible à l’espace qui est protégé, son jumeau.
+
+On va chercher le "jumeau" grâce à des caractéristiques que l’on peut mesurer, c’est-à-dire des **caractéristiques observables** $X$, et on va comparer les résultats entre ces espaces qui se ressemblent !
+
+## Hypothèses centrales 
+
+**Hypothèses sous-jacentes :**
+
+- L'assignation à un programme est aléatoire lorsque les deux unités ont les mêmes caractéristiques observables  
+  $\Rightarrow$ [Indépendance conditionnelle (aux caractéristiques observables)]{style="color:red;"}
+
+$$ (Y 1 ,Y 0 ) ⊥ T|X $$
+
+- Il doit y avoir suffisamment d'unités traitées qui ressemblent à des unités contrôles  
+  $\Rightarrow$ [Support commun]{style="color:red;"}
+
+## Hypothèse d'indépendance conditionnelle 
+
+**L’hypothèse d’indépendance conditionnelle :**
+
+- L'assignation dans un programme de conservation d’un espace ayant les mêmes caractéristiques $X$ est indépendante des résultats potentiels avec et sans le traitement.
+
+$\Rightarrow$ Conditionnellement aux caractéristiques observables $X$, les résultats moyens des unités qui ne bénéficient pas du programme peuvent servir de [contrefactuel]{style="color:red;"} des résultats moyens des unités qui bénéficient du programme en l’absence de ce dernier.
+
+$\Rightarrow$ L'indépendance conditionnelle permet de ne plus avoir de [problème de sélection]{style="color:red;"} i.e d'obtenir des [estimateurs sans biais]{style="color:red;"} de l'effet du traitement (conditionnel aux observables).
+
+## Hypothèse d'indépendance conditionnelle 
+
+Assouplissement de l'hypothèse d'indépendance conditionnelle lorsque l'on s'intéresse à l'effet du traitement sur les unités traitées (ATT) :
+
+- **Hypothèse d'indépendance conditionnelle** est moins forte, i.e.
+
+$$
+Y(0) \perp T \mid X
+$$
+
+$\Rightarrow$ Conditionnellement aux caractéristiques observables $X$, le résultat des unités non-traitées ($T = 0$) représente un [contrefactuel non biaisé]{style="color:red;"} du résultat potentiel moyen des unités pour lesquelles $T = 1$ en l’absence de traitement $T$.
+
+## Hypothèse d'indépendance conditionnelle 
+
+Implication de l’hypothèse d’indépendance conditionnelle (CIA)
+
+$\Rightarrow$ En dehors des observables ($X$), il n'existe pas d'autres caractéristiques qui influencent à la fois les résultats potentiels ($Y$) et l’adoption du programme ($T$).
+
+Risque important que l’hypothèse ne soit pas respectée.
+
+. . . 
+
+$\Rightarrow$ Pour pouvoir comparer une unité traitée avec une unité non traitée identique, il faut qu'une [unité non traitée identique existe]{style="color:blue;"} !
+
+. . . 
+
+
+
+$\Rightarrow$ Si, pour certaines caractéristiques $X$, les unités sont assurées d’être traitées alors il ne sera [pas possible]{style="color:red;"} de trouver des unités non traitées comparables !
+
+## Hypothèse d'existence d'un support commun 
+
+**L’hypothèse d’existence d’un support commun ("overlap")**
+
+- Avoir des unités traitées et non traitées [qui se ressemblent]{style="color:blue;"} donc avoir un [chevauchement suffisant]{style="color:red;"} entre les unités traitées et les unités non traitées pour trouver des appariements.
+
+$\Rightarrow$ Pour chaque valeur de $X$, on suppose qu’il existe des unités qui ont le traitement et d’autres qui n’y ne l'ont pas.
+
+## Le principe
+
+**Méthodes d’appariement**
+
+our évaluer l’effet moyen sur les traités (ATE), cela revient à [comparer]{style="color:blue;"} le résultat $Y1$ de chaque unité traitée avec le résultat $Y0$ de l’unité non traitée ayant exactement les mêmes caractéristiques observables.
+
+Cela revient en symétrie à exclure de l'analyse les unités qui ne sont pas comparables.
+
+## Le principe 
+
+**Méthodes d’appariement**
+
+- L'idée est de comparer les résultats ($Y1$) de chaque unité avec les résultats ($Y0$) de son "jumeau".
+
+$\Rightarrow$ Pour évaluer l’effet moyen sur les traités (ATE), cela revient à [comparer]{style="color:blue;"} le résultat $Y1$ de chaque unité traitée avec le résultat $Y0$ de l’unité non traitée ayant exactement les mêmes caractéristiques observables.
+
+
+## Le principe
+
+Plusieurs variantes dans la manière de construire le contrefactuel de chaque unité et donc la manière de trouver un [jumeau]{style="color:blue;"} varient en fonction de la technique utilisée :
+
+- Voisin le plus proche
+- Voisins les plus proches
+- Score de propension...
+
+::: {.notes}
+Vérifier la typologie des approches : nearest neighbor basé sur PSM
+:::
+
+## Voisin le plus proche 
+
+**Voisin le plus proche**
+
+- La méthode la plus simple est de comparer chaque unité avec son "jumeau", i.e. des unités qui ont les [caractéristiques observables $X$]{style="color:red;"} les plus proches.
+
+. . .
+
+- Il est rare de trouver des unités non traitées avec des caractéristiques identiques à celles des unités traitées.  
+  $\Rightarrow$ On choisit donc son [plus proche voisin]{style="color:red;"}
+
+. . .
+
+- Cette notion demande de définir une [métrique de la distance]{style="color:red;"} ou de la [ressemblance entre les unités]{style="color:blue;"}
+
+## Les métriques 
+
+Il y a plusieurs manières de calculer la distance entre deux unités :
+
+- **[Distance euclidienne]{style="color:blue;"}** : la distance entre deux unités est la somme des distances de toutes les covariables i.e les caractéristiques observables $X$.
+
+. . .
+
+- **[Distance de Mahalanobis]{style="color:blue;"}** : accorde un poids différent aux caractéristiques observables $X$.
+
+- **[Score de propension]{style="color:blue;"}** : une seule mesure de proabilité de traitement (expliqué plus loin)
+
+## Variantes du plus proche voisin 
+
+**Les plus proches voisins**
+
+- **[Plus proches voisins]{style="color:blue;"}** :
+  - On apparie avec un nombre fixe $m$ de plus proches voisins et le résultat potentiel contrefactuel est donc la moyenne des résultats de ces $m$ voisins.
+  - On exclut les couples trop éloignés i.e. on n’utilise pas les unités traitées pour lesquels on ne peut pas trouver un (ou $m$) jumeau.x à moins d’une certaine distance $d$ à fixer.
+
+## Mécanique de l'appariement 
+
+L’appariement peut être fait :
+
+- **[Sans remise]{style="color:blue;"}** : une unité du groupe de contrôle ne peut être appariée qu’une fois avec une unité du groupe de traitement.
+
+- **[Avec remise]{style="color:blue;"}** : on utilise l’ensemble de l’échantillon à chaque fois ce qui autorise des appariements avec la même unité.
+
+. . . 
+
+**Inconvénients du matching sans remise ?**
+
+. . . 
+
+- Nécessite un large échantillon de contrôle
+- L’estimation pourra être sensible à l’ordre dans lequel l’appariement est effectué
+
+## Limites du plus proche voisin 
+
+L’appariement est assez simple à mettre en œuvre, son principe est intuitif et ne demande pas de choix de paramètres.
+
+Toutefois, on ne contrôle pas la [qualité]{style="color:red;"} de l’appariement, la notion du plus proche voisin est par nature relative.
+
+- Certains plus proches voisins pourront être en fait éloignés. Or la méthode du plus proche voisin traite de la même manière des couples proches et moins proches.
+
+Apparier avec un seul individu prive de l’information apportée par tous les autres ce qui [réduit a priori]{style="color:red;"} la précision de l’estimation.
+
+- Certains bénéficiaires peuvent avoir plusieurs jumeaux proches : on peut considérer qu’il est dommage de n’en choisir qu'un.
+
+## Choix de la taille de la fenêtre 
+
+La fenêtre $d$ mesure la taille du voisinage en dehors duquel les poids sont très faibles.
+
+Plus la fenêtre $d$ est petite, plus l’estimation du contrefactuel d’une unité traitée ne prendra en compte que les unités non traitées dont les caractéristiques observables sont très proches des siennes.
+
+Il n’existe pas vraiment de règle établie pour le choix de cette fenêtre.
+
+En pratique, le choix de la fenêtre est fait de manière _ad-hoc_.
+
+## Précision vs biais 
+
+Chaque méthode a des avantages et des inconvénients.
+
+L’opposition entre la plus simple (voisin le plus proche) et la plus élaborée (noyau) reflète le dilemme classique entre biais et variance :
+
+- Ne pas utiliser l’ensemble de l’information disponible réduit la précision.
+- Les estimations par fonction à noyau sont toujours plus précises, même sur de petits échantillons (Frolich, 2004), mais on peut craindre qu’elles augmentent aussi les risques de mauvais appariements et donc les biais.
+
+En pratique, on recommande de tester la sensibilité des résultats à la méthode utilisée.
+
+## Combien de variables de contrôle ? 
+
+Le matching exact est souvent compliqué à mettre en œuvre.
+
+Pour que l’hypothèse CIA soit vérifiée, on souhaite utiliser le maximum d’information et donc apparier sur de très nombreuses variables. Mais plus on intègre des variables, plus il s’avérera difficile de trouver un voisin proche.
+
+À distance finie, les estimateurs sont d’autant plus biaisés que le nombre de variables de conditionnement $X$ est élevé (d’autant plus lorsque les variables de conditionnement sont continues).
+
+$\Rightarrow$ L’appariement sur le score de propension (PSM) est pragmatique et désirable.
+
+## Appariement sur le score de propension 
+
+Si l’hypothèse CIA est vérifiée, alors les résultats potentiels sont indépendants de l’adhésion au traitement conditionnellement au score de propension (Rosenbaum et Rubin, 1983).
+
+Soit le score de propension $\pi(X_i) \equiv P(T_i = 1 \mid X_i)$ et $0 < \pi(X_i) < 1$, i.e. la probabilité d’être traité conditionnellement aux observables, on a :
+
+$$
+(Y(0), Y(1)) \perp T \mid X \Rightarrow (Y(0), Y(1)) \perp T \mid \pi(X_i)
+$$
+
+Cette propriété diminue le nombre de dimensions des comparaisons, puisque l’on ramène le nombre de variables de conditionnement à une seule : résumé univarié de l’ensemble des covariables.
+
+## Estimation du score de propension 
+
+Pour tenir compte de la nature bornée du PSM, il est d’usage de le modéliser par une forme logistique (ou un probit) :
+
+Même s’il est coutume d’estimer le PSM par un modèle logit ou probit, il convient de se rappeler que la forme fonctionnelle du PSM est souvent inconnue.
+
+## Restriction au support commun 
+
+Les méthodes présentées sous l’hypothèse d’indépendance conditionnelle reposent sur l’hypothèse d’un support commun.
+
+Celle-ci signifie qu’il existe à la fois des unités traitées et des non traitées ayant des valeurs des observables identiques, i.e. qui partagent le même PSM.
+
+Si ce n’est pas le cas, il sera impossible de trouver pour chaque unité traitée des non traitées comparables.
+
+$\Rightarrow$ Il est important de vérifier que le [support commun]{style="color:blue;"} i.e. la zone sur laquelle il existe des unités traitées et non traitées qui partagent le même score de propension, est suffisamment large.
+
+## Test visuel du support commun 
+
+On peut représenter le support commun à partir de la distribution des scores de propension des unités traitées et non-traitées.
+
+En pratique, on représente les histogrammes de probabilité estimée d’être traité pour les unités bénéficiaires et des non bénéficiaires du traitement étudié.
+
+On peut ensuite vérifier l’étendue des valeurs de $\pi(X_i)$ pour lesquelles on observe un nombre suffisant d’unités traitées et non-traitées, i.e. la largeur du support commun.
+
+## Test visuel du support commun
+
+```{r}
+#| label: fig-exemple
+#| fig-cap: "Exemple de support commun"
+
+# Load necessary libraries
+library(ggplot2)
+
+# Simulate propensity scores for the two groups with more overlap
+set.seed(123)
+n <- 1000
+propensity_nonenrolled <- rbeta(n, 2, 4)  # Adjusted parameters for more overlap
+propensity_enrolled <- rbeta(n, 4, 2)     # Adjusted parameters for more overlap
+
+# Create a data frame combining both groups
+data <- data.frame(
+  propensity_score = c(propensity_nonenrolled, propensity_enrolled),
+  group = factor(c(rep("Non traités", n), rep("Traités", n)))
+)
+
+# Define common support area based on visual inspection of densities
+common_support_min <- min(propensity_enrolled[propensity_enrolled > 0])
+common_support_max <- max(propensity_nonenrolled[propensity_nonenrolled > 0])
+
+# Plot the density curves for both groups
+ggplot(data, aes(x = propensity_score, fill = group, color = group)) +
+  geom_density(alpha = 0.5) +  # Create density plots with transparency
+  # Shaded common support area
+  annotate("rect", xmin = common_support_min, xmax = common_support_max, 
+           ymin = 0, ymax = Inf, alpha = 0.2, fill = "black") +
+  # Text annotation
+  annotate("text", x = (common_support_min + common_support_max) / 2, y = 0.30, 
+           label = "Support commun", size = 4, angle = 0, hjust = 0.5) +
+  # Arrows
+  annotate("segment", x = common_support_min, xend = common_support_max, 
+           y = 0.22, yend = 0.22, arrow = arrow(length = unit(0.2, "cm")), 
+           size = 1) +
+  annotate("segment", x = common_support_max, xend = common_support_min, 
+           y = 0.22, yend = 0.22, arrow = arrow(length = unit(0.2, "cm")), 
+           size = 1) +
+  # Layout
+  labs(x = "Score de propension", y = "Densité", fill = "Groupe", 
+       color = "Groupe") +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+```
+
+## Enjeux liés au support commun 
+
+```{r}
+#| label: fig-enjeux
+#| fig-cap: "Exemple de support commun et validité externe"
+
+# Plot the density curves for both groups with French labels
+ggplot(data, aes(x = propensity_score, fill = group, color = group)) +
+  geom_density(alpha = 0.5) +  # Create density plots with transparency
+  
+  # Shaded common support area based on the range where the densities overlap
+  annotate("rect", xmin = 0, xmax = common_support_min, ymin = 0, ymax = Inf, 
+           alpha = 0.2, fill = "black")+
+  annotate("rect", xmin = common_support_max, xmax = 1, ymin = 0, ymax = Inf, 
+           alpha = 0.2, fill = "black") + 
+  # Add arrows left
+  annotate("segment", x = 0, xend = common_support_min, 
+           y = 0.22, yend = 0.22, arrow = arrow(length = unit(0.2, "cm")), 
+           size = 1) +
+   annotate("segment", x = common_support_min, xend = 0, 
+           y = 0.22, yend = 0.22, arrow = arrow(length = unit(0.2, "cm")), 
+           size = 1) +
+  # Add arrows right
+  annotate("segment", x = common_support_max, xend = 1, 
+           y = 0.22, yend = 0.22, arrow = arrow(length = unit(0.2, "cm")), 
+           size = 1) +
+   annotate("segment", x = 1, xend = common_support_max, 
+           y = 0.22, yend = 0.22, arrow = arrow(length = unit(0.2, "cm")), 
+           size = 1) +
+    # Add text annotation for common support, higher at y = 0.30
+  annotate("text", x = common_support_min, y = 0.30, 
+           label = "Jamais traités", size = 4, angle = 0, hjust = 0.5) + 
+  annotate("text", x = common_support_max, y = 0.30, 
+           label = "Toujours traités", size = 4, angle = 0, hjust = 0.5) +
+  
+  # Customize labels and theme
+  labs(x = "Score de propension",  y = "Densité", fill = "Groupe", 
+       color = "Groupe") +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+```
+
+## Imposer un support commun 
+
+### Méthode du min/max
+
+- Pour estimer l’ATT, Dehejia et Wahba (1999) proposent d'éliminer :
+
+    1. les unités non traitées ayant un score inférieur au minimum observé sur les unités traitées, c.à.d. *"Jamais traités"*
+    2. les unités traitées ayant un score supérieur au maximum observé pour les unités non traitées, c.à.d *"always treated"*
+    
+**Attention** : Ce qui est alors estimé, ce n'est plus un *ATE* (average treatment effect), ni même un *ATT* (average treatement effect on the treated) mais un *ATM* (average teatment effect on the matched observations)
+
+## Le Coarsened Exact Matching (CEM)
+
+CEM : appariement sur variables regroupées en classes (traduction approximative).
+
+Une approche qui se passe de régression linéaires ou de mesures de distance.
+
+
+##
+
+![](figs/CEM_01.png)
+
+##
+
+![](figs/CEM_02.png)
+
+##
+
+![](figs/CEM_03.png)
+
+##
+
+![](figs/CEM_04.png)
+
+## Quelles variables de conditionnement/contrôle ? 
+
+L’hypothèse d’indépendance conditionnelle demande d’observer les caractéristiques qui déterminent l’allocation du traitement.
+
+En pratique, il doit s’agir de variables qui peuvent avoir un impact sur la variable d’intérêt (e.g. déforestation) et sur le choix de bénéficier du dispositif (e.g. Aire Protégée).
+
+**Deux points de vigilance :**
+- Il ne faut pas utiliser de variables mesurées après la mise en place du dispositif et qui peuvent également affecter celui-ci → problème d’endogénéité
+- Il faut qu’il existe une part d’aléa ou d’exogénéité dans la sélection des unités traitées sinon il n’y a plus de support commun puisque la participation au programme est entièrement déterminée par des caractéristiques des unités.
+
+## Estimateur
+
+L’effet moyen estimé sur les traités correspond à la moyenne de ces effets estimés :
+
+$$\hat{E}[Y_i(1) - Y_i(0) | T_i = 1] = \frac{1}{n_1} {\sum}_{i \in E_1}^{n} \left( y_i(1) - \hat{y}_i(0) \right)$$
+
+
+
+où :   
+- $n_1$ est le nombre d’unités traitées   
+- $E_1$ est l’ensemble des unités traitées   
+- $y_i(1)$ le résultat observé de l’individu $i$   
+- $\hat{y}_i(0)$ le résultat du plus proche voisin non traité de $i$
+
+## Résumé
+
+Pour mettre en œuvre une méthode d’appariement, il faut :
+
+- Identifier les unités traitées et les non-traitées
+- Observer les caractéristiques qui déterminent le traitement pour chaque unité
+- Choisir une méthode d’estimation : plus proche(s) voisin(s), PSM ?
+- Dans le cas d’un appariement sur le score de propension, il faut l’estimer
+- Estimer les effets (ATT et/ou ATE)
+
+## Résumé
+
+La crédibilité des estimateurs estimés repose sur l’hypothèse très forte d’indépendance conditionnelle.
+
+- Tiens aux observables **disponibles et utilisées** pour la comparaison
+- Si on dispose de peu d’informations dans nos données sur les choix entre les variables, il ne sera pas possible d’éliminer le **biais de sélection**
+

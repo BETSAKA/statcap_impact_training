@@ -1,0 +1,217 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Expérimentations par assignation aléatoire
+
+<iframe src="slides/fr/randomization.html" width="100%" height="400px">
+
+</iframe>
+
+
+<a href="slides/fr/randomization.html" download>Cliquer ici pour télécharger la présentation</a>.
+
+## Mise en pratique
+
+> **ATTENTION :** Il va de soi que les AP malgaches n'ont à aucun moment été assignées aléatoirement. Lors de cette séquence, on fait "comme si", pour montrer la manière dont les données sont analysées quand il y a eu assignation aléatoire. On verra en fin de session les limites d'une telle approche et dans les suivantes des manières de construire des contrefactuels plus vraisemblables pour un sujet comme celui-ci.
+
+## Préparation des données
+
+Pour commencer, on charge les librairies requises (après les avoir installées si nécessaire).
+
+```{r}
+# On charge les librairies utiles pour cette analyse
+library(tidyverse) # Facilite la manipulation de données
+library(gt) # Aide à formater de jolis tableaux de rendu
+library(broom) # Aide à formater les rendus de régressions
+library(stargazer) # idem
+library(sf) # Pour les données spatiales
+library(lubridate) # Pour gérer des dates
+library(htmltools)
+library(mapme.biodiversity)
+library(units)
+
+# Désactiver les notations scientifiques
+options(scipen = 999)
+
+# On charge AP_Vahatra
+AP_Vahatra <- read_rds("data/AP_Vahatra_mapme.rds")
+```
+
+## Analyse des équilibres initiaux
+
+On commence par vérifier s'il existe des déséquilibres flagrants entre les aires qui ont été protégées avant 2015 et celles qui ont été protégées en 2015, en matière de surface totale ou de part couverte par des forêts en 2000.
+
+```{r}
+library(units)
+
+# Correctly define variables with units
+AP_RCT <- AP_Vahatra %>%
+  portfolio_wide() %>% 
+  mutate(Groupe = ifelse(year(date_creation) < 2015, "Traitement", "Contrôle"),
+         `Couvert forestier en 2000` = `treecover_area_2000-01-01_treecover_ha`,
+         `Surface (ha)` = as.numeric(st_area(AP_Vahatra)) / 10000,
+         `Couvert forestier en 2000 (%)` = (`Couvert forestier en 2000` / `Surface (ha)`)*100)
+
+# On fait une série de tests de comparaison de moyenne
+t_tests <- AP_RCT %>%
+  st_drop_geometry() %>%
+  summarise(across(`Surface (ha)`:`Couvert forestier en 2000 (%)`,
+                   ~ t.test(.[Groupe == "Contrôle"], .[Groupe == "Traitement"])$p.value)) %>%
+  mutate(Groupe = "t-test")
+
+equilibre_avant <- AP_RCT %>%
+  st_drop_geometry() %>%
+  group_by(Groupe) %>%
+  summarise(`Nombre d'aires` = n(),
+            `Surface (ha)` = mean(`Surface (ha)`),
+            `Couvert forestier en 2000 (%)` = mean(`Couvert forestier en 2000 (%)`, na.rm = TRUE)) %>%
+  bind_rows(t_tests) %>%
+  mutate(across(!Groupe, ~round(., 2)))
+
+# Ce qui suit est une série d'opérations pour formater le rendu en tableau
+equilibre_avant %>%
+  t() %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column() %>%
+  `colnames<-` (filter(., row_number() == 1)) %>%
+  filter(row_number() != 1) %>%
+  gt() %>%
+  tab_header(title = "Équilibre des variables avant intervention",
+             subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
+  tab_source_note("Source : Association Vahatra et données GFC")
+```
+
+> **Exercice** : Analysez le résultat de cette table.
+
+En moyenne, les deux groupes sont assez proches en termes de surface et de couvert forestier, et le test de Student ne permet pas de rejeter l'hypothèse nulle concernant une différence de moyenne sur ces critères.
+
+## Différences de déforestation "après intervention"
+
+On va maintenant s'intéresser aux différences de déforestation observées "après intervention" dans le groupe de traitement, entre 2000 et 2014.
+
+```{r}
+# Calculer le taux annuel de déforestation moyen pour la période 2000-2014
+
+AP_RCT <- AP_RCT %>%
+  mutate(taux_deforestation_2000_2014 = 
+           -((`treecover_area_2014-01-01_treecover_ha` - 
+              `treecover_area_2000-01-01_treecover_ha`) /
+           `treecover_area_2000-01-01_treecover_ha`)* 100)
+
+# Comparer les taux de déforestation moyens entre les groupes
+comparaison_deforestation <- AP_RCT %>%
+  st_drop_geometry() %>%
+  group_by(Groupe) %>%
+  summarise(`Taux annuel de déforestation moyen 2000-2014 (%)` = 
+              mean(taux_deforestation_2000_2014, na.rm = TRUE)) %>%
+  mutate(across(!Groupe, ~round(., 2)))
+
+# Ce qui suit est une série d'opérations pour formater le rendu en tableau
+comparaison_deforestation %>%
+  t() %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column() %>%
+  `colnames<-` (filter(., row_number() == 1)) %>%
+  filter(row_number() != 1) %>%
+  gt() %>%
+  tab_header(title = "Moyennes des taux annuels de déforestation",
+             subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
+  tab_source_note("Source : Association Vahatra et données GFC")
+```
+
+> **Exercice** : Commentez le résultat de cette table.
+
+On peut également réaliser une régression simple, qu'on présente selon le format courant pour la littérature en économie grâce au package {stargazer} [@hlavac2022].
+
+```{r}
+#| output: false
+
+# On exécute une régression pour la période 2000-2014
+def_2000_2014 <- lm(taux_deforestation_2000_2014 ~ Groupe, data = AP_RCT)
+
+# On consolide les résultats des régressions dans une table qu'on formate
+# avec le package stargazer
+rct_out1 <- stargazer(def_2000_2014, type = "html",
+          title = "Impact de la conservation sur la perte de couvert forestier",
+          notes = "Données : Association Vahatra et données GFC")  
+```
+```{r, echo=FALSE}
+# Cette commande s'imprime aussi bien dans RStudio que dans le rendu quarto
+output_html <- browsable(HTML(paste(rct_out1, collapse = "")))
+browsable(div(style = "width: 300px;", output_html))
+```
+
+> **Exercice** : Analysez le résultat de cette table. Qu'est-ce qu'elle suggère ?
+
+## Analyse des variables topologiques et de l'accessibilité
+
+On analyse ensuite la relation aux variables topologiques (altitude, pente) et de temps de trajet à la ville la plus proche en 2015. Le seuil retenu ici pour considérer une localité comme une ville est qu'elle ait au moins 5000 habitants.
+
+```{r}
+# On fait une série de tests de comparaison de moyenne pour les variables topologiques
+
+t_tests_topo <- AP_RCT %>% 
+  st_drop_geometry() %>%
+  summarise(across(c(`elevation_2000-02-01_elevation_mean_m`, 
+                   `slope_2000-02-01_slope_mean_degrees`, 
+                   `traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes`),
+                   ~ t.test(as.numeric(.[Groupe == "Contrôle"]), as.numeric(.[Groupe == "Traitement"]))$p.value)) %>% 
+  rename(`Altitude moyenne (m)` = `elevation_2000-02-01_elevation_mean_m`,
+         `Pente moyenne (degrés)` = `slope_2000-02-01_slope_mean_degrees`,
+         `Temps de trajet moyen (minutes)` = 
+           `traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes`) %>%
+  mutate(Groupe = "t-test")
+
+equilibre_topo <- AP_RCT %>%
+  st_drop_geometry() %>%
+  group_by(Groupe) %>%
+  summarise(`Nombre d'aires` = n(),
+            `Altitude moyenne (m)` = mean(`elevation_2000-02-01_elevation_mean_m`, na.rm = TRUE),
+            `Pente moyenne (degrés)` = mean(`slope_2000-02-01_slope_mean_degrees`, na.rm = TRUE),
+            `Temps de trajet moyen (minutes)` = mean(`traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes`, na.rm = TRUE)) %>%
+  bind_rows(t_tests_topo) %>% 
+  mutate(across(!Groupe, ~round(., 2)))
+
+# Ce qui suit est une série d'opérations pour formater le rendu en tableau
+equilibre_topo %>%
+  t() %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column() %>%
+  `colnames<-` (filter(., row_number() == 1)) %>%
+  filter(row_number() != 1) %>%
+  gt() %>%
+  tab_header(title = "Équilibre entre les groupes en matière topologique",
+             subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
+  tab_source_note("Source : Nasa SRTM, Nelson et al.")
+```
+
+Le temps de trajet aux villes est significativement distinct entre les deux groupes. 
+
+On essaye de limiter ce biais en ajoutant le temps de trajet à une ville comme variable de contrôle à notre régression.
+```{r}
+#| output: false
+AP_RCT2 <- AP_RCT %>%
+  rename(`Temps de trajet moyen (minutes)` = 
+           `traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes`)
+
+# On exécute une régression pour la période 2000-2014
+def_2000_2014 <- lm(taux_deforestation_2000_2014 ~ 
+                      Groupe + `Temps de trajet moyen (minutes)`,
+                    data = AP_RCT2)
+
+# On consolide les résultats des régressions dans une table qu'on formate
+# avec le package stargazer
+rct_out2 <- stargazer(def_2000_2014, type = "html",
+          title = "Impact de la conservation sur la perte de couvert forestier (en contrôlant pour l'accessibilité)",
+          notes = "Données : Association Vahatra et données GFC")  
+```
+```{r, echo=FALSE}
+# Cette commande s'imprime aussi bien dans RStudio que dans le rendu quarto
+output2_html <- browsable(HTML(paste(rct_out2, collapse = "")))
+browsable(div(style = "width: 500px;", output2_html))
+```
+
+> Exercice : interprétez le résultat
