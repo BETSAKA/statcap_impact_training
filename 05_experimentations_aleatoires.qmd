@@ -19,7 +19,7 @@ editor_options:
 
 ## Préparation des données
 
-Pour commencer, on charge les librairies requises (après les avoir installées si nécessaire).
+#Pour commencer, on charge les librairies requises (après les avoir installées si nécessaire).
 
 ```{r}
 # On charge les librairies utiles pour cette analyse
@@ -32,6 +32,10 @@ library(lubridate) # Pour gérer des dates
 library(htmltools)
 library(mapme.biodiversity)
 library(units)
+library(lmtest)      # Tests statistiques sur des modèles linéaires (waldtest, coeftest)
+library(sandwich)    # Calcul d'erreurs standards robustes (vcovHC pour heteroskedasticité)
+
+
 
 # Désactiver les notations scientifiques
 options(scipen = 999)
@@ -45,43 +49,142 @@ AP_Vahatra <- read_rds("data/AP_Vahatra_mapme.rds")
 On commence par vérifier s'il existe des déséquilibres flagrants entre les aires qui ont été protégées avant 2015 et celles qui ont été protégées en 2015, en matière de surface totale ou de part couverte par des forêts en 2000.
 
 ```{r}
-library(units)
 
-# Correctly define variables with units
+# # Correctly define variables with units
+# AP_RCT <- AP_Vahatra %>%
+#   portfolio_wide() %>% 
+#   mutate(Groupe = ifelse(year(date_creation) < 2015, "Traitement", "Contrôle"),
+#          `Couvert forestier en 2000` = `treecover_area_2000-01-01_treecover_ha`,
+#          `Surface (ha)` = as.numeric(st_area(AP_Vahatra)) / 10000,
+#          `Couvert forestier en 2000 (%)` = (`Couvert forestier en 2000` / `Surface (ha)`)*100)
+
+# Définir les variables dans les bonnes unités
 AP_RCT <- AP_Vahatra %>%
-  portfolio_wide() %>% 
-  mutate(Groupe = ifelse(year(date_creation) < 2015, "Traitement", "Contrôle"),
-         `Couvert forestier en 2000` = `treecover_area_2000-01-01_treecover_ha`,
-         `Surface (ha)` = as.numeric(st_area(AP_Vahatra)) / 10000,
-         `Couvert forestier en 2000 (%)` = (`Couvert forestier en 2000` / `Surface (ha)`)*100)
+  # Supprimer les AP sans données de couvert forestier (souvent maritimes)
+  filter(!map_lgl(treecover_area, is.null)) %>%
+  
+  mutate(
+    Groupe = ifelse(year(date_creation) < 2015, "Traitement", "Contrôle"),
+    Traitement = ifelse(Groupe == "Traitement", 1, 0),
+    
+    `Couvert forestier en 2000 (ha)` = map_dbl(treecover_area, ~ {
+      val <- .x %>%
+        filter(year(datetime) == 2000) %>%
+        pull(value)
+      if (length(val) == 0) NA_real_ else val[1]
+    }),
+    
+     `Altitude moyenne (m)` = map_dbl(elevation, ~ {
+      val <- .x %>%
+        pull(value)
+      if (length(val) == 0) NA_real_ else val[1]
+    }),
+    
+    `Pente moyenne (degres)` = map_dbl(slope, ~ {
+      val <- .x %>%
+        pull(value)
+      if (length(val) == 0) NA_real_ else val[1]
+    }),
+    
+        `Temps de trajet (minutes)` = map_dbl(traveltime, ~ {
+      val <- .x %>%
+        pull(value)
+      if (length(val) == 0) NA_real_ else val[1]
+    }),
+    
+    `Surface (ha)` = as.numeric(st_area(.)) / 10000,
+    
+    `Couvert forestier en 2000 (%)` = (`Couvert forestier en 2000 (ha)` / `Surface (ha)`) * 100
+  )
 
-# On fait une série de tests de comparaison de moyenne
-t_tests <- AP_RCT %>%
-  st_drop_geometry() %>%
-  summarise(across(`Surface (ha)`:`Couvert forestier en 2000 (%)`,
-                   ~ t.test(.[Groupe == "Contrôle"], .[Groupe == "Traitement"])$p.value)) %>%
-  mutate(Groupe = "t-test")
 
-equilibre_avant <- AP_RCT %>%
-  st_drop_geometry() %>%
-  group_by(Groupe) %>%
-  summarise(`Nombre d'aires` = n(),
-            `Surface (ha)` = mean(`Surface (ha)`),
-            `Couvert forestier en 2000 (%)` = mean(`Couvert forestier en 2000 (%)`, na.rm = TRUE)) %>%
-  bind_rows(t_tests) %>%
-  mutate(across(!Groupe, ~round(., 2)))
+# Définir la fonction pour les étoiles de significativité
+stars <- function(p) {
+  if (is.na(p)) return("")
+  if (p < 0.01) return("***")
+  else if (p < 0.05) return("**")
+  else if (p < 0.10) return("*")
+  else return("")
+}
 
-# Ce qui suit est une série d'opérations pour formater le rendu en tableau
-equilibre_avant %>%
-  t() %>%
-  as.data.frame() %>%
-  tibble::rownames_to_column() %>%
-  `colnames<-` (filter(., row_number() == 1)) %>%
-  filter(row_number() != 1) %>%
+
+# Liste des covariables à inclure dans le tableau d’équilibre
+covars <- c("Surface (ha)", "Couvert forestier en 2000 (ha)", "Couvert forestier en 2000 (%)", "Altitude moyenne (m)", "Pente moyenne (degres)", "Temps de trajet (minutes)")
+
+# Création du tableau d’équilibre
+balance_data <- lapply(covars, function(var) {
+    
+      # Moyennes et écart-types par groupe
+      stats <- AP_RCT %>%
+        group_by(Groupe) %>%
+        summarise(
+          mean = mean(.data[[var]], na.rm = TRUE),
+          sd = sd(.data[[var]], na.rm = TRUE),
+          n = sum(!is.na(.data[[var]]))
+        ) %>%
+        ungroup()
+    
+      # Extraire les statistiques pour les deux groupes
+      treat <- stats %>% filter(Groupe == "Traitement")
+      control <- stats %>% filter(Groupe == "Contrôle")
+      
+      # Différence brute
+      diff <- treat$mean - control$mean
+      
+      # Estimation de l’erreur standard via régression avec erreurs robustes
+      mod <- lm(as.formula(paste0("`", var, "` ~ Groupe")), data = AP_RCT)
+      coef_test <- coeftest(mod, vcov. = vcovHC(mod, type = "HC1"))
+      se_diff <- coef_test["GroupeTraitement", "Std. Error"]
+        p_val <- coef_test["GroupeTraitement", "Pr(>|t|)"]
+        etoiles <- stars(p_val)
+      
+      # Calcul de la différence standardisée
+      pooled_sd <- sqrt(0.5 * (treat$sd^2 + control$sd^2))
+      std_diff <- diff / pooled_sd
+    
+  # Construction de la ligne du tableau
+  tibble(
+    Variable = var,
+    Moy_Traitement = sprintf("%.2f\n(%.2f)", treat$mean, treat$sd),
+    Moy_Contrôle = sprintf("%.2f\n(%.2f)", control$mean, control$sd),
+    Diff = sprintf("%.2f%s\n[%.2f]", diff, etoiles, se_diff),
+     Diff_std = sprintf("%.2f", std_diff) 
+  )
+}) %>% bind_rows()
+  
+  # Test de significativité conjointe des covariables (p-value du F-test)
+  f_test_mod <- lm(as.formula(paste("Traitement ~", paste0("`", covars, "`", collapse = " + "))), data = AP_RCT)
+  f_test <- waldtest(f_test_mod, vcov = vcovHC(f_test_mod, type = "HC1"))
+  p_val_joint <- signif(f_test$`Pr(>F)`[2], 3)
+  
+  # Ajouter une ligne au tableau avec la p-value du F-test
+  balance_data <- bind_rows(
+    balance_data,
+    tibble(
+      Variable = "P-value F-test conjoint",
+      Moy_Traitement = "", Moy_Contrôle = "",
+      Diff = sprintf("p = %.3f", p_val_joint),
+      Diff_std = ""
+    )
+  )
+
+# Affichage final
+balance_data %>%
   gt() %>%
-  tab_header(title = "Équilibre des variables avant intervention",
-             subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
+  tab_header(
+    title = "Tableau de contrôle d'équilibre initial entre groupes",
+    subtitle = "(exercice : \"comme si\" c'était un RCT)"
+  ) %>%
+  cols_label(
+    Variable = "Variable",
+    Moy_Traitement = "Traitement\n(Moy (SD))",
+    Moy_Contrôle = "Contrôle\n(Moy (SD))",
+    Diff = "Différence\n(Moy [SE])",
+    Diff_std = "Différence\nstandardisée"
+  ) %>%
   tab_source_note("Source : Association Vahatra et données GFC")
+
+
 ```
 
 > **Exercice** : Analysez le résultat de cette table.
