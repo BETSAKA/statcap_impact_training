@@ -287,12 +287,14 @@ contour_mada <- gadm("Madagascar", level = 0, path = "data") %>% st_as_sf()
 tm_shape(contour_mada) +
   tm_borders() +
   tm_shape(grille_matched) +
-  tm_fill(col = "traitement", palette = "Set1", title = "Groupes d'appariement",
-          labels = c("Contrôle", "Traitement")) +
-  tm_layout(legend.outside = TRUE,
-            main.title = "Localisation des groupes de traitement et de contrôle",
-            main.title.position = c("center", "top"),
-            main.title.size = 1)
+  tm_fill(
+    fill = "traitement",
+    fill.scale = tm_scale(values = "brewer.set1", labels = c("Contrôle", "Traitement")),
+    fill.legend = tm_legend(title = "Groupes d'appariement")
+  ) +
+  tm_layout(legend.outside = TRUE) +
+  tm_title("Localisation des groupes de traitement et de contrôle", 
+           position = c("center", "top"), size = 1)
 ```
 
 > Exercice: Réaliser des tests d'équilibre
@@ -308,7 +310,7 @@ modele <- lm(formula = taux_deforestation_2000_2023 ~
                altitude + 
                pente + 
                dist_ville,
-             data = m_data,
+             data = grille_matched,
              weights = weights)
 cellmatch_out2 <- stargazer(modele, type = "html") 
 ```
