@@ -182,13 +182,24 @@ La fonction `rast()` permet de charger un fichier raster, et `plot()` permet d'a
 
 - **Visualisation avec tmap** : Utilisons maintenant `tmap` en mode "view" pour représenter les données raster et colorer la carte en fonction du pourcentage de couvert forestier.
 
+> **Attention** : le mode interactif `tmap_mode("view")` repose sur la librairie `leaflet`, qui impose une **limite de taille de 4 Mo** pour les images raster utilisées comme tuiles. Afin d'éviter l'erreur `"Raster image too large"`, nous allons **réduire la résolution du raster** à l'aide de la fonction `aggregate()`. Cette opération moyenne les valeurs sur des blocs de pixels, ce qui diminue la taille tout en conservant l'information visuelle utile à l'exploration interactive.
+
+
 ```{r}
 # Mode interactif pour explorer les données
 tmap_mode("view") # Le mode 'view' est utilisé ici pour une visualisation interactive des données spatiales, permettant une exploration dynamique avec des outils de navigation, contrairement au mode 'plot' qui produit une carte statique.
 
+
+# Réduire la résolution du raster pour l'affichage interactif
+gfc_raster_small <- aggregate(gfc_raster_mada, fact = 4, fun = "mean") # Résolution 4x plus grossière
+
+
 # Créer une carte interactive de la couverture forestière
-tm_shape(gfc_raster_mada) +
-  tm_raster(style = "cont", palette = "Greens", title = "Couvert Forestier (% en 2000)")
+tm_shape(gfc_raster_small) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "brewer.greens"),
+    col.legend = tm_legend(title = "Couvert Forestier (% en 2000)")
+  )
 ```
 
 ### Formats de données raster
