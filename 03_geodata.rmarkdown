@@ -1,0 +1,331 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Données spatiales : types et importation
+
+## Types de données spatiales
+
+Les données spatiales peuvent être regroupées en deux types principaux :
+
+1. **Vecteur** : Les données vectorielles représentent des entités géographiques par des points, des lignes, et des polygones. Chaque entité spatiale est associée à des attributs qui peuvent être vus comme un tableau de données lié à ces entités. Par exemple : les frontières administratives, les routes, les parcs naturels.
+
+2. **Raster** : Les données raster sont représentées par une grille de pixels, où chaque cellule contient une valeur. Ce type de donnée est généralement utilisé pour les données continues, comme l'altitude, la température, ou la couverture forestière.
+
+## Données vectorielles
+
+### Importation des données vectorielles avec `sf`
+
+Pour illustrer l'importation de données vectorielles, nous allons utiliser le package `sf`, qui est une librairie puissante pour la manipulation des données spatiales vectorielles en R.
+
+- **Charger les Données** : Nous allons commencer par charger un fichier GeoJSON qui contient des informations sur les aires protégées de Madagascar.
+
+```{r}
+library(sf)
+library(tidyverse)
+library(tmap)
+library(geodata)
+library(terra)
+
+# Importer le fichier GeoJSON
+AP_Vahatra <- st_read("data/AP_Vahatra.geojson")
+```
+
+- **Explorer les Données** : Explorons le contenu de ce fichier pour comprendre sa structure et ses attributs. Vous pouvez également utiliser le menu contextuel de RStudio pour ouvrir et examiner les données de manière interactive.
+
+```{r}
+# Afficher les premières lignes de l'objet spatial
+head(AP_Vahatra)
+
+# Voir la structure des attributs
+str(AP_Vahatra)
+
+# Ouvrir les données dans la vue interactive de RStudio
+# View(AP_Vahatra)
+```
+
+- **Visualisation Initiale avec tmap** : Utilisons `tmap` pour visualiser les aires protégées et avoir une première idée de leur distribution géographique.
+
+```{r}
+# Mode interactif pour explorer les données
+tmap_mode("view")
+
+# Créer une carte interactive des aires protégées
+tm_shape(AP_Vahatra) +
+  tm_borders() +
+  tm_fill("cat_iucn", title = "Catégorie IUCN")
+```
+
+### Formats usuels de données vectorielles
+
+Les données vectorielles peuvent être enregistrées dans différents formats, tels que :
+
+- **GeoJSON** : Format ouvert et largement utilisé pour le partage de données spatiales sur le web. Il est basé sur une structure JSON, ce qui le rend lisible pour les humains.
+
+Pour illustrer ce format, nous pouvons ouvrir le fichier `AP_Vahatra.geojson` dans un éditeur de texte. Vous remarquerez une structure JSON qui contient les coordonnées géographiques ainsi que les attributs associés à chaque entité.
+
+- **Shapefile** : Convertissons le fichier GeoJSON en shapefile pour voir comment les données sont structurées dans ce format très couramment utilisé.
+
+```{r}
+# On crée un dossier pour l'export
+dir.create("output")
+# Enregistrer l'objet en tant que shapefile dans un sous-dossier de data
+st_write(AP_Vahatra, "output/AP_Vahatra_shapefile.shp", 
+         append = FALSE,
+         layer_options = "ENCODING=UTF-8")
+```
+
+Un shapefile est en fait constitué de plusieurs fichiers (.shp, .shx, .dbf, .prj, etc.) qui doivent être conservés ensemble pour garantir l'intégrité des données. Chaque fichier a un rôle spécifique :
+
+- **.shp** : Contient la géométrie des entités (points, lignes, polygones).
+- **.shx** : Index spatial permettant d'accéder rapidement aux entités.
+- **.dbf** : Base de données associée contenant les attributs des entités.
+- **.prj** : Contient les informations relatives à la projection cartographique, permettant de définir le système de coordonnées des données.
+
+Ces fichiers doivent non seulement être gardés ensemble, mais aussi porter exactement le même nom (à l'exception de l'extension).
+
+> **Instruction** : Ouvrez le dossier `output` dans votre explorateur de fichiers pour observer les différents fichiers qui composent le shapefile.
+
+- **Lire le Shapefile** : Importons le shapefile nouvellement créé et vérifions qu'il est identique à l'objet d'origine.
+
+```{r}
+# Importer le shapefile
+AP_Vahatra_shp <- st_read("output/AP_Vahatra_shapefile.shp", quiet = TRUE) 
+
+# Vérifier que les deux objets sont identiques
+identical(AP_Vahatra, AP_Vahatra_shp)
+```
+
+> Les objets ne sont plus exactement les mêmes. Voyez-vous pourquoi ?
+
+Outre le GeoJSON et le Shapefile, d'autres formats de données vectorielles incluent :
+
+- **KML** (Keyhole Markup Language) : Utilisé principalement par Google Earth.
+- **GPKG** (GeoPackage) : Un format basé sur SQLite, qui est de plus en plus populaire pour stocker des données spatiales.
+- **GML** (Geography Markup Language) : Format XML utilisé pour échanger des données géospatiales.
+- **RDS** (Format Natif R) : Format utilisé pour enregistrer des objets R directement, ce qui permet une manipulation rapide et facile des données spatiales dans R.
+
+### Exploration des Données GADM
+
+Pour illustrer l'accès aux données spatiales administratives, nous allons utiliser les données GADM (Global Administrative Areas). Ces données sont disponibles à différents niveaux administratifs (niveaux 0, 1, 2, etc.). Voici ce que nous allons faire :
+
+1. Téléchargement manuel : Rendez-vous sur le site https://gadm.org/ et explorez les différentes options de téléchargement des données administratives. Cela vous permettra de vous familiariser avec les types de niveaux disponibles.
+
+2. Téléchargement via R : Utilisons la fonction gadm() du package geodata pour obtenir directement les données dans R.
+
+```{r}
+# Télécharger les données GADM pour Madagascar au niveau administratif 0
+gadm_mada0 <- gadm(country = "Madagascar", level = 0, path = "data") %>%
+  st_as_sf() # Pour transformer en vecteur
+```
+
+Exercices : 
+
+- Visualisez les données `gadm_mada0` téléchargées avec tmap. De quel niveau administratif s'agit-il ? 
+- En utilisant les autres niveaux administratifs disponibles (1, 2, 3, 4), déduisez à quoi correspond chaque niveau dans la hiérarchie administrative de Madagascar. 
+
+
+## Données en raster
+
+### Importation de données raster avec `terra`
+
+Les données raster sont constituées d'une grille de pixels, chaque pixel ayant une valeur. Ce type de donnée est généralement utilisé pour représenter des phénomènes continus tels que la couverture forestière, l'altitude, ou la précipitation. Les données raster sont souvent dérivées d'images satellitaires ou de relevés aériens, et peuvent varier en résolution (taille des pixels) et en échelle.
+
+Il existe deux catégories principales de données raster :
+
+1. **Images Satellitaires** : Ce sont des images prises à partir de satellites, telles que celles fournies par **Sentinel-2** ou **Landsat** (gratuites, à moyenne résolution) ou encore **Pléiades** (payantes, à haute résolution).
+
+2. **Produits Prétransformés** : Ces données sont déjà traitées pour extraire certaines informations pertinentes (par exemple, la couverture forestière, les précipitations mensuelles, l'altitude). Ces produits sont souvent préférés car ils sont directement exploitables.
+
+Voici quelques exemples de produits prétransformés disponibles, qui peuvent être utiles dans vos analyses :
+
+- **accessibility_2000** : Accessibilité pour l'année 2000
+- **biodiversity_intactness_index** : Indice d'intactité de la biodiversité
+- **gfw_treecover** : Pourcentage de couverture arborée
+- **worldclim_max_temperature** : Température maximale mensuelle (1960 - 2018)
+- **soilgrids** : Propriétés du sol modélisées à l'échelle globale
+
+Ces ressources, parmi d'autres, sont disponibles pour l'analyse et fournissent des données spatiales à différentes résolutions et pour différents indicateurs.
+
+Pour explorer concrètement une donnée raster, nous allons travailler avec une tuile de la base de données **Global Forest Change** (GFC). Ces données sont disponibles en ligne sur [Global Forest Change 2023](https://storage.googleapis.com/earthenginepartners-hansen/GFC-2023-v1.11/download.html). Nous utiliserons la tuile **10S, 50E**, qui couvre une partie de la côte est de Madagascar, près du parc national de Masoala. Cette tuile est relativement légère car elle comprend principalement des zones marines.
+
+La tuile préchargée est disponible sous : `data/Hansen_GFC-2023-v1.11_treecover2000_10S_050E.tif`.
+
+- **Charger et Observer la Tuile Raster** : Utilisons le package `terra` pour manipuler les données raster dans R.
+
+```{r}
+# Charger la tuile raster
+gfc_raster <- rast("data/Hansen_GFC-2023-v1.11_treecover2000_10S_050E.tif")
+
+# Extraire la bounding box du raster en tant que SpatVector
+raster_bbox <- as.polygons(ext(gfc_raster), crs = crs(gfc_raster)) %>%
+  st_as_sf()
+
+# Calculer l'intersection entre la bbox du raster et gadm_mada0
+intersection <- st_intersection(raster_bbox, gadm_mada0)
+
+
+# Réduire l'étendue du raster avec crop() en utilisant l'emprise de Madagascar
+gfc_raster_crop <- crop(gfc_raster, intersection)
+
+# Appliquer mask() pour ne garder que la partie terrestre
+gfc_raster_mada <- mask(gfc_raster_crop, intersection)
+
+
+# Visualiser la donnée raster
+plot(gfc_raster_mada, main = "Couvert forestier en 2000 (Tuile 10S, 50E)")
+```
+
+La fonction `rast()` permet de charger un fichier raster, et `plot()` permet d'avoir une visualisation simple de la couverture forestière de l'année 2000 pour la zone concernée. Observez la résolution de la grille ainsi que les valeurs attribuées à chaque pixel, qui représentent ici la proportion de couverture arborée.
+
+- **Visualisation avec tmap** : Utilisons maintenant `tmap` en mode "view" pour représenter les données raster et colorer la carte en fonction du pourcentage de couvert forestier.
+
+> **Attention** : le mode interactif `tmap_mode("view")` repose sur la librairie `leaflet`, qui impose une **limite de taille de 4 Mo** pour les images raster utilisées comme tuiles. Afin d'éviter l'erreur `"Raster image too large"`, nous allons **réduire la résolution du raster** à l'aide de la fonction `aggregate()`. Cette opération moyenne les valeurs sur des blocs de pixels, ce qui diminue la taille tout en conservant l'information visuelle utile à l'exploration interactive.
+
+
+```{r}
+# Mode interactif pour explorer les données
+tmap_mode("view") # Le mode 'view' est utilisé ici pour une visualisation interactive des données spatiales, permettant une exploration dynamique avec des outils de navigation, contrairement au mode 'plot' qui produit une carte statique.
+
+
+# Réduire la résolution du raster pour l'affichage interactif
+gfc_raster_small <- aggregate(gfc_raster_mada, fact = 4, fun = "mean") # Résolution 4x plus grossière
+
+
+# Créer une carte interactive de la couverture forestière
+tm_shape(gfc_raster_small) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "brewer.greens"),
+    col.legend = tm_legend(title = "Couvert Forestier (% en 2000)")
+  )
+```
+
+### Formats de données raster
+
+Comme pour les données vectorielles, les données raster peuvent être enregistrées dans différents formats. Voici quelques-uns des formats les plus courants :
+
+- **GeoTIFF** : Format très utilisé pour les données raster, car il permet de stocker des informations géoréférencées (coordonnées, projection).
+- **.img** : Format souvent utilisé par le logiciel ERDAS pour les données raster.
+- **NetCDF** : Format flexible utilisé pour stocker des données multidimensionnelles (ex., temps, altitude).
+- **RDS** (Format Natif R) : Permet d'enregistrer un objet R directement, ce qui est très pratique pour conserver les paramètres et les métadonnées associées.
+
+### Exercice : exploration manuelle et via R
+
+1. **Exploration Manuelle** : Rendez-vous sur le site [Global Forest Change 2023](https://storage.googleapis.com/earthenginepartners-hansen/GFC-2023-v1.11/download.html), et téléchargez une tuile de votre choix. Essayez de comprendre la structure des fichiers téléchargés et leur signification.
+
+2. **Chargement avec R** : Utilisez la fonction `rast()` du package `terra` pour charger la tuile que vous avez téléchargée, puis affichez-la avec `plot()`. Quels types d'informations pouvez-vous en déduire ?
+
+3. **Décrire les Différents Formats** : En fonction de ce que vous avez appris, décrivez les différents formats de données raster que vous avez rencontrés, et discutez des avantages de chaque format en termes de stockage, de compatibilité, et d'utilisation dans R.
+
+## Opérations spatiales avec le package `sf`
+
+### Introduction aux opérations spatiales
+
+Les opérations spatiales sont des manipulations qui permettent de croiser, combiner, séparer ou analyser des données géographiques. Ces opérations sont essentielles pour explorer les relations spatiales entre différents objets géographiques, par exemple : trouver les aires qui se chevauchent, calculer des distances, ou encore créer des zones d'influence (buffers).
+
+Dans cette section, nous allons nous familiariser avec quelques opérations spatiales de base à l'aide du package `sf`, un outil puissant pour manipuler les données géographiques dans R.
+
+### Types d'opérations spatiales
+
+#### Intersection
+
+L'intersection permet de trouver la zone commune entre deux entités géographiques. Nous avons déjà utilisé cette opération pour découper le raster de Global Forest Change à l'aide des limites de Madagascar.
+
+Maintenant, nous allons appliquer une variante sous forme de tests logique aux communes (niveau 4 dans GADM) pour déterminer quelles communes contiennent des aires protégées.
+
+```{r}
+# Charger les données des aires protégées
+AP_Vahatra <- st_read("data/AP_Vahatra.geojson", quiet = TRUE) %>%
+  st_make_valid()
+
+# Charger les communes
+communes <- gadm(country = "Madagascar", level = 4, path = "data") %>%
+  st_as_sf() %>%
+  st_make_valid()
+
+# Filtrer les communes qui intersectent le buffer
+communes_avec_ap <- communes %>%
+  filter(lengths(st_intersects(., AP_Vahatra)) > 0)
+
+# Visualiser les résultats
+tm_shape(communes_avec_ap) + 
+  tm_borders() +
+  tm_shape(AP_Vahatra) + 
+  tm_borders(col = "green")
+```
+
+#### Union
+
+L'union est une opération qui permet de combiner plusieurs entités géographiques pour en créer une seule. Par exemple, on peut combiner toutes les aires protégées de Madagascar pour en faire une entité unique.
+
+```{r}
+# Union des aires protégées
+union_result <- st_union(AP_Vahatra)
+
+# Visualisation
+tm_shape(union_result) +
+  tm_polygons(col = "green", title = "Union des Aires Protégées")
+```
+
+#### Différence
+
+La différence permet de trouver la partie d'une entité qui n'est pas incluse dans une autre. Par exemple, on peut déterminer quelles zones de Madagascar ne sont pas couvertes par les aires protégées.
+
+```{r}
+# Différence entre la frontière nationale et les aires protégées
+non_protected <- st_difference(gadm_mada0, union_result)
+
+# Visualisation
+tm_shape(non_protected) +
+  tm_polygons(col = "gray", title = "Zones Non Protégées de Madagascar")
+```
+
+#### Buffers (Zones Tampons)
+
+Un buffer, ou zone tampon, est une zone créée à une certaine distance autour d'une entité géographique. Cela est utile, par exemple, pour déterminer les zones d'influence autour des réserves naturelles.
+
+```{r}
+# Créer une zone tampon de 10 km autour des aires protégées
+buffer_result <- st_buffer(AP_Vahatra, dist = 10000)
+
+# Visualisation
+tm_shape(buffer_result) +
+  tm_polygons(col = "orange", alpha = 0.5, title = "Buffer de 10 km autour des Aires Protégées")
+```
+
+#### Calcul de surfaces
+
+Le calcul de la surface permet de connaître l'étendue spatiale d'une entité. Cela est très utile pour mesurer les surfaces des aires protégées ou des zones tampons.
+
+```{r}
+library(units) # Facilite le traitement des km2, ha...
+# Désactiver la notation scientifique dans l'environnement R
+options(scipen = 999)
+
+# Calculer la surface des aires protégées
+AP_Vahatra <- AP_Vahatra %>%
+  mutate(surface_m2 = st_area(.),
+         surface_ha = set_units(surface_m2, ha),
+         surface_km2 = set_units(surface_m2, km2)) # Conversion en hectares
+
+# Créer le graphique de densité
+ggplot(AP_Vahatra, aes(x = surface_km2)) +
+  geom_histogram(binwidth = 100, fill = "blue", color = "black", alpha = 0.7) + 
+  labs(
+    title = "Densité des surfaces des aires protégées",
+    x = "Surface",
+    y = "Densité"
+  ) +
+  theme_minimal()
+```
+
+### Exercices pratiques
+
+1. **Intersection** : Utilisez `st_intersection()` pour trouver les zones communes entre les réserves naturelles et une région administrative spécifique.
+2. **Union** : Combinez toutes les aires protégées en une seule entité et calculez sa surface totale.
+3. **Buffer** : Créez une zone tampon de 5 km autour des Aires protégées de type II seulement.
+4. **Surface** : Calculez la surface totale des zones tampons créées et comparez-la avec la surface totale des aires protégées.
+
+

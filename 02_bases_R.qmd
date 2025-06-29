@@ -390,7 +390,7 @@ ventes_magasin <- data.frame(
   )
 ```
 
-### Les jointures
+### Les jointures 
 
 Les jointures permettent de fusionner deux tableaux par une variable d'identification ("clé").
 
@@ -403,15 +403,75 @@ clients <- data.frame(ID = c(1, 2, 3, 4),
 commandes <- data.frame(ID = c(2, 3, 1, 4),
                         montant = c(100, 150, 50, 200))
 
-# Jointure par ID
-resultat <- inner_join(clients, commandes, by = "ID")
+# inner_join : ne garde que les IDs présents dans les deux tableaux
+inner_join(clients, commandes, by = "ID")
+
+# left_join : garde tous les clients, même ceux sans commande
+left_join(clients, commandes, by = "ID")
 ```
 
-Cette opération exige toutefois que la **variable d'identification soit écrite de manière identique** dans les deux jeux de données.
+Cette opération exige  que la **variable d'identification soit écrite de manière identique** dans les deux jeux de données.
 
 Supposons que l'on travaille sur les aires protégées à Madagascar et que l'on dispose de deux jeux de données provenant de sources différentes. On a alors des informations complémentaires que l'on souhaite fusionner en un seul tableau via le nom de l'aire protégée.
 
 Il faudra veiller à ce que les noms aient la même écriture (pas de différences avec des majuscules, des abréviations ou des noms raccourcis).
+
+### Empilement d'observations (`bind_rows`)
+
+Cette fonction permet d'empiler plusieurs tableaux identiques (par exemple, plusieurs années ou régions).
+
+```{r}
+clients_2020 <- data.frame(ID = c(1, 2), nom = c("Alice", "Bob"))
+clients_2021 <- data.frame(ID = c(3, 4), nom = c("Charlie", "David"))
+
+bind_rows(clients_2020, clients_2021)
+
+```
+
+
+### Restructuration de données (`pivot`) 
+
+Certaines analyses requièrent des données en format long (une ligne par unité-temps) ou en format large (une colonne par année ou modalité).
+
+```{r}
+
+# Passage de format large à format long
+large <- data.frame(ID = c(1, 2),
+                    revenu_2020 = c(100, 150),
+                    revenu_2021 = c(120, 160))
+
+long <- pivot_longer(large,
+                     cols = starts_with("revenu"),
+                     names_to = "année",
+                     values_to = "revenu")
+print(long)
+
+# Passage de format long à format large
+pivot_wider(long,
+            names_from = année,
+            values_from = revenu)
+```
+
+### Exercice
+
+Vous disposez de deux tableaux :
+- Une base d’individus avec leur commune de résidence
+- Une base de communes avec des indicateurs agrégés (ex: pauvreté, déforestation)
+
+**Objectif** : faites une jointure pour enrichir la base individuelle avec les caractéristiques de la commune.
+
+```{r}
+# Base individuelle
+individus <- data.frame(ID = 1:4,
+                        commune = c("A", "B", "A", "C"),
+                        revenu = c(200, 250, 180, 220))
+
+# Base agrégée
+communes <- data.frame(commune = c("A", "B", "C"),
+                       deforestation = c(0.2, 0.1, 0.3))
+```
+
+À vous de jouer : utilisez `left_join()`.
 
 ## Import de données
 

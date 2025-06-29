@@ -96,7 +96,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-2e2f7a2b0f6ea1d0af1331a7a5ecbdf9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0782c41cead3ebe281edb3ab3c776001.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -276,6 +276,9 @@ div.csl-indent {
   <li><a href="#lopérateur-pipeline" id="toc-lopérateur-pipeline" class="nav-link" data-scroll-target="#lopérateur-pipeline"><span class="header-section-number">2.3.2</span> L’opérateur pipeline</a></li>
   <li><a href="#la-préparation-des-données-avec-dplyr" id="toc-la-préparation-des-données-avec-dplyr" class="nav-link" data-scroll-target="#la-préparation-des-données-avec-dplyr"><span class="header-section-number">2.3.3</span> La préparation des données avec dplyr</a></li>
   <li><a href="#les-jointures" id="toc-les-jointures" class="nav-link" data-scroll-target="#les-jointures"><span class="header-section-number">2.3.4</span> Les jointures</a></li>
+  <li><a href="#empilement-dobservations-bind_rows" id="toc-empilement-dobservations-bind_rows" class="nav-link" data-scroll-target="#empilement-dobservations-bind_rows"><span class="header-section-number">2.3.5</span> Empilement d’observations (<code>bind_rows</code>)</a></li>
+  <li><a href="#restructuration-de-données-pivot" id="toc-restructuration-de-données-pivot" class="nav-link" data-scroll-target="#restructuration-de-données-pivot"><span class="header-section-number">2.3.6</span> Restructuration de données (<code>pivot</code>)</a></li>
+  <li><a href="#exercice-7" id="toc-exercice-7" class="nav-link" data-scroll-target="#exercice-7"><span class="header-section-number">2.3.7</span> Exercice</a></li>
   </ul></li>
   <li><a href="#import-de-données" id="toc-import-de-données" class="nav-link" data-scroll-target="#import-de-données"><span class="header-section-number">2.4</span> Import de données</a>
   <ul class="collapse">
@@ -756,12 +759,97 @@ div.csl-indent {
 <span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>commandes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>),</span>
 <span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">montant =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">150</span>, <span class="dv">50</span>, <span class="dv">200</span>))</span>
 <span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Jointure par ID</span></span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>resultat <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(clients, commandes, <span class="at">by =</span> <span class="st">"ID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="co"># inner_join : ne garde que les IDs présents dans les deux tableaux</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a><span class="fu">inner_join</span>(clients, commandes, <span class="at">by =</span> <span class="st">"ID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ID nom_client montant
+1  1      Alice      50
+2  2        Bob     100
+3  3    Charlie     150
+4  4      David     200</code></pre>
 </div>
-<p>Cette opération exige toutefois que la <strong>variable d’identification soit écrite de manière identique</strong> dans les deux jeux de données.</p>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># left_join : garde tous les clients, même ceux sans commande</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>(clients, commandes, <span class="at">by =</span> <span class="st">"ID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ID nom_client montant
+1  1      Alice      50
+2  2        Bob     100
+3  3    Charlie     150
+4  4      David     200</code></pre>
+</div>
+</div>
+<p>Cette opération exige que la <strong>variable d’identification soit écrite de manière identique</strong> dans les deux jeux de données.</p>
 <p>Supposons que l’on travaille sur les aires protégées à Madagascar et que l’on dispose de deux jeux de données provenant de sources différentes. On a alors des informations complémentaires que l’on souhaite fusionner en un seul tableau via le nom de l’aire protégée.</p>
 <p>Il faudra veiller à ce que les noms aient la même écriture (pas de différences avec des majuscules, des abréviations ou des noms raccourcis).</p>
+</section>
+<section id="empilement-dobservations-bind_rows" class="level3" data-number="2.3.5">
+<h3 data-number="2.3.5" class="anchored" data-anchor-id="empilement-dobservations-bind_rows"><span class="header-section-number">2.3.5</span> Empilement d’observations (<code>bind_rows</code>)</h3>
+<p>Cette fonction permet d’empiler plusieurs tableaux identiques (par exemple, plusieurs années ou régions).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>clients_2020 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">nom =</span> <span class="fu">c</span>(<span class="st">"Alice"</span>, <span class="st">"Bob"</span>))</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>clients_2021 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="at">nom =</span> <span class="fu">c</span>(<span class="st">"Charlie"</span>, <span class="st">"David"</span>))</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(clients_2020, clients_2021)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ID     nom
+1  1   Alice
+2  2     Bob
+3  3 Charlie
+4  4   David</code></pre>
+</div>
+</div>
+</section>
+<section id="restructuration-de-données-pivot" class="level3" data-number="2.3.6">
+<h3 data-number="2.3.6" class="anchored" data-anchor-id="restructuration-de-données-pivot"><span class="header-section-number">2.3.6</span> Restructuration de données (<code>pivot</code>)</h3>
+<p>Certaines analyses requièrent des données en format long (une ligne par unité-temps) ou en format large (une colonne par année ou modalité).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Passage de format large à format long</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>large <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">revenu_2020 =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">150</span>),</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">revenu_2021 =</span> <span class="fu">c</span>(<span class="dv">120</span>, <span class="dv">160</span>))</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(large,</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"revenu"</span>),</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">names_to =</span> <span class="st">"année"</span>,</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">values_to =</span> <span class="st">"revenu"</span>)</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+     ID année       revenu
+  &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;
+1     1 revenu_2020    100
+2     1 revenu_2021    120
+3     2 revenu_2020    150
+4     2 revenu_2021    160</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Passage de format long à format large</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_wider</span>(long,</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">names_from =</span> année,</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">values_from =</span> revenu)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+     ID revenu_2020 revenu_2021
+  &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+1     1         100         120
+2     2         150         160</code></pre>
+</div>
+</div>
+</section>
+<section id="exercice-7" class="level3" data-number="2.3.7">
+<h3 data-number="2.3.7" class="anchored" data-anchor-id="exercice-7"><span class="header-section-number">2.3.7</span> Exercice</h3>
+<p>Vous disposez de deux tableaux : - Une base d’individus avec leur commune de résidence - Une base de communes avec des indicateurs agrégés (ex: pauvreté, déforestation)</p>
+<p><strong>Objectif</strong> : faites une jointure pour enrichir la base individuelle avec les caractéristiques de la commune.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Base individuelle</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>individus <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">commune =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"C"</span>),</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">revenu =</span> <span class="fu">c</span>(<span class="dv">200</span>, <span class="dv">250</span>, <span class="dv">180</span>, <span class="dv">220</span>))</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Base agrégée</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>communes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">commune =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>),</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">deforestation =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>À vous de jouer : utilisez <code>left_join()</code>.</p>
 </section>
 </section>
 <section id="import-de-données" class="level2" data-number="2.4">
@@ -783,19 +871,19 @@ div.csl-indent {
 <li>Fichiers CSV : Les fichiers CSV sont très populaires pour leur simplicité. Pour importer un fichier CSV, vous pouvez utiliser la fonction read.csv() ou read_csv() (package readr, partie du tidyverse).</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/AP_Vahatra.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/AP_Vahatra.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>2. Fichiers Excel</strong> : Pour importer des fichiers Excel, on peut utiliser le package readxl. La fonction read_xlsx() permet d’importer un fichier au format .xlsx.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>Mon_objet_R <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">"data/mon_fichier.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>Mon_objet_R <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">"data/mon_fichier.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>3. Fichiers texte</strong> : Les fichiers texte peuvent être importés avec read.table() ou read_delim() (pour des délimiteurs personnalisés).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"data/mon_fichier.txt"</span>, <span class="at">delim =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"data/mon_fichier.txt"</span>, <span class="at">delim =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="exercice-pratique" class="level3" data-number="2.4.3">
@@ -816,7 +904,7 @@ div.csl-indent {
 <li>Afficher les noms des colonnes :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(AP_Vahatra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(AP_Vahatra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "nom"                "cat_iucn"           "creation"          
  [4] "date_creation"      "date_modification"  "mention_changement"
@@ -831,9 +919,9 @@ div.csl-indent {
 <li>Sélectionner les 10 premières aires protégées et leur catégorie IUCN :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, cat_iucn) <span class="sc">%&gt;%</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">&lt;=</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, cat_iucn) <span class="sc">%&gt;%</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">&lt;=</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    nom                                     cat_iucn
@@ -854,10 +942,10 @@ div.csl-indent {
 <li>Explorer les dates de création et de modification :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, date_creation, date_modification) <span class="sc">%&gt;%</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(date_creation)) <span class="sc">%&gt;%</span></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date_creation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, date_creation, date_modification) <span class="sc">%&gt;%</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(date_creation)) <span class="sc">%&gt;%</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date_creation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 98 × 3
    nom            date_creation       date_modification  
@@ -879,8 +967,8 @@ div.csl-indent {
 <li>Calculer la superficie totale des aires protégées :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_totale =</span> <span class="fu">sum</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_totale =</span> <span class="fu">sum</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 1
   superficie_totale
@@ -892,9 +980,9 @@ div.csl-indent {
 <li>Lister les aires protégées gérées par “Madagascar National Parks” :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gest_1 <span class="sc">==</span> <span class="st">"Madagascar National Parks"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, gest_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gest_1 <span class="sc">==</span> <span class="st">"Madagascar National Parks"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, gest_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 38 × 2
    nom              gest_1                   
@@ -916,11 +1004,11 @@ div.csl-indent {
 <li>Obtenir des statistiques descriptives sur la superficie des aires protégées :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_moyenne =</span> <span class="fu">mean</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_mediane =</span> <span class="fu">median</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_max =</span> <span class="fu">max</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_min =</span> <span class="fu">min</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_moyenne =</span> <span class="fu">mean</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_mediane =</span> <span class="fu">median</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_max =</span> <span class="fu">max</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_min =</span> <span class="fu">min</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 4
   superficie_moyenne superficie_mediane superficie_max superficie_min
@@ -955,45 +1043,45 @@ div.csl-indent {
 <h3 data-number="2.6.1" class="anchored" data-anchor-id="exemple-dutilisation-de-gt"><span class="header-section-number">2.6.1</span> Exemple d’utilisation de <code>gt</code></h3>
 <p>Voici un exemple d’utilisation de <code>gt</code> pour résumer les superficies des aires protégées par catégorie IUCN.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On va dabord convertir les superficies en hectares dans une nouvelle colonne</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>)</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul des superficies totales pour chaque catégorie IUCN</span></span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(cat_iucn)) <span class="sc">%&gt;%</span></span>
-<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cat_iucn) <span class="sc">%&gt;%</span></span>
-<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_totale =</span> <span class="fu">sum</span>(superficie_km2))</span>
-<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Production du tableau</span></span>
-<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="sc">%&gt;%</span></span>
-<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">cat_iucn =</span> <span class="st">"Catégorie IUCN"</span>,</span>
-<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">superficie_totale =</span> <span class="st">"Superficie totale (km²)"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
-<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Aires protégées de Madagascar : superficies par catégorie IUCN"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : données de l'association Vahatra"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On va dabord convertir les superficies en hectares dans une nouvelle colonne</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>)</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul des superficies totales pour chaque catégorie IUCN</span></span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(cat_iucn)) <span class="sc">%&gt;%</span></span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cat_iucn) <span class="sc">%&gt;%</span></span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_totale =</span> <span class="fu">sum</span>(superficie_km2))</span>
+<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Production du tableau</span></span>
+<span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="sc">%&gt;%</span></span>
+<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">cat_iucn =</span> <span class="st">"Catégorie IUCN"</span>,</span>
+<span id="cb68-17"><a href="#cb68-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">superficie_totale =</span> <span class="st">"Superficie totale (km²)"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb68-18"><a href="#cb68-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb68-19"><a href="#cb68-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Aires protégées de Madagascar : superficies par catégorie IUCN"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb68-20"><a href="#cb68-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : données de l'association Vahatra"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb68-21"><a href="#cb68-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="ruzydjvllm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ruzydjvllm table {
+<div id="nsdzufxnoq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nsdzufxnoq table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ruzydjvllm thead, #ruzydjvllm tbody, #ruzydjvllm tfoot, #ruzydjvllm tr, #ruzydjvllm td, #ruzydjvllm th {
+#nsdzufxnoq thead, #nsdzufxnoq tbody, #nsdzufxnoq tfoot, #nsdzufxnoq tr, #nsdzufxnoq td, #nsdzufxnoq th {
   border-style: none;
 }
 
-#ruzydjvllm p {
+#nsdzufxnoq p {
   margin: 0;
   padding: 0;
 }
 
-#ruzydjvllm .gt_table {
+#nsdzufxnoq .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1019,12 +1107,12 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#ruzydjvllm .gt_caption {
+#nsdzufxnoq .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ruzydjvllm .gt_title {
+#nsdzufxnoq .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1036,7 +1124,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#ruzydjvllm .gt_subtitle {
+#nsdzufxnoq .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1048,7 +1136,7 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#ruzydjvllm .gt_heading {
+#nsdzufxnoq .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1060,13 +1148,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#ruzydjvllm .gt_bottom_border {
+#nsdzufxnoq .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ruzydjvllm .gt_col_headings {
+#nsdzufxnoq .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1081,7 +1169,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#ruzydjvllm .gt_col_heading {
+#nsdzufxnoq .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1101,7 +1189,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#ruzydjvllm .gt_column_spanner_outer {
+#nsdzufxnoq .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1113,15 +1201,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#ruzydjvllm .gt_column_spanner_outer:first-child {
+#nsdzufxnoq .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ruzydjvllm .gt_column_spanner_outer:last-child {
+#nsdzufxnoq .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ruzydjvllm .gt_column_spanner {
+#nsdzufxnoq .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1133,11 +1221,11 @@ div.csl-indent {
   width: 100%;
 }
 
-#ruzydjvllm .gt_spanner_row {
+#nsdzufxnoq .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ruzydjvllm .gt_group_heading {
+#nsdzufxnoq .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1163,7 +1251,7 @@ div.csl-indent {
   text-align: left;
 }
 
-#ruzydjvllm .gt_empty_group_heading {
+#nsdzufxnoq .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1178,15 +1266,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#ruzydjvllm .gt_from_md > :first-child {
+#nsdzufxnoq .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ruzydjvllm .gt_from_md > :last-child {
+#nsdzufxnoq .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ruzydjvllm .gt_row {
+#nsdzufxnoq .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1205,7 +1293,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#ruzydjvllm .gt_stub {
+#nsdzufxnoq .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1218,7 +1306,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#ruzydjvllm .gt_stub_row_group {
+#nsdzufxnoq .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1232,15 +1320,15 @@ div.csl-indent {
   vertical-align: top;
 }
 
-#ruzydjvllm .gt_row_group_first td {
+#nsdzufxnoq .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ruzydjvllm .gt_row_group_first th {
+#nsdzufxnoq .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ruzydjvllm .gt_summary_row {
+#nsdzufxnoq .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1250,16 +1338,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#ruzydjvllm .gt_first_summary_row {
+#nsdzufxnoq .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ruzydjvllm .gt_first_summary_row.thick {
+#nsdzufxnoq .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ruzydjvllm .gt_last_summary_row {
+#nsdzufxnoq .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1269,7 +1357,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#ruzydjvllm .gt_grand_summary_row {
+#nsdzufxnoq .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1279,7 +1367,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#ruzydjvllm .gt_first_grand_summary_row {
+#nsdzufxnoq .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1289,7 +1377,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#ruzydjvllm .gt_last_grand_summary_row_top {
+#nsdzufxnoq .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1299,11 +1387,11 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#ruzydjvllm .gt_striped {
+#nsdzufxnoq .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ruzydjvllm .gt_table_body {
+#nsdzufxnoq .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1312,7 +1400,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#ruzydjvllm .gt_footnotes {
+#nsdzufxnoq .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1326,7 +1414,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#ruzydjvllm .gt_footnote {
+#nsdzufxnoq .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1335,7 +1423,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#ruzydjvllm .gt_sourcenotes {
+#nsdzufxnoq .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1349,7 +1437,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#ruzydjvllm .gt_sourcenote {
+#nsdzufxnoq .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1357,72 +1445,72 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#ruzydjvllm .gt_left {
+#nsdzufxnoq .gt_left {
   text-align: left;
 }
 
-#ruzydjvllm .gt_center {
+#nsdzufxnoq .gt_center {
   text-align: center;
 }
 
-#ruzydjvllm .gt_right {
+#nsdzufxnoq .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ruzydjvllm .gt_font_normal {
+#nsdzufxnoq .gt_font_normal {
   font-weight: normal;
 }
 
-#ruzydjvllm .gt_font_bold {
+#nsdzufxnoq .gt_font_bold {
   font-weight: bold;
 }
 
-#ruzydjvllm .gt_font_italic {
+#nsdzufxnoq .gt_font_italic {
   font-style: italic;
 }
 
-#ruzydjvllm .gt_super {
+#nsdzufxnoq .gt_super {
   font-size: 65%;
 }
 
-#ruzydjvllm .gt_footnote_marks {
+#nsdzufxnoq .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ruzydjvllm .gt_asterisk {
+#nsdzufxnoq .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ruzydjvllm .gt_indent_1 {
+#nsdzufxnoq .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ruzydjvllm .gt_indent_2 {
+#nsdzufxnoq .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ruzydjvllm .gt_indent_3 {
+#nsdzufxnoq .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ruzydjvllm .gt_indent_4 {
+#nsdzufxnoq .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ruzydjvllm .gt_indent_5 {
+#nsdzufxnoq .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ruzydjvllm .katex-display {
+#nsdzufxnoq .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ruzydjvllm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#nsdzufxnoq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1478,11 +1566,11 @@ div.csl-indent {
 <h3 data-number="2.6.2" class="anchored" data-anchor-id="superficie-cumulée-par-année-de-création"><span class="header-section-number">2.6.2</span> Superficie cumulée par année de création</h3>
 <p>Avant de créer un graphique en nuages de points, nous devons préparer un tableau qui résume la superficie cumulée des aires protégées en fonction de leur année de création.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>AP_superficie_annees <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(an_creation) <span class="sc">%&gt;%</span></span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_annuelle =</span> <span class="fu">sum</span>(superficie_km2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(an_creation) <span class="sc">%&gt;%</span></span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(superficie_cumulée <span class="ot">=</span> <span class="fu">cumsum</span>(superficie_annuelle))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>AP_superficie_annees <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(an_creation) <span class="sc">%&gt;%</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_annuelle =</span> <span class="fu">sum</span>(superficie_km2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(an_creation) <span class="sc">%&gt;%</span></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(superficie_cumulée <span class="ot">=</span> <span class="fu">cumsum</span>(superficie_annuelle))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="exercice-créer-un-tableau-synthétique" class="level3" data-number="2.6.3">
@@ -1519,19 +1607,19 @@ div.csl-indent {
 <li><strong>Importer le package et les données</strong> :</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="co"># On suppose que AP_superficie_annees est déjà créé</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co"># On suppose que AP_superficie_annees est déjà créé</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
 <li><strong>Créer la base du graphique</strong> :</li>
 </ol>
 <p>La première étape consiste à spécifier les données et les mappings esthétiques. Par exemple, nous allons indiquer que l’axe des abscisses (<code>x</code>) représente l’année de création (<code>an_creation</code>) et l’axe des ordonnées (<code>y</code>) représente la superficie cumulée (<code>superficie_cumulée</code>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_bases_R_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1541,13 +1629,13 @@ div.csl-indent {
 </ol>
 <p>Pour visualiser les données, nous ajoutons des points (<code>geom_point()</code>) et des lignes (<code>geom_line()</code>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_bases_R_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1557,15 +1645,15 @@ div.csl-indent {
 </ol>
 <p>Pour rendre le graphique plus compréhensible, nous ajoutons des labels pour les axes et un titre.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
-<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_bases_R_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1575,16 +1663,16 @@ div.csl-indent {
 </ol>
 <p>Le thème permet de personnaliser l’apparence générale du graphique. Ici, nous utilisons <code>theme_minimal()</code> pour une apparence épurée.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
-<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>) <span class="sc">+</span></span>
-<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>) <span class="sc">+</span></span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_bases_R_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
