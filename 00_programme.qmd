@@ -1,226 +1,30 @@
+---
+editor: 
+  markdown: 
+    wrap: 72
+---
+
 # Programme {.unnumbered}
 
-Voici une proposition de programme sur sept jours, visant une progression pédagogique pour commencer par les fondaments conceptuels et techniques et approfondir progressivement jusqu'à une maîtrise des bases de l'évaluation d'impact sur données spatiales. A La formation combine des cours théoriques et des exercices pratiques, incluant l'utilisation de logiciels tels que R. 
+Voici une proposition de programme sur sept jours, visant une
+progression pédagogique pour commencer par les fondaments conceptuels et
+techniques et approfondir progressivement jusqu'à une maîtrise des bases
+de l'évaluation d'impact sur données spatiales. A La formation combine
+des cours théoriques et des exercices pratiques, incluant l'utilisation
+de logiciels tels que R.
 
-## JOUR 1 : L’évaluation d’impact : Pourquoi ? Comment ?
+-   Jour 1 : Introduction et cadrage théorique et méthodologique
 
--   **8h - 9h30** : Présentation de l’atelier *(60 minutes)*
+-   Jour 2 : Revue de travaux scientifiques et typologie de données
 
-    -   Objectif, contenu, programme, supports
-    -   Méthode, exercices et constitution des groupes
-    -   Formateurs et stagiaires (expérience R...)
+-   Jour 3 et 4 : Initiation à R
 
-    Discussion/questions *(30 minutes)*
+-   Jour 5 : Production d'indicateurs spatialisés
 
-    -   Lien entre la formation et les agendas des participants
-    -   Intérêt de la dimension spatiale
-    -   Fil rouge pour expliquer les méthodes d’analyses : l’impact des aires protégées sur la déforestation\
+-   Jour 6 : Méthodes expérimentales et avant-après
 
--   **9h30 - 10h** : Pause
+-   Jour 7 : Méthodes d'appariement
 
--   **10h - 12h** : Définition des objectifs de l’évaluation *(90 minutes)*
+-   Jour 8 : Double différence
 
-    -   Suivi, évaluations classiques et d’impact : liens et différences
-    -   Corrélation vs causalité : théorie des évaluations d’impact
-
-    Discussion/questions (*30 minutes*)
-
-    -   Illustrations autour de cas concrets
-
--   **12h - 13h30** : Pause déjeuner
-
--   **13h30 - 14h45** : Tour d'horizon des méthodes d'évaluation *(45 minutes)*
-
-    -   Méthodes par assignation aléatoire
-    -   BACI (Before-after-control-impact)
-    -   Appariement, double différence, contrôles synthétiques
-    -   Régression sur discontinuité et variables instrumentales
-    -   Cas d'application et avantages-inconvénients de chacune\
-        *Durée :*
-
-    Discussion/questions (*30 minutes*)
-
-    -   Focus sur les méthodes qui ne seront pas approfondies\
-        *Durée :*
-
--   **14h45 - 15h** : Pause
-
--   **15h30 - 17h** : Étude d’articles : cadrage *(30 minutes)*
-
-    Discussion/questions *(60 minutes)*
-
-    -   Formation des groupes
-    -   Identification des articles
-    -   Début des travaux pratiques (pas finis en séance)
-    -   Débrieffing pour s'assurer que la méthode est bien comprise\
-
-## JOUR 2 : Initiation à R
-
--   **8h - 8h30** : Environnement technique *(30 minutes)*
-
--   **8h30 - 9h** : Interface et formats *(60 minutes)*
-
--   **9h30 - 10h** : Pause
-
--   **10h - 12h** : Règles de code, assignation, objets *(120 minutes)*
-
--   **12h - 13h30** : Pause déjeuner
-
--   **13h30 - 15h** : Fonctions, librairies, aide *(90 minutes)*
-
--   **15h - 15h30** : Pause
-
--   **15h30 - 17h** : Import de données, valeurs manquantes *(90 minutes)*
-
-
-## JOUR 3 : Initiation à R et restitution des lectures d'articles
-
--   **8h - 9h30** : Manipulations de données avec tidyverse *(90 minutes)*
-
-    -   Opérateur "pipe" pour chaîner les opérations
-    -   Opérations essentielles : sélectionner, filtrer...
-
--   **9h30 - 10h** : Pause
-
--   **10h - 12h** : Manipulations de données avec tidyverse *(120 minutes)*
-
-    -   Suite des opérations essentielles
-    -   Jointures
-
--   **12h - 13h30** : Pause déjeuner
-
--   **13h30 - 15h** : Tables (gt) et graphiques (ggplot2) *(90 minutes)*
-
--   **15h - 15h30** : Pause
-
--   **15h30 - 17h** : Restitution des lectures d'articles *(90 minutes)*
-
-## JOUR 4 : Données spatiales et mapme.biodiversity
-
--   **8h - 8h30** : Présentation des données spatiales *(30 minutes)*
-
-    -   Typologies, sources et principes techniques
-
-    Questions / discussion *(15 minutes)*
-
-    -   Avantages et inconvénients de ces sources
-    -   Expériences des participants dans leur utilisation
-    -   Opportunités pour leurs sujets de recherche
-
--   **8h30 - 9h15** : Manipulation de données spatiales d'AP sur R *(45 minutes)*
-
-    -   Types : vecteur, raster
-    -   Analogie avec les données tabulaires
-    -   Opérations spécifiquement spatiales
-
--   **9h15 - 9h30** : Pause
-
--   **9h30 - 10h15** : Visualisation et analyse des données spatiales *(45 minutes)*
-
-    -   Point avec tmap
-    -   Clarification sur les projections
-    -   Poursuite des exercices pratiques sur les aires protégées : comparaison des sources, statistiques descriptives
-
--   **12h - 13h30** : Pause déjeuner
-
--   **13h30 - 15h** : Présentation du package mapme.biodiversity, discussion/questions et manipulation *(90 minutes)*
-
-    -   Consultation des ressources disponibles
-    -   Découverte des données
-    -   Préparation des données pour les aires protégées
-
--   **15h - 15h30** : Pause
-
--   **15h30 - 17h** : Poursuite des analyses *(90 minutes)*
-
-    -   Création d'une grille sur le territoire
-    -   Exemple bref d'acquisition des données et calcul sur la grille
-
-## JOUR 5 : Méthodes expérimentales et observationnelles avant/après
-
--   **8h - 9h30** : Randomisation *(45 minutes)*
-
-    Questions / discussion *(45 minutes)*
-
-    -   Débat autour de la pertinence des RCT
-    -   Défis méthodologiques et pratique de la faisabilité
-    -   Questions éthiques
-
--   **9h30 - 10h** : Pause
-
--   **10h - 12h** : Application pratique : faisons "comme si" les AP étaient créées aléatoirement *(2 heures)*
-
-    -   Analyse de données
-    -   Interprétations
-    -   Tests d'équilibre
-
--   **12h - 13h30** : Pause déjeuner
-
--   **13h30 - 15h** : Avant/Après *(90 minutes)*
-
-    Discussion/questions et manipulation
-
-    -   Limites de l'approche
-    -   Moyens de vérification des tendances
-
--   **15h - 15h30** : Pause
-
--   **15h30 - 17h** : Tests de comparaison et d'équilibre avant-après et avec-sans *(90 minutes)*
-
-## JOUR 6 : Méthodes observationnelles d'appariement (matching)
-
--   **8h - 9h30** : Différentes unités/échelles d'analyse (AP, cellules, pixels...) *(30 minutes)*
-
-    Questions / discussion / mise en pratique *(90 minutes)*
-
--   **9h30 - 10h** : Pause
-
--   **10h - 12h** : Appariement (Matching) *(90 minutes)*
-
-    Questions / discussion *(30 minutes)*
-
-    -   Clarification du principe d'appariement
-    -   Variables pertinentes pour les aires protégées
-    -   Questions sur les biais potentiels liés aux variables non observables
-
--   **12h - 13h30** : Pause déjeuner
-
--   **13h30 - 15h** : Présentation du package MatchIt *(30 minutes)*
-
-    -   Exercices d'application aux aires protégées *(60 minutes)*
-    -   Spécification des variables
-    -   Algorithmes d'appariement
-    -   Paramètres associés 
-
--   **15h - 15h30** : Pause
-
--   **15h30 - 17h** : Suite des exercices d'application aux aires protégées *(90 minutes)*
-
-    -   Tests d'équilibre
-
-## JOUR 7 : Double différence et conclusion
-
--   **8h - 9h30** : Double différence (DiD) *(60 minutes)*
-
-    Questions / discussion *(30 minutes)*
-
-    -   Intérêt de l'approche DiD
-    -   Enjeux de validité si plusieurs périodes de comparaison
-    -   Stratégies de simplification
-
--   **9h30 - 10h** : Pause
-
--   **10h - 12h** : Package `did` *(30 minutes)*
-
-    -   Mise en application *(90 minutes)*
-    -   Utilisation sur 2 périodes
-    -   Utilisation sur N périodes
-    -   Vérification des tendances de prétraitement 
-
--   **12h - 13h30** : Pause déjeuner
-
--   **13h30 - 15h** : Synthèse et outils pratiques *(90 minutes)*
-
--   **15h - 15h30** : Pause
-
--   **15h30 - 17h** : Évaluation de la formation et remise des certificats *(90 minutes)*
+-   Jour 9 : Exercices pratiques et conclusion

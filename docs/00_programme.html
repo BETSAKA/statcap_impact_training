@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-2e2f7a2b0f6ea1d0af1331a7a5ecbdf9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0782c41cead3ebe281edb3ab3c776001.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -193,20 +193,8 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#jour-1-lévaluation-dimpact-pourquoi-comment" id="toc-jour-1-lévaluation-dimpact-pourquoi-comment" class="nav-link active" data-scroll-target="#jour-1-lévaluation-dimpact-pourquoi-comment">JOUR 1 : L’évaluation d’impact : Pourquoi ? Comment ?</a></li>
-  <li><a href="#jour-2-initiation-à-r" id="toc-jour-2-initiation-à-r" class="nav-link" data-scroll-target="#jour-2-initiation-à-r">JOUR 2 : Initiation à R</a></li>
-  <li><a href="#jour-3-initiation-à-r-et-restitution-des-lectures-darticles" id="toc-jour-3-initiation-à-r-et-restitution-des-lectures-darticles" class="nav-link" data-scroll-target="#jour-3-initiation-à-r-et-restitution-des-lectures-darticles">JOUR 3 : Initiation à R et restitution des lectures d’articles</a></li>
-  <li><a href="#jour-4-données-spatiales-et-mapme.biodiversity" id="toc-jour-4-données-spatiales-et-mapme.biodiversity" class="nav-link" data-scroll-target="#jour-4-données-spatiales-et-mapme.biodiversity">JOUR 4 : Données spatiales et mapme.biodiversity</a></li>
-  <li><a href="#jour-5-méthodes-expérimentales-et-observationnelles-avantaprès" id="toc-jour-5-méthodes-expérimentales-et-observationnelles-avantaprès" class="nav-link" data-scroll-target="#jour-5-méthodes-expérimentales-et-observationnelles-avantaprès">JOUR 5 : Méthodes expérimentales et observationnelles avant/après</a></li>
-  <li><a href="#jour-6-méthodes-observationnelles-dappariement-matching" id="toc-jour-6-méthodes-observationnelles-dappariement-matching" class="nav-link" data-scroll-target="#jour-6-méthodes-observationnelles-dappariement-matching">JOUR 6 : Méthodes observationnelles d’appariement (matching)</a></li>
-  <li><a href="#jour-7-double-différence-et-conclusion" id="toc-jour-7-double-différence-et-conclusion" class="nav-link" data-scroll-target="#jour-7-double-différence-et-conclusion">JOUR 7 : Double différence et conclusion</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -231,215 +219,18 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Voici une proposition de programme sur sept jours, visant une progression pédagogique pour commencer par les fondaments conceptuels et techniques et approfondir progressivement jusqu’à une maîtrise des bases de l’évaluation d’impact sur données spatiales. A La formation combine des cours théoriques et des exercices pratiques, incluant l’utilisation de logiciels tels que R.</p>
-<section id="jour-1-lévaluation-dimpact-pourquoi-comment" class="level2">
-<h2 class="anchored" data-anchor-id="jour-1-lévaluation-dimpact-pourquoi-comment">JOUR 1 : L’évaluation d’impact : Pourquoi ? Comment ?</h2>
 <ul>
-<li><p><strong>8h - 9h30</strong> : Présentation de l’atelier <em>(60 minutes)</em></p>
-<ul>
-<li>Objectif, contenu, programme, supports</li>
-<li>Méthode, exercices et constitution des groupes</li>
-<li>Formateurs et stagiaires (expérience R…)</li>
-</ul>
-<p>Discussion/questions <em>(30 minutes)</em></p>
-<ul>
-<li>Lien entre la formation et les agendas des participants</li>
-<li>Intérêt de la dimension spatiale</li>
-<li>Fil rouge pour expliquer les méthodes d’analyses : l’impact des aires protégées sur la déforestation<br>
-</li>
-</ul></li>
-<li><p><strong>9h30 - 10h</strong> : Pause</p></li>
-<li><p><strong>10h - 12h</strong> : Définition des objectifs de l’évaluation <em>(90 minutes)</em></p>
-<ul>
-<li>Suivi, évaluations classiques et d’impact : liens et différences</li>
-<li>Corrélation vs causalité : théorie des évaluations d’impact</li>
-</ul>
-<p>Discussion/questions (<em>30 minutes</em>)</p>
-<ul>
-<li>Illustrations autour de cas concrets</li>
-</ul></li>
-<li><p><strong>12h - 13h30</strong> : Pause déjeuner</p></li>
-<li><p><strong>13h30 - 14h45</strong> : Tour d’horizon des méthodes d’évaluation <em>(45 minutes)</em></p>
-<ul>
-<li>Méthodes par assignation aléatoire</li>
-<li>BACI (Before-after-control-impact)</li>
-<li>Appariement, double différence, contrôles synthétiques</li>
-<li>Régression sur discontinuité et variables instrumentales</li>
-<li>Cas d’application et avantages-inconvénients de chacune<br>
-<em>Durée :</em></li>
-</ul>
-<p>Discussion/questions (<em>30 minutes</em>)</p>
-<ul>
-<li>Focus sur les méthodes qui ne seront pas approfondies<br>
-<em>Durée :</em></li>
-</ul></li>
-<li><p><strong>14h45 - 15h</strong> : Pause</p></li>
-<li><p><strong>15h30 - 17h</strong> : Étude d’articles : cadrage <em>(30 minutes)</em></p>
-<p>Discussion/questions <em>(60 minutes)</em></p>
-<ul>
-<li>Formation des groupes</li>
-<li>Identification des articles</li>
-<li>Début des travaux pratiques (pas finis en séance)</li>
-<li>Débrieffing pour s’assurer que la méthode est bien comprise<br>
-</li>
-</ul></li>
-</ul>
-</section>
-<section id="jour-2-initiation-à-r" class="level2">
-<h2 class="anchored" data-anchor-id="jour-2-initiation-à-r">JOUR 2 : Initiation à R</h2>
-<ul>
-<li><p><strong>8h - 8h30</strong> : Environnement technique <em>(30 minutes)</em></p></li>
-<li><p><strong>8h30 - 9h</strong> : Interface et formats <em>(60 minutes)</em></p></li>
-<li><p><strong>9h30 - 10h</strong> : Pause</p></li>
-<li><p><strong>10h - 12h</strong> : Règles de code, assignation, objets <em>(120 minutes)</em></p></li>
-<li><p><strong>12h - 13h30</strong> : Pause déjeuner</p></li>
-<li><p><strong>13h30 - 15h</strong> : Fonctions, librairies, aide <em>(90 minutes)</em></p></li>
-<li><p><strong>15h - 15h30</strong> : Pause</p></li>
-<li><p><strong>15h30 - 17h</strong> : Import de données, valeurs manquantes <em>(90 minutes)</em></p></li>
-</ul>
-</section>
-<section id="jour-3-initiation-à-r-et-restitution-des-lectures-darticles" class="level2">
-<h2 class="anchored" data-anchor-id="jour-3-initiation-à-r-et-restitution-des-lectures-darticles">JOUR 3 : Initiation à R et restitution des lectures d’articles</h2>
-<ul>
-<li><p><strong>8h - 9h30</strong> : Manipulations de données avec tidyverse <em>(90 minutes)</em></p>
-<ul>
-<li>Opérateur “pipe” pour chaîner les opérations</li>
-<li>Opérations essentielles : sélectionner, filtrer…</li>
-</ul></li>
-<li><p><strong>9h30 - 10h</strong> : Pause</p></li>
-<li><p><strong>10h - 12h</strong> : Manipulations de données avec tidyverse <em>(120 minutes)</em></p>
-<ul>
-<li>Suite des opérations essentielles</li>
-<li>Jointures</li>
-</ul></li>
-<li><p><strong>12h - 13h30</strong> : Pause déjeuner</p></li>
-<li><p><strong>13h30 - 15h</strong> : Tables (gt) et graphiques (ggplot2) <em>(90 minutes)</em></p></li>
-<li><p><strong>15h - 15h30</strong> : Pause</p></li>
-<li><p><strong>15h30 - 17h</strong> : Restitution des lectures d’articles <em>(90 minutes)</em></p></li>
-</ul>
-</section>
-<section id="jour-4-données-spatiales-et-mapme.biodiversity" class="level2">
-<h2 class="anchored" data-anchor-id="jour-4-données-spatiales-et-mapme.biodiversity">JOUR 4 : Données spatiales et mapme.biodiversity</h2>
-<ul>
-<li><p><strong>8h - 8h30</strong> : Présentation des données spatiales <em>(30 minutes)</em></p>
-<ul>
-<li>Typologies, sources et principes techniques</li>
-</ul>
-<p>Questions / discussion <em>(15 minutes)</em></p>
-<ul>
-<li>Avantages et inconvénients de ces sources</li>
-<li>Expériences des participants dans leur utilisation</li>
-<li>Opportunités pour leurs sujets de recherche</li>
-</ul></li>
-<li><p><strong>8h30 - 9h15</strong> : Manipulation de données spatiales d’AP sur R <em>(45 minutes)</em></p>
-<ul>
-<li>Types : vecteur, raster</li>
-<li>Analogie avec les données tabulaires</li>
-<li>Opérations spécifiquement spatiales</li>
-</ul></li>
-<li><p><strong>9h15 - 9h30</strong> : Pause</p></li>
-<li><p><strong>9h30 - 10h15</strong> : Visualisation et analyse des données spatiales <em>(45 minutes)</em></p>
-<ul>
-<li>Point avec tmap</li>
-<li>Clarification sur les projections</li>
-<li>Poursuite des exercices pratiques sur les aires protégées : comparaison des sources, statistiques descriptives</li>
-</ul></li>
-<li><p><strong>12h - 13h30</strong> : Pause déjeuner</p></li>
-<li><p><strong>13h30 - 15h</strong> : Présentation du package mapme.biodiversity, discussion/questions et manipulation <em>(90 minutes)</em></p>
-<ul>
-<li>Consultation des ressources disponibles</li>
-<li>Découverte des données</li>
-<li>Préparation des données pour les aires protégées</li>
-</ul></li>
-<li><p><strong>15h - 15h30</strong> : Pause</p></li>
-<li><p><strong>15h30 - 17h</strong> : Poursuite des analyses <em>(90 minutes)</em></p>
-<ul>
-<li>Création d’une grille sur le territoire</li>
-<li>Exemple bref d’acquisition des données et calcul sur la grille</li>
-</ul></li>
-</ul>
-</section>
-<section id="jour-5-méthodes-expérimentales-et-observationnelles-avantaprès" class="level2">
-<h2 class="anchored" data-anchor-id="jour-5-méthodes-expérimentales-et-observationnelles-avantaprès">JOUR 5 : Méthodes expérimentales et observationnelles avant/après</h2>
-<ul>
-<li><p><strong>8h - 9h30</strong> : Randomisation <em>(45 minutes)</em></p>
-<p>Questions / discussion <em>(45 minutes)</em></p>
-<ul>
-<li>Débat autour de la pertinence des RCT</li>
-<li>Défis méthodologiques et pratique de la faisabilité</li>
-<li>Questions éthiques</li>
-</ul></li>
-<li><p><strong>9h30 - 10h</strong> : Pause</p></li>
-<li><p><strong>10h - 12h</strong> : Application pratique : faisons “comme si” les AP étaient créées aléatoirement <em>(2 heures)</em></p>
-<ul>
-<li>Analyse de données</li>
-<li>Interprétations</li>
-<li>Tests d’équilibre</li>
-</ul></li>
-<li><p><strong>12h - 13h30</strong> : Pause déjeuner</p></li>
-<li><p><strong>13h30 - 15h</strong> : Avant/Après <em>(90 minutes)</em></p>
-<p>Discussion/questions et manipulation</p>
-<ul>
-<li>Limites de l’approche</li>
-<li>Moyens de vérification des tendances</li>
-</ul></li>
-<li><p><strong>15h - 15h30</strong> : Pause</p></li>
-<li><p><strong>15h30 - 17h</strong> : Tests de comparaison et d’équilibre avant-après et avec-sans <em>(90 minutes)</em></p></li>
-</ul>
-</section>
-<section id="jour-6-méthodes-observationnelles-dappariement-matching" class="level2">
-<h2 class="anchored" data-anchor-id="jour-6-méthodes-observationnelles-dappariement-matching">JOUR 6 : Méthodes observationnelles d’appariement (matching)</h2>
-<ul>
-<li><p><strong>8h - 9h30</strong> : Différentes unités/échelles d’analyse (AP, cellules, pixels…) <em>(30 minutes)</em></p>
-<p>Questions / discussion / mise en pratique <em>(90 minutes)</em></p></li>
-<li><p><strong>9h30 - 10h</strong> : Pause</p></li>
-<li><p><strong>10h - 12h</strong> : Appariement (Matching) <em>(90 minutes)</em></p>
-<p>Questions / discussion <em>(30 minutes)</em></p>
-<ul>
-<li>Clarification du principe d’appariement</li>
-<li>Variables pertinentes pour les aires protégées</li>
-<li>Questions sur les biais potentiels liés aux variables non observables</li>
-</ul></li>
-<li><p><strong>12h - 13h30</strong> : Pause déjeuner</p></li>
-<li><p><strong>13h30 - 15h</strong> : Présentation du package MatchIt <em>(30 minutes)</em></p>
-<ul>
-<li>Exercices d’application aux aires protégées <em>(60 minutes)</em></li>
-<li>Spécification des variables</li>
-<li>Algorithmes d’appariement</li>
-<li>Paramètres associés</li>
-</ul></li>
-<li><p><strong>15h - 15h30</strong> : Pause</p></li>
-<li><p><strong>15h30 - 17h</strong> : Suite des exercices d’application aux aires protégées <em>(90 minutes)</em></p>
-<ul>
-<li>Tests d’équilibre</li>
-</ul></li>
-</ul>
-</section>
-<section id="jour-7-double-différence-et-conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="jour-7-double-différence-et-conclusion">JOUR 7 : Double différence et conclusion</h2>
-<ul>
-<li><p><strong>8h - 9h30</strong> : Double différence (DiD) <em>(60 minutes)</em></p>
-<p>Questions / discussion <em>(30 minutes)</em></p>
-<ul>
-<li>Intérêt de l’approche DiD</li>
-<li>Enjeux de validité si plusieurs périodes de comparaison</li>
-<li>Stratégies de simplification</li>
-</ul></li>
-<li><p><strong>9h30 - 10h</strong> : Pause</p></li>
-<li><p><strong>10h - 12h</strong> : Package <code>did</code> <em>(30 minutes)</em></p>
-<ul>
-<li>Mise en application <em>(90 minutes)</em></li>
-<li>Utilisation sur 2 périodes</li>
-<li>Utilisation sur N périodes</li>
-<li>Vérification des tendances de prétraitement</li>
-</ul></li>
-<li><p><strong>12h - 13h30</strong> : Pause déjeuner</p></li>
-<li><p><strong>13h30 - 15h</strong> : Synthèse et outils pratiques <em>(90 minutes)</em></p></li>
-<li><p><strong>15h - 15h30</strong> : Pause</p></li>
-<li><p><strong>15h30 - 17h</strong> : Évaluation de la formation et remise des certificats <em>(90 minutes)</em></p></li>
+<li><p>Jour 1 : Introduction et cadrage théorique et méthodologique</p></li>
+<li><p>Jour 2 : Revue de travaux scientifiques et typologie de données</p></li>
+<li><p>Jour 3 et 4 : Initiation à R</p></li>
+<li><p>Jour 5 : Production d’indicateurs spatialisés</p></li>
+<li><p>Jour 6 : Méthodes expérimentales et avant-après</p></li>
+<li><p>Jour 7 : Méthodes d’appariement</p></li>
+<li><p>Jour 8 : Double différence</p></li>
+<li><p>Jour 9 : Exercices pratiques et conclusion</p></li>
 </ul>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
