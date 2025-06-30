@@ -16,5 +16,5 @@ Mentionner également les enjeux de prise en compte du qualitatif.
 On va revoir deux articles récents qui emploient des méthodes semblables à celles que nous allons étudier pendant le cours :
 
 - L'article "On track to achieve no net loss of forest at Madagascar's biggest mine" de Devenish et al. [-@devenish_track_2022] paru dans *Nature Sustainability*.
-- L'article "Forest loss report card for the world’s protected areas", de Wolf et al. [-@wolf_forest_2021], paru dans *Nature Ecology & Evolution*.
+- L'article "Collaborative management partnerships strongly decreased deforestation in the most at-risk protected areas in Africa since 2000", de Desbureaux et al. [-@desbureaux_collaborative_2025], paru dans *Proceedings of the National Academy of Sciences*.
 
