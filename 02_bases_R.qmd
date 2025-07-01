@@ -25,6 +25,8 @@ RStudio inclut un éditeur de texte avec coloration syntaxique, un gestionnaire 
 
 En somme, R est le langage de programmation sous-jacent pour l'analyse des données, tandis que RStudio est un environnement de développement qui facilite l'utilisation de R.
 
+[Cette page](https://posit.co/download/rstudio-desktop/) fournit des liens pour télécharger R et RStudio afin de les installer sur son ordinateur.
+
 ### Sources d'apprentissage
 
 Il existe de plusieurs ressources en français pour apprendre à coder sur
