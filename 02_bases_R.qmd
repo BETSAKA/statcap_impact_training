@@ -456,24 +456,33 @@ pivot_wider(long,
 
 ### Exercice
 
-Vous disposez de deux tableaux :
-- Une base d’individus avec leur commune de résidence
-- Une base de communes avec des indicateurs agrégés (ex: pauvreté, déforestation)
+Vous disposez de trois tableaux :
+- Deux bases sur les surfaces de couvert forestier (en ha) d'aires protégées : 
+  - Une base d'aire protégées gérées par le gouvernement (MNP)
+  - Une base d'aires protégées gérées par des acteurs privés (ONG)
+- Une base de régions avec un indicateur agrégé (déforestation)
 
-**Objectif** : faites une jointure pour enrichir la base individuelle avec les caractéristiques de la commune.
+**Objectif** : crééer une base unique au format large contenant une ligne par aire protégée avec les informations sur la région de localisation, le taux de déforestation entre 2010 et 2020, la surface de couvert forestier en 2010 et la surface de couvert forestier en 2020 de chaque aire protégée.
 
 ```{r}
-# Base individuelle
-individus <- data.frame(ID = 1:4,
-                        commune = c("A", "B", "A", "C"),
-                        revenu = c(200, 250, 180, 220))
+# Base parcs MNP
+ap_mnp <- data.frame(ID = c(1:4, 1:4),
+                        region = c("A", "B", "A", "C", "A", "B", "A", "C"),
+                        annee = c(2010, 2010, 2010, 2010, 2020, 2020, 2020, 2020),
+                        surface_foret = c(643, 1181, 3747, 2790, 579, 1063, 3372, 2232))
 
-# Base agrégée
-communes <- data.frame(commune = c("A", "B", "C"),
-                       deforestation = c(0.2, 0.1, 0.3))
+# Base parcs ONG
+ap_ong <- data.frame(ID = c(5:8, 5:8),
+                        region = c("A", "B", "B", "C", "A", "B", "B", "C"),
+                        annee = c(2010, 2010, 2010, 2010, 2020, 2020, 2020, 2020),
+                        surface_foret = c(10683, 4484, 2692, 1801, 9615, 4036, 2423, 1440))
+
+# Base régions
+regions <- data.frame(region = c("A", "B", "C"),
+                       deforestation_10ans = c(0.1, 0.1, 0.2))
 ```
 
-À vous de jouer : utilisez `left_join()`.
+À vous de jouer : utilisez `pivot_wider()`, `bind_rows()`et `left_join()` (pas forcément dans cet ordre).
 
 ## Import de données
 

@@ -90,13 +90,39 @@ ventes_par_produit <- ventes_magasin %>%
 ventes_par_produit
 
 # Section: Jointures
-# Exercice : enrichir base individuelle avec caractéristiques communales
-individus <- data.frame(ID = 1:4, commune = c("A", "B", "A", "C"), revenu = c(200, 250, 180, 220))
-individus
+# Exercice : créer une base unique des surfaces de couvert forestier des aires protégées 
+# en 2010 et 2020 au format large
 
-communes <- data.frame(commune = c("A", "B", "C"), deforestation = c(0.2, 0.1, 0.3))
-individus <- left_join(individus, communes, by = "commune")
-individus
+# Base parcs MNP
+parcs_mnp <- data.frame(ID = c(1:4, 1:4),
+                        region = c("A", "B", "A", "C", "A", "B", "A", "C"),
+                        annee = c(2010, 2010, 2010, 2010, 2020, 2020, 2020, 2020),
+                        surface_foret = c(643, 1181, 3747, 2790, 579, 1063, 3372, 2232))
+
+# Base parcs ONG
+parcs_ong <- data.frame(ID = c(5:8, 5:8),
+                        region = c("A", "B", "B", "C", "A", "B", "B", "C"),
+                        annee = c(2010, 2010, 2010, 2010, 2020, 2020, 2020, 2020),
+                        surface_foret = c(10683, 4484, 2692, 1801, 9615, 4036, 2423, 1440))
+
+# Base régions
+regions <- data.frame(region = c("A", "B", "C"),
+                      deforestation_10ans = c(0.1, 0.1, 0.2))
+
+
+    #Empiler les bases parcs
+    parcs <- bind_rows(parcs_mnp, parcs_ong) %>%
+              arrange(ID, annee)
+    
+    #Joindre avec la base régions
+    parcs <- left_join(parcs, regions, by = "region")
+    
+    #Pivoter la base parcs
+    parcs_wide <- parcs %>%
+      pivot_wider(names_from = annee, values_from = surface_foret, names_prefix = "surface_foret_")
+
+
+
 
 # Section: Import de données
 # Exercice : importer CSV, Excel, texte
