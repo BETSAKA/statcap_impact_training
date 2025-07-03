@@ -268,7 +268,8 @@ div.csl-indent {
   <li><a href="#les-noms-dobjets" id="toc-les-noms-dobjets" class="nav-link" data-scroll-target="#les-noms-dobjets"><span class="header-section-number">2.2.5</span> Les noms d’objets</a></li>
   <li><a href="#les-fonctions" id="toc-les-fonctions" class="nav-link" data-scroll-target="#les-fonctions"><span class="header-section-number">2.2.6</span> Les fonctions</a></li>
   <li><a href="#les-structures-de-contrôle-if-else-et-les-boucles" id="toc-les-structures-de-contrôle-if-else-et-les-boucles" class="nav-link" data-scroll-target="#les-structures-de-contrôle-if-else-et-les-boucles"><span class="header-section-number">2.2.7</span> Les structures de contrôle : <code>if</code>, <code>else</code>, et les boucles</a></li>
-  <li><a href="#les-valeurs-manquantes" id="toc-les-valeurs-manquantes" class="nav-link" data-scroll-target="#les-valeurs-manquantes"><span class="header-section-number">2.2.8</span> Les valeurs manquantes</a></li>
+  <li><a href="#les-opérateurs-logiques" id="toc-les-opérateurs-logiques" class="nav-link" data-scroll-target="#les-opérateurs-logiques"><span class="header-section-number">2.2.8</span> Les opérateurs logiques</a></li>
+  <li><a href="#les-valeurs-manquantes" id="toc-les-valeurs-manquantes" class="nav-link" data-scroll-target="#les-valeurs-manquantes"><span class="header-section-number">2.2.9</span> Les valeurs manquantes</a></li>
   </ul></li>
   <li><a href="#librairies-r" id="toc-librairies-r" class="nav-link" data-scroll-target="#librairies-r"><span class="header-section-number">2.3</span> Librairies R</a>
   <ul class="collapse">
@@ -278,7 +279,7 @@ div.csl-indent {
   <li><a href="#les-jointures" id="toc-les-jointures" class="nav-link" data-scroll-target="#les-jointures"><span class="header-section-number">2.3.4</span> Les jointures</a></li>
   <li><a href="#empilement-dobservations-bind_rows" id="toc-empilement-dobservations-bind_rows" class="nav-link" data-scroll-target="#empilement-dobservations-bind_rows"><span class="header-section-number">2.3.5</span> Empilement d’observations (<code>bind_rows</code>)</a></li>
   <li><a href="#restructuration-de-données-pivot" id="toc-restructuration-de-données-pivot" class="nav-link" data-scroll-target="#restructuration-de-données-pivot"><span class="header-section-number">2.3.6</span> Restructuration de données (<code>pivot</code>)</a></li>
-  <li><a href="#exercice-7" id="toc-exercice-7" class="nav-link" data-scroll-target="#exercice-7"><span class="header-section-number">2.3.7</span> Exercice</a></li>
+  <li><a href="#exercice-8" id="toc-exercice-8" class="nav-link" data-scroll-target="#exercice-8"><span class="header-section-number">2.3.7</span> Exercice</a></li>
   </ul></li>
   <li><a href="#import-de-données" id="toc-import-de-données" class="nav-link" data-scroll-target="#import-de-données"><span class="header-section-number">2.4</span> Import de données</a>
   <ul class="collapse">
@@ -584,43 +585,133 @@ div.csl-indent {
 <pre><code>[1] "x est supérieur à 5"</code></pre>
 </div>
 </div>
+<p>Les blocs de conditions peuvent aussi être enchaînés avec else if :</p>
 <p>Dans cet exemple, le message “x est supérieur à 5” sera affiché car la condition <code>x &gt; 5</code> est vraie.</p>
-<ul>
-<li><strong>Boucles <code>for</code></strong> : Les boucles <code>for</code> permettent de répéter une série d’instructions un certain nombre de fois.</li>
-</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) {</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Itération :"</span>, i))</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>note <span class="ot">&lt;-</span> <span class="dv">15</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (note <span class="sc">&gt;=</span> <span class="dv">16</span>) {</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Très bien"</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (note <span class="sc">&gt;=</span> <span class="dv">12</span>) {</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Assez bien"</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"À améliorer"</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Itération : 1"
-[1] "Itération : 2"
-[1] "Itération : 3"
-[1] "Itération : 4"
-[1] "Itération : 5"</code></pre>
+<pre><code>[1] "Assez bien"</code></pre>
 </div>
 </div>
-<p>Ici, la boucle <code>for</code> va exécuter l’instruction <code>print()</code> pour chaque valeur de <code>i</code> allant de 1 à 5.</p>
 <section id="exercice-6" class="level4" data-number="2.2.7.1">
 <h4 data-number="2.2.7.1" class="anchored" data-anchor-id="exercice-6"><span class="header-section-number">2.2.7.1</span> Exercice</h4>
+<p>Exercice</p>
+<p>Créez une variable <code>temp</code> qui représente une température. Utilisez <code>if</code>, <code>else if</code>, et <code>else</code> pour afficher :</p>
 <ul>
-<li><strong>Utiliser une boucle <code>for</code></strong> : Créez une boucle qui affiche les carrés des nombres de 1 à 10.</li>
+<li>“Très froid” si temp est inférieure à 5,</li>
+<li>“Tempéré” si elle est entre 5 et 25,</li>
+<li>“Chaud” si elle est supérieure à 25.</li>
 </ul>
 </section>
 </section>
-<section id="les-valeurs-manquantes" class="level3" data-number="2.2.8">
-<h3 data-number="2.2.8" class="anchored" data-anchor-id="les-valeurs-manquantes"><span class="header-section-number">2.2.8</span> Les valeurs manquantes</h3>
+<section id="les-opérateurs-logiques" class="level3" data-number="2.2.8">
+<h3 data-number="2.2.8" class="anchored" data-anchor-id="les-opérateurs-logiques"><span class="header-section-number">2.2.8</span> Les opérateurs logiques</h3>
+<p>Les conditions reposent souvent sur des <strong>opérateurs logiques</strong> pour comparer des valeurs ou combiner des tests :</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>Opérateur</strong></th>
+<th><strong>Signification</strong></th>
+<th><strong>Exemple</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>==</code></td>
+<td>égal à</td>
+<td><code>x == 5</code></td>
+</tr>
+<tr class="even">
+<td><code>!=</code></td>
+<td>différent de</td>
+<td><code>x != 5</code></td>
+</tr>
+<tr class="odd">
+<td><code>&lt;</code></td>
+<td>strictement inférieur à</td>
+<td><code>x &lt; 5</code></td>
+</tr>
+<tr class="even">
+<td><code>&lt;=</code></td>
+<td>inférieur ou égal à</td>
+<td><code>x &lt;= 5</code></td>
+</tr>
+<tr class="odd">
+<td><code>&gt;</code></td>
+<td>strictement supérieur à</td>
+<td><code>x &gt; 5</code></td>
+</tr>
+<tr class="even">
+<td><code>&gt;=</code></td>
+<td>supérieur ou égal à</td>
+<td><code>x &gt;= 5</code></td>
+</tr>
+<tr class="odd">
+<td><code>&amp;</code></td>
+<td>ET logique (conjonction)</td>
+<td><code>x &gt; 5 &amp; x &lt; 10</code></td>
+</tr>
+<tr class="even">
+<td><code>|</code></td>
+<td>OU logique (disjonction)</td>
+<td><code>x &lt; 5 | x &gt; 10</code></td>
+</tr>
+<tr class="odd">
+<td><code>!</code></td>
+<td>NON logique (négation)</td>
+<td><code>! (x == 5)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ces opérateurs sont essentiels pour formuler des conditions dans vos scripts.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>x <span class="sc">&gt;</span> <span class="dv">5</span> <span class="sc">&amp;</span> x <span class="sc">&lt;</span> <span class="dv">10</span>   <span class="co"># TRUE : les deux conditions sont vraies</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>x <span class="sc">&lt;</span> <span class="dv">5</span> <span class="sc">|</span> x <span class="sc">&gt;</span> <span class="dv">10</span>   <span class="co"># FALSE : aucune des deux n’est vraie</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="sc">!</span>(x <span class="sc">==</span> <span class="dv">7</span>)        <span class="co"># FALSE : x est bien égal à 7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<section id="exercice-7" class="level4" data-number="2.2.8.1">
+<h4 data-number="2.2.8.1" class="anchored" data-anchor-id="exercice-7"><span class="header-section-number">2.2.8.1</span> Exercice</h4>
+<p>Créez une variable revenu &lt;- 1500. Affichez :</p>
+<ul>
+<li>“Faible revenu” si le revenu est inférieur à 1000,</li>
+<li>“Revenu moyen” s’il est entre 1000 et 2000,</li>
+<li>“Haut revenu” sinon.</li>
+<li>Utilisez des opérateurs logiques (&amp;, &gt;=, &lt;) pour formuler les conditions.</li>
+</ul>
+</section>
+</section>
+<section id="les-valeurs-manquantes" class="level3" data-number="2.2.9">
+<h3 data-number="2.2.9" class="anchored" data-anchor-id="les-valeurs-manquantes"><span class="header-section-number">2.2.9</span> Les valeurs manquantes</h3>
 <p>Les valeurs manquantes (<code>NA</code>) sont courantes dans les jeux de données réels. Il est essentiel de savoir comment les gérer pour éviter des erreurs.</p>
 <ul>
 <li><strong>Gérer les valeurs manquantes</strong> : Utilisez <code>na.rm = TRUE</code> pour ignorer les <code>NA</code> dans des opérations.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">30</span>, <span class="cn">NA</span>, <span class="dv">40</span>)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(ages) <span class="co"># Renvoie une valeur manquante </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">30</span>, <span class="cn">NA</span>, <span class="dv">40</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(ages) <span class="co"># Renvoie une valeur manquante </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] NA</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>moyenne_ages <span class="ot">&lt;-</span> <span class="fu">mean</span>(ages, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>moyenne_ages <span class="ot">&lt;-</span> <span class="fu">mean</span>(ages, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -631,10 +722,10 @@ div.csl-indent {
 <p>Lors de la rédaction de publications scientifiques, il est important de citer correctement les packages R utilisés dans votre analyse. Assurez-vous d’inclure le nom complet du package ainsi que le nom de son auteur ou des auteurs. Zotero et RStudio permettent aisément d’inclure ces citations dans votre analyse.</p>
 <p>Les autres packages mobilisés pour ce cours sont listés dans le bloc de code ci-dessous :</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tidyverse"</span>) <span class="co"># Une série de packages pour faciliter la manipulation de données</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"readxl"</span>) <span class="co"># Pour lire les fichiers Excel (Carvalho et al. 2018)</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"gt"</span>) <span class="co"># Pour des rendus graphiques harmonisés HTML et PDF/LaTeX</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"wdpar"</span>) <span class="co"># Pour télécharger simplement la base d'aires protégées WDPA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tidyverse"</span>) <span class="co"># Une série de packages pour faciliter la manipulation de données</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"readxl"</span>) <span class="co"># Pour lire les fichiers Excel (Carvalho et al. 2018)</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"gt"</span>) <span class="co"># Pour des rendus graphiques harmonisés HTML et PDF/LaTeX</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"wdpar"</span>) <span class="co"># Pour télécharger simplement la base d'aires protégées WDPA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="le-tidyverse" class="level3" data-number="2.3.1">
 <h3 data-number="2.3.1" class="anchored" data-anchor-id="le-tidyverse"><span class="header-section-number">2.3.1</span> Le tidyverse</h3>
@@ -644,15 +735,15 @@ div.csl-indent {
 <h3 data-number="2.3.2" class="anchored" data-anchor-id="lopérateur-pipeline"><span class="header-section-number">2.3.2</span> L’opérateur pipeline</h3>
 <p>Le signe <code>%&gt;%</code> est un “tuyau”. On peut le lire à haute voix comme “ensuite”. Par exemple :</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="dv">7</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> a <span class="sc">%&gt;%</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addition</span>(b) <span class="sc">%&gt;%</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addition</span>(c)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> a <span class="sc">%&gt;%</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addition</span>(b) <span class="sc">%&gt;%</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addition</span>(c)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="la-préparation-des-données-avec-dplyr" class="level3" data-number="2.3.3">
@@ -660,17 +751,17 @@ div.csl-indent {
 <p>Le “tidyverse” comprend plusieurs packages populaires, notamment <strong>dplyr</strong>. Ce dernier est très utile pour épurer les données lorsque vous travaillez sur des tableaux (et donc sur des tables attributaires).</p>
 <p>Il est utilisé pour la manipulation de données, notamment le filtrage, la sélection, le regroupement et la création de nouvelles variables.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On commence par créer les variables (les colonnes du tableau)</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>noms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"John"</span>, <span class="st">"Jack"</span>, <span class="st">"Cindy"</span>, <span class="st">"Samantha"</span>)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>sexe <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"homme"</span>, <span class="st">"homme"</span>, <span class="st">"femme"</span>, <span class="st">"femme"</span>)</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">42</span>, <span class="dv">57</span>, <span class="dv">24</span>, <span class="cn">NA</span>)</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>poids <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">87</span>, <span class="dv">73</span>, <span class="cn">NA</span>, <span class="cn">NA</span>)</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>tailles <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">174</span>, <span class="dv">198</span>, <span class="dv">192</span>, <span class="dv">164</span>)</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="co"># On les rassemble dans un tableau </span></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>ma_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(noms, sexe, ages, poids, tailles)</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>ma_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On commence par créer les variables (les colonnes du tableau)</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>noms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"John"</span>, <span class="st">"Jack"</span>, <span class="st">"Cindy"</span>, <span class="st">"Samantha"</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>sexe <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"homme"</span>, <span class="st">"homme"</span>, <span class="st">"femme"</span>, <span class="st">"femme"</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">42</span>, <span class="dv">57</span>, <span class="dv">24</span>, <span class="cn">NA</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>poids <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">87</span>, <span class="dv">73</span>, <span class="cn">NA</span>, <span class="cn">NA</span>)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>tailles <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">174</span>, <span class="dv">198</span>, <span class="dv">192</span>, <span class="dv">164</span>)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="co"># On les rassemble dans un tableau </span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>ma_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(noms, sexe, ages, poids, tailles)</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>ma_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      noms  sexe ages poids tailles
 1     John homme   42    87     174
@@ -678,29 +769,39 @@ div.csl-indent {
 3    Cindy femme   24    NA     192
 4 Samantha femme   NA    NA     164</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Un exemple qui combine ces opérations</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>ma_table <span class="sc">%&gt;%</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ages))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Un exemple qui combine ces opérations</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>ma_table <span class="sc">%&gt;%</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ages))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   noms  sexe ages poids tailles
 1  John homme   42    87     174
 2  Jack homme   57    73     198
 3 Cindy femme   24    NA     192</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>ma_table <span class="sc">%&gt;%</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ages)) <span class="sc">%&gt;%</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sexe, ages, tailles, poids)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exemples pour filter et select </span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>ma_table <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ages)) <span class="sc">%&gt;%</span> <span class="co"># on ne garde que les ligne ou âge n'est pas manquant</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sexe, ages, tailles, poids) <span class="co"># on spécifie des colonnes à garder</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   sexe ages tailles poids
 1 homme   42     174    87
 2 homme   57     198    73
 3 femme   24     192    NA</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>ma_table <span class="sc">%&gt;%</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ages)) <span class="sc">%&gt;%</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sexe, ages, tailles, poids) <span class="sc">%&gt;%</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sexe) <span class="sc">%&gt;%</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">nb_pers =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajout d'une colonne 'taille_m' convertissant la taille en mètres</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>ma_table <span class="ot">&lt;-</span> ma_table <span class="sc">%&gt;%</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">taille_m =</span> tailles <span class="sc">/</span> <span class="dv">100</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Création d'une variable âge corrigé (ajout de 1 an)</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>ma_table <span class="ot">&lt;-</span> ma_table <span class="sc">%&gt;%</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_corrige =</span> ages <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Statistiques agrégées par sexe</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>ma_table <span class="sc">%&gt;%</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ages)) <span class="sc">%&gt;%</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sexe, ages, tailles, poids) <span class="sc">%&gt;%</span></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sexe) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">nb_pers =</span> <span class="fu">n</span>()) <span class="co"># la fonction n() compte le nombre de lignes</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 2
   sexe  nb_pers
@@ -708,14 +809,15 @@ div.csl-indent {
 1 femme       1
 2 homme       2</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>ma_table <span class="sc">%&gt;%</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ages)) <span class="sc">%&gt;%</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sexe, ages, tailles, poids) <span class="sc">%&gt;%</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sexe) <span class="sc">%&gt;%</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">nb_pers =</span> <span class="fu">n</span>(),</span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">somme_poids =</span> <span class="fu">sum</span>(poids, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">taille_max =</span> <span class="fu">max</span>(tailles, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">age_moy =</span> <span class="fu">mean</span>(ages, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On peut produire plusieurs statistiques dans le même appel de summarise</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>ma_table <span class="sc">%&gt;%</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ages)) <span class="sc">%&gt;%</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sexe, ages, tailles, poids) <span class="sc">%&gt;%</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sexe) <span class="sc">%&gt;%</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">nb_pers =</span> <span class="fu">n</span>(),</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">somme_poids =</span> <span class="fu">sum</span>(poids, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="co"># sum = somme</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">taille_max =</span> <span class="fu">max</span>(tailles, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="co"># max = valeur maximum</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">age_moy =</span> <span class="fu">mean</span>(ages, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="co"># mean = moyenne</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 5
   sexe  nb_pers somme_poids taille_max age_moy
@@ -724,7 +826,7 @@ div.csl-indent {
 2 homme       2         160        198    49.5</code></pre>
 </div>
 </div>
-<p>Voici certaines des fonctions fondamentales de dplyr : - <code>select</code> : choisir des colonnes - <code>filter</code> : choisir des lignes - <code>mutate</code> : modifier des valeurs - <code>group_by</code> : regrouper les données par une ou plusieurs variables - <code>summarise</code> : créer des résumés sur les données</p>
+<p>Voici certaines des fonctions fondamentales de dplyr : - <code>select</code> : choisir des colonnes en indiquant leur nom ou sur la base de conditions logiques (cf.&nbsp;<code>?tidyselect</code>) - <code>filter</code> : choisir des lignes en fonction d’une condition logique (ex. égal à, supérieur à…) - <code>mutate</code> : modifier des valeurs - <code>group_by</code> : regrouper les données par une ou plusieurs variables - <code>summarise</code> : créer des résumés sur les données</p>
 <blockquote class="blockquote">
 <p><strong>Exercice en groupe</strong> : à partir du tableau <code>ventes_magasin</code>, utilisez les fonctions précédentes et l’opérateur pipe pour réaliser les opérations suivantes :</p>
 <ol type="1">
@@ -736,32 +838,32 @@ div.csl-indent {
 </ol>
 </blockquote>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Création du data frame ventes_magasin</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>ventes_magasin <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">produit =</span> <span class="fu">c</span>(<span class="st">"Produit A"</span>, <span class="st">"Produit B"</span>, <span class="st">"Produit A"</span>, <span class="st">"Produit C"</span>, <span class="st">"Produit B"</span>,</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Produit A"</span>, <span class="st">"Produit C"</span>, <span class="st">"Produit B"</span>, <span class="st">"Produit A"</span>),</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantite =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">4</span>, <span class="dv">12</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="dv">3</span>, <span class="dv">11</span>, <span class="dv">5</span>),</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">prix_unitaire =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">8</span>, <span class="dv">12</span>, <span class="dv">20</span>, <span class="dv">10</span>, <span class="dv">18</span>, <span class="dv">14</span>, <span class="dv">9</span>),</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">date_vente =</span> <span class="fu">ymd</span>( <span class="co"># Cette fonction interprète des dates year-month-day</span></span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"2023-01-05"</span>, <span class="st">"2023-01-08"</span>, <span class="st">"2023-01-09"</span>, <span class="st">"2023-01-10"</span>, <span class="st">"2023-01-15"</span>,</span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"2023-01-20"</span>, <span class="st">"2023-01-25"</span>, <span class="st">"2023-01-30"</span>, <span class="st">"2023-02-02"</span>))</span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Création du data frame ventes_magasin</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>ventes_magasin <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">produit =</span> <span class="fu">c</span>(<span class="st">"Produit A"</span>, <span class="st">"Produit B"</span>, <span class="st">"Produit A"</span>, <span class="st">"Produit C"</span>, <span class="st">"Produit B"</span>,</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Produit A"</span>, <span class="st">"Produit C"</span>, <span class="st">"Produit B"</span>, <span class="st">"Produit A"</span>),</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantite =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">4</span>, <span class="dv">12</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="dv">3</span>, <span class="dv">11</span>, <span class="dv">5</span>),</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">prix_unitaire =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">8</span>, <span class="dv">12</span>, <span class="dv">20</span>, <span class="dv">10</span>, <span class="dv">18</span>, <span class="dv">14</span>, <span class="dv">9</span>),</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">date_vente =</span> <span class="fu">ymd</span>( <span class="co"># Cette fonction interprète des dates year-month-day</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"2023-01-05"</span>, <span class="st">"2023-01-08"</span>, <span class="st">"2023-01-09"</span>, <span class="st">"2023-01-10"</span>, <span class="st">"2023-01-15"</span>,</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"2023-01-20"</span>, <span class="st">"2023-01-25"</span>, <span class="st">"2023-01-30"</span>, <span class="st">"2023-02-02"</span>))</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="les-jointures" class="level3" data-number="2.3.4">
 <h3 data-number="2.3.4" class="anchored" data-anchor-id="les-jointures"><span class="header-section-number">2.3.4</span> Les jointures</h3>
 <p>Les jointures permettent de fusionner deux tableaux par une variable d’identification (“clé”).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tableau clients</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>clients <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nom_client =</span> <span class="fu">c</span>(<span class="st">"Alice"</span>, <span class="st">"Bob"</span>, <span class="st">"Charlie"</span>, <span class="st">"David"</span>))</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Tableau commandes</span></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>commandes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>),</span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">montant =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">150</span>, <span class="dv">50</span>, <span class="dv">200</span>))</span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="co"># inner_join : ne garde que les IDs présents dans les deux tableaux</span></span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a><span class="fu">inner_join</span>(clients, commandes, <span class="at">by =</span> <span class="st">"ID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tableau clients</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>clients <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nom_client =</span> <span class="fu">c</span>(<span class="st">"Alice"</span>, <span class="st">"Bob"</span>, <span class="st">"Charlie"</span>, <span class="st">"David"</span>))</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Tableau commandes</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>commandes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>),</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">montant =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">150</span>, <span class="dv">50</span>, <span class="dv">200</span>))</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="co"># inner_join : ne garde que les IDs présents dans les deux tableaux</span></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="fu">inner_join</span>(clients, commandes, <span class="at">by =</span> <span class="st">"ID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  ID nom_client montant
 1  1      Alice      50
@@ -769,8 +871,8 @@ div.csl-indent {
 3  3    Charlie     150
 4  4      David     200</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># left_join : garde tous les clients, même ceux sans commande</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>(clients, commandes, <span class="at">by =</span> <span class="st">"ID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># left_join : garde tous les clients, même ceux sans commande</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>(clients, commandes, <span class="at">by =</span> <span class="st">"ID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  ID nom_client montant
 1  1      Alice      50
@@ -787,10 +889,10 @@ div.csl-indent {
 <h3 data-number="2.3.5" class="anchored" data-anchor-id="empilement-dobservations-bind_rows"><span class="header-section-number">2.3.5</span> Empilement d’observations (<code>bind_rows</code>)</h3>
 <p>Cette fonction permet d’empiler plusieurs tableaux identiques (par exemple, plusieurs années ou régions).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>clients_2020 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">nom =</span> <span class="fu">c</span>(<span class="st">"Alice"</span>, <span class="st">"Bob"</span>))</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>clients_2021 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="at">nom =</span> <span class="fu">c</span>(<span class="st">"Charlie"</span>, <span class="st">"David"</span>))</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(clients_2020, clients_2021)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>clients_2020 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">nom =</span> <span class="fu">c</span>(<span class="st">"Alice"</span>, <span class="st">"Bob"</span>))</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>clients_2021 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="at">nom =</span> <span class="fu">c</span>(<span class="st">"Charlie"</span>, <span class="st">"David"</span>))</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(clients_2020, clients_2021)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  ID     nom
 1  1   Alice
@@ -804,16 +906,16 @@ div.csl-indent {
 <h3 data-number="2.3.6" class="anchored" data-anchor-id="restructuration-de-données-pivot"><span class="header-section-number">2.3.6</span> Restructuration de données (<code>pivot</code>)</h3>
 <p>Certaines analyses requièrent des données en format long (une ligne par unité-temps) ou en format large (une colonne par année ou modalité).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Passage de format large à format long</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>large <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">revenu_2020 =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">150</span>),</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">revenu_2021 =</span> <span class="fu">c</span>(<span class="dv">120</span>, <span class="dv">160</span>))</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(large,</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"revenu"</span>),</span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">names_to =</span> <span class="st">"année"</span>,</span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">values_to =</span> <span class="st">"revenu"</span>)</span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Passage de format large à format long</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>large <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">revenu_2020 =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">150</span>),</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">revenu_2021 =</span> <span class="fu">c</span>(<span class="dv">120</span>, <span class="dv">160</span>))</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(large,</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"revenu"</span>),</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">names_to =</span> <span class="st">"année"</span>,</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">values_to =</span> <span class="st">"revenu"</span>)</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
      ID année       revenu
@@ -823,10 +925,10 @@ div.csl-indent {
 3     2 revenu_2020    150
 4     2 revenu_2021    160</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Passage de format long à format large</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_wider</span>(long,</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">names_from =</span> année,</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">values_from =</span> revenu)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Passage de format long à format large</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_wider</span>(long,</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">names_from =</span> année,</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">values_from =</span> revenu)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 3
      ID revenu_2020 revenu_2021
@@ -836,21 +938,28 @@ div.csl-indent {
 </div>
 </div>
 </section>
-<section id="exercice-7" class="level3" data-number="2.3.7">
-<h3 data-number="2.3.7" class="anchored" data-anchor-id="exercice-7"><span class="header-section-number">2.3.7</span> Exercice</h3>
-<p>Vous disposez de deux tableaux : - Une base d’individus avec leur commune de résidence - Une base de communes avec des indicateurs agrégés (ex: pauvreté, déforestation)</p>
-<p><strong>Objectif</strong> : faites une jointure pour enrichir la base individuelle avec les caractéristiques de la commune.</p>
+<section id="exercice-8" class="level3" data-number="2.3.7">
+<h3 data-number="2.3.7" class="anchored" data-anchor-id="exercice-8"><span class="header-section-number">2.3.7</span> Exercice</h3>
+<p>Vous disposez de trois tableaux : - Deux bases sur les surfaces de couvert forestier (en ha) d’aires protégées : - Une base d’aire protégées gérées par le gouvernement (MNP) - Une base d’aires protégées gérées par des acteurs privés (ONG) - Une base de régions avec un indicateur agrégé (déforestation)</p>
+<p><strong>Objectif</strong> : crééer une base unique au format large contenant une ligne par aire protégée avec les informations sur la région de localisation, le taux de déforestation entre 2010 et 2020, la surface de couvert forestier en 2010 et la surface de couvert forestier en 2020 de chaque aire protégée.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Base individuelle</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>individus <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">commune =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"C"</span>),</span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">revenu =</span> <span class="fu">c</span>(<span class="dv">200</span>, <span class="dv">250</span>, <span class="dv">180</span>, <span class="dv">220</span>))</span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Base agrégée</span></span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>communes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">commune =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>),</span>
-<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">deforestation =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Base parcs MNP</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>ap_mnp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>),</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">region =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>, <span class="st">"C"</span>),</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">annee =</span> <span class="fu">c</span>(<span class="dv">2010</span>, <span class="dv">2010</span>, <span class="dv">2010</span>, <span class="dv">2010</span>, <span class="dv">2020</span>, <span class="dv">2020</span>, <span class="dv">2020</span>, <span class="dv">2020</span>),</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">surface_foret =</span> <span class="fu">c</span>(<span class="dv">643</span>, <span class="dv">1181</span>, <span class="dv">3747</span>, <span class="dv">2790</span>, <span class="dv">579</span>, <span class="dv">1063</span>, <span class="dv">3372</span>, <span class="dv">2232</span>))</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Base parcs ONG</span></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>ap_ong <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">8</span>, <span class="dv">5</span><span class="sc">:</span><span class="dv">8</span>),</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">region =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>),</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">annee =</span> <span class="fu">c</span>(<span class="dv">2010</span>, <span class="dv">2010</span>, <span class="dv">2010</span>, <span class="dv">2010</span>, <span class="dv">2020</span>, <span class="dv">2020</span>, <span class="dv">2020</span>, <span class="dv">2020</span>),</span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">surface_foret =</span> <span class="fu">c</span>(<span class="dv">10683</span>, <span class="dv">4484</span>, <span class="dv">2692</span>, <span class="dv">1801</span>, <span class="dv">9615</span>, <span class="dv">4036</span>, <span class="dv">2423</span>, <span class="dv">1440</span>))</span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Base régions</span></span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>regions <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">region =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>),</span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>                       <span class="at">deforestation_10ans =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>À vous de jouer : utilisez <code>left_join()</code>.</p>
+<p>À vous de jouer : utilisez <code>pivot_wider()</code>, <code>bind_rows()</code>et <code>left_join()</code> (pas forcément dans cet ordre).</p>
 </section>
 </section>
 <section id="import-de-données" class="level2" data-number="2.4">
@@ -872,19 +981,19 @@ div.csl-indent {
 <li>Fichiers CSV : Les fichiers CSV sont très populaires pour leur simplicité. Pour importer un fichier CSV, vous pouvez utiliser la fonction read.csv() ou read_csv() (package readr, partie du tidyverse).</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/AP_Vahatra.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/AP_Vahatra.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>2. Fichiers Excel</strong> : Pour importer des fichiers Excel, on peut utiliser le package readxl. La fonction read_xlsx() permet d’importer un fichier au format .xlsx.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>Mon_objet_R <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">"data/mon_fichier.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>Mon_objet_R <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">"data/mon_fichier.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>3. Fichiers texte</strong> : Les fichiers texte peuvent être importés avec read.table() ou read_delim() (pour des délimiteurs personnalisés).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"data/mon_fichier.txt"</span>, <span class="at">delim =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"data/mon_fichier.txt"</span>, <span class="at">delim =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="exercice-pratique" class="level3" data-number="2.4.3">
@@ -905,7 +1014,7 @@ div.csl-indent {
 <li>Afficher les noms des colonnes :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(AP_Vahatra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(AP_Vahatra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "nom"                "cat_iucn"           "creation"          
  [4] "date_creation"      "date_modification"  "mention_changement"
@@ -920,9 +1029,9 @@ div.csl-indent {
 <li>Sélectionner les 10 premières aires protégées et leur catégorie IUCN :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, cat_iucn) <span class="sc">%&gt;%</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">&lt;=</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, cat_iucn) <span class="sc">%&gt;%</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">&lt;=</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    nom                                     cat_iucn
@@ -943,10 +1052,10 @@ div.csl-indent {
 <li>Explorer les dates de création et de modification :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, date_creation, date_modification) <span class="sc">%&gt;%</span></span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(date_creation)) <span class="sc">%&gt;%</span></span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date_creation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, date_creation, date_modification) <span class="sc">%&gt;%</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(date_creation)) <span class="sc">%&gt;%</span></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date_creation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 98 × 3
    nom            date_creation       date_modification  
@@ -968,8 +1077,8 @@ div.csl-indent {
 <li>Calculer la superficie totale des aires protégées :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_totale =</span> <span class="fu">sum</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_totale =</span> <span class="fu">sum</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 1
   superficie_totale
@@ -981,9 +1090,9 @@ div.csl-indent {
 <li>Lister les aires protégées gérées par “Madagascar National Parks” :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gest_1 <span class="sc">==</span> <span class="st">"Madagascar National Parks"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, gest_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gest_1 <span class="sc">==</span> <span class="st">"Madagascar National Parks"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, gest_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 38 × 2
    nom              gest_1                   
@@ -1005,11 +1114,11 @@ div.csl-indent {
 <li>Obtenir des statistiques descriptives sur la superficie des aires protégées :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_moyenne =</span> <span class="fu">mean</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_mediane =</span> <span class="fu">median</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_max =</span> <span class="fu">max</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_min =</span> <span class="fu">min</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_moyenne =</span> <span class="fu">mean</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_mediane =</span> <span class="fu">median</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_max =</span> <span class="fu">max</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">superficie_min =</span> <span class="fu">min</span>(hectares, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 4
   superficie_moyenne superficie_mediane superficie_max superficie_min
@@ -1044,45 +1153,45 @@ div.csl-indent {
 <h3 data-number="2.6.1" class="anchored" data-anchor-id="exemple-dutilisation-de-gt"><span class="header-section-number">2.6.1</span> Exemple d’utilisation de <code>gt</code></h3>
 <p>Voici un exemple d’utilisation de <code>gt</code> pour résumer les superficies des aires protégées par catégorie IUCN.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On va dabord convertir les superficies en hectares dans une nouvelle colonne</span></span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>)</span>
-<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul des superficies totales pour chaque catégorie IUCN</span></span>
-<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(cat_iucn)) <span class="sc">%&gt;%</span></span>
-<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cat_iucn) <span class="sc">%&gt;%</span></span>
-<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_totale =</span> <span class="fu">sum</span>(superficie_km2))</span>
-<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Production du tableau</span></span>
-<span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="sc">%&gt;%</span></span>
-<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">cat_iucn =</span> <span class="st">"Catégorie IUCN"</span>,</span>
-<span id="cb68-17"><a href="#cb68-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">superficie_totale =</span> <span class="st">"Superficie totale (km²)"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb68-18"><a href="#cb68-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
-<span id="cb68-19"><a href="#cb68-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Aires protégées de Madagascar : superficies par catégorie IUCN"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb68-20"><a href="#cb68-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : données de l'association Vahatra"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb68-21"><a href="#cb68-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On va dabord convertir les superficies en hectares dans une nouvelle colonne</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>)</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul des superficies totales pour chaque catégorie IUCN</span></span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(cat_iucn)) <span class="sc">%&gt;%</span></span>
+<span id="cb74-10"><a href="#cb74-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cat_iucn) <span class="sc">%&gt;%</span></span>
+<span id="cb74-11"><a href="#cb74-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_totale =</span> <span class="fu">sum</span>(superficie_km2))</span>
+<span id="cb74-12"><a href="#cb74-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-13"><a href="#cb74-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Production du tableau</span></span>
+<span id="cb74-14"><a href="#cb74-14" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="sc">%&gt;%</span></span>
+<span id="cb74-15"><a href="#cb74-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb74-16"><a href="#cb74-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">cat_iucn =</span> <span class="st">"Catégorie IUCN"</span>,</span>
+<span id="cb74-17"><a href="#cb74-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">superficie_totale =</span> <span class="st">"Superficie totale (km²)"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb74-18"><a href="#cb74-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb74-19"><a href="#cb74-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Aires protégées de Madagascar : superficies par catégorie IUCN"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb74-20"><a href="#cb74-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : données de l'association Vahatra"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb74-21"><a href="#cb74-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="gddpvmhdwb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#gddpvmhdwb table {
+<div id="geqgfmgtrl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#geqgfmgtrl table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#gddpvmhdwb thead, #gddpvmhdwb tbody, #gddpvmhdwb tfoot, #gddpvmhdwb tr, #gddpvmhdwb td, #gddpvmhdwb th {
+#geqgfmgtrl thead, #geqgfmgtrl tbody, #geqgfmgtrl tfoot, #geqgfmgtrl tr, #geqgfmgtrl td, #geqgfmgtrl th {
   border-style: none;
 }
 
-#gddpvmhdwb p {
+#geqgfmgtrl p {
   margin: 0;
   padding: 0;
 }
 
-#gddpvmhdwb .gt_table {
+#geqgfmgtrl .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1108,12 +1217,12 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#gddpvmhdwb .gt_caption {
+#geqgfmgtrl .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#gddpvmhdwb .gt_title {
+#geqgfmgtrl .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1125,7 +1234,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#gddpvmhdwb .gt_subtitle {
+#geqgfmgtrl .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1137,7 +1246,7 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#gddpvmhdwb .gt_heading {
+#geqgfmgtrl .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1149,13 +1258,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#gddpvmhdwb .gt_bottom_border {
+#geqgfmgtrl .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gddpvmhdwb .gt_col_headings {
+#geqgfmgtrl .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1170,7 +1279,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#gddpvmhdwb .gt_col_heading {
+#geqgfmgtrl .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1190,7 +1299,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#gddpvmhdwb .gt_column_spanner_outer {
+#geqgfmgtrl .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1202,15 +1311,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#gddpvmhdwb .gt_column_spanner_outer:first-child {
+#geqgfmgtrl .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gddpvmhdwb .gt_column_spanner_outer:last-child {
+#geqgfmgtrl .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gddpvmhdwb .gt_column_spanner {
+#geqgfmgtrl .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1222,11 +1331,11 @@ div.csl-indent {
   width: 100%;
 }
 
-#gddpvmhdwb .gt_spanner_row {
+#geqgfmgtrl .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#gddpvmhdwb .gt_group_heading {
+#geqgfmgtrl .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1252,7 +1361,7 @@ div.csl-indent {
   text-align: left;
 }
 
-#gddpvmhdwb .gt_empty_group_heading {
+#geqgfmgtrl .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1267,15 +1376,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#gddpvmhdwb .gt_from_md > :first-child {
+#geqgfmgtrl .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#gddpvmhdwb .gt_from_md > :last-child {
+#geqgfmgtrl .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#gddpvmhdwb .gt_row {
+#geqgfmgtrl .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1294,7 +1403,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#gddpvmhdwb .gt_stub {
+#geqgfmgtrl .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1307,7 +1416,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#gddpvmhdwb .gt_stub_row_group {
+#geqgfmgtrl .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1321,15 +1430,15 @@ div.csl-indent {
   vertical-align: top;
 }
 
-#gddpvmhdwb .gt_row_group_first td {
+#geqgfmgtrl .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#gddpvmhdwb .gt_row_group_first th {
+#geqgfmgtrl .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#gddpvmhdwb .gt_summary_row {
+#geqgfmgtrl .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1339,16 +1448,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#gddpvmhdwb .gt_first_summary_row {
+#geqgfmgtrl .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#gddpvmhdwb .gt_first_summary_row.thick {
+#geqgfmgtrl .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#gddpvmhdwb .gt_last_summary_row {
+#geqgfmgtrl .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1358,7 +1467,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#gddpvmhdwb .gt_grand_summary_row {
+#geqgfmgtrl .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1368,7 +1477,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#gddpvmhdwb .gt_first_grand_summary_row {
+#geqgfmgtrl .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1378,7 +1487,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#gddpvmhdwb .gt_last_grand_summary_row_top {
+#geqgfmgtrl .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1388,11 +1497,11 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#gddpvmhdwb .gt_striped {
+#geqgfmgtrl .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gddpvmhdwb .gt_table_body {
+#geqgfmgtrl .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1401,7 +1510,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#gddpvmhdwb .gt_footnotes {
+#geqgfmgtrl .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1415,7 +1524,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#gddpvmhdwb .gt_footnote {
+#geqgfmgtrl .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1424,7 +1533,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#gddpvmhdwb .gt_sourcenotes {
+#geqgfmgtrl .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1438,7 +1547,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#gddpvmhdwb .gt_sourcenote {
+#geqgfmgtrl .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1446,72 +1555,72 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#gddpvmhdwb .gt_left {
+#geqgfmgtrl .gt_left {
   text-align: left;
 }
 
-#gddpvmhdwb .gt_center {
+#geqgfmgtrl .gt_center {
   text-align: center;
 }
 
-#gddpvmhdwb .gt_right {
+#geqgfmgtrl .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gddpvmhdwb .gt_font_normal {
+#geqgfmgtrl .gt_font_normal {
   font-weight: normal;
 }
 
-#gddpvmhdwb .gt_font_bold {
+#geqgfmgtrl .gt_font_bold {
   font-weight: bold;
 }
 
-#gddpvmhdwb .gt_font_italic {
+#geqgfmgtrl .gt_font_italic {
   font-style: italic;
 }
 
-#gddpvmhdwb .gt_super {
+#geqgfmgtrl .gt_super {
   font-size: 65%;
 }
 
-#gddpvmhdwb .gt_footnote_marks {
+#geqgfmgtrl .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#gddpvmhdwb .gt_asterisk {
+#geqgfmgtrl .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#gddpvmhdwb .gt_indent_1 {
+#geqgfmgtrl .gt_indent_1 {
   text-indent: 5px;
 }
 
-#gddpvmhdwb .gt_indent_2 {
+#geqgfmgtrl .gt_indent_2 {
   text-indent: 10px;
 }
 
-#gddpvmhdwb .gt_indent_3 {
+#geqgfmgtrl .gt_indent_3 {
   text-indent: 15px;
 }
 
-#gddpvmhdwb .gt_indent_4 {
+#geqgfmgtrl .gt_indent_4 {
   text-indent: 20px;
 }
 
-#gddpvmhdwb .gt_indent_5 {
+#geqgfmgtrl .gt_indent_5 {
   text-indent: 25px;
 }
 
-#gddpvmhdwb .katex-display {
+#geqgfmgtrl .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#gddpvmhdwb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#geqgfmgtrl div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1567,11 +1676,11 @@ div.csl-indent {
 <h3 data-number="2.6.2" class="anchored" data-anchor-id="superficie-cumulée-par-année-de-création"><span class="header-section-number">2.6.2</span> Superficie cumulée par année de création</h3>
 <p>Avant de créer un graphique en nuages de points, nous devons préparer un tableau qui résume la superficie cumulée des aires protégées en fonction de leur année de création.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>AP_superficie_annees <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(an_creation) <span class="sc">%&gt;%</span></span>
-<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_annuelle =</span> <span class="fu">sum</span>(superficie_km2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(an_creation) <span class="sc">%&gt;%</span></span>
-<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(superficie_cumulée <span class="ot">=</span> <span class="fu">cumsum</span>(superficie_annuelle))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>AP_superficie_annees <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(an_creation) <span class="sc">%&gt;%</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_annuelle =</span> <span class="fu">sum</span>(superficie_km2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(an_creation) <span class="sc">%&gt;%</span></span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(superficie_cumulée <span class="ot">=</span> <span class="fu">cumsum</span>(superficie_annuelle))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="exercice-créer-un-tableau-synthétique" class="level3" data-number="2.6.3">
@@ -1608,19 +1717,19 @@ div.csl-indent {
 <li><strong>Importer le package et les données</strong> :</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co"># On suppose que AP_superficie_annees est déjà créé</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="co"># On suppose que AP_superficie_annees est déjà créé</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
 <li><strong>Créer la base du graphique</strong> :</li>
 </ol>
 <p>La première étape consiste à spécifier les données et les mappings esthétiques. Par exemple, nous allons indiquer que l’axe des abscisses (<code>x</code>) représente l’année de création (<code>an_creation</code>) et l’axe des ordonnées (<code>y</code>) représente la superficie cumulée (<code>superficie_cumulée</code>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_bases_R_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1630,13 +1739,13 @@ div.csl-indent {
 </ol>
 <p>Pour visualiser les données, nous ajoutons des points (<code>geom_point()</code>) et des lignes (<code>geom_line()</code>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_bases_R_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1646,15 +1755,15 @@ div.csl-indent {
 </ol>
 <p>Pour rendre le graphique plus compréhensible, nous ajoutons des labels pour les axes et un titre.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
-<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_bases_R_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1664,16 +1773,16 @@ div.csl-indent {
 </ol>
 <p>Le thème permet de personnaliser l’apparence générale du graphique. Ici, nous utilisons <code>theme_minimal()</code> pour une apparence épurée.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
-<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
-<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>) <span class="sc">+</span></span>
-<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>) <span class="sc">+</span></span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_bases_R_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
