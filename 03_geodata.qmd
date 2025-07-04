@@ -55,7 +55,7 @@ tmap_mode("view")
 # Créer une carte interactive des aires protégées
 tm_shape(AP_Vahatra) +
   tm_borders() +
-  tm_fill("cat_iucn", title = "Catégorie IUCN")
+  tm_fill("cat_iucn", fill.legend = tm_legend(title = "Catégorie IUCN"))
 ```
 
 ### Formats usuels de données vectorielles
@@ -266,7 +266,8 @@ union_result <- st_union(AP_Vahatra)
 
 # Visualisation
 tm_shape(union_result) +
-  tm_polygons(col = "green", title = "Union des Aires Protégées")
+  tm_polygons(fill = "green", 
+              fill.legend = tm_legend(title = "Union des Aires Protégées"))
 ```
 
 #### Différence
@@ -279,7 +280,8 @@ non_protected <- st_difference(gadm_mada0, union_result)
 
 # Visualisation
 tm_shape(non_protected) +
-  tm_polygons(col = "gray", title = "Zones Non Protégées de Madagascar")
+  tm_polygons(fill = "gray", 
+              fill.legend = tm_legend(title = "Zones Non Protégées de Madagascar"))
 ```
 
 #### Buffers (Zones Tampons)
@@ -292,7 +294,10 @@ buffer_result <- st_buffer(AP_Vahatra, dist = 10000)
 
 # Visualisation
 tm_shape(buffer_result) +
-  tm_polygons(col = "orange", alpha = 0.5, title = "Buffer de 10 km autour des Aires Protégées")
+  tm_polygons(fill = "orange", fill_alpha = 0.5,
+              fill.legend = tm_legend(title = "Buffer de 10 km autour des Aires Protégées"))
+
+
 ```
 
 #### Calcul de surfaces
