@@ -597,6 +597,8 @@ AP_Vahatra %>%
   arrange(date_creation)
 ```
 
+On aurait pu ordonner les lignes par ordre inversement chronologique en utilisant `desc()` de la manière suivante `arrange(desc(date_creation))`.
+
 -   Calculer la superficie totale des aires protégées :
 
 ```{r}
@@ -627,12 +629,37 @@ AP_Vahatra %>%
 Pour cet exercice, utilisez les données AP_Vahatra que vous avez importées pour produire les statistiques suivantes :
 
 1.  Filtrez les aires protégées dont la catégorie IUCN est "II" et affichez uniquement leurs noms.
-2.  Ajoutez une colonne superficie_km2 à AP_Vahatra en convertissant la valeur hectares en kilomètres carrés.
-3.  Triez les données par superficie_km2 de manière décroissante.
+```{r}
+AP_Vahatra %>%
+  filter(cat_iucn == "II") %>% 
+  select(nom, cat_iucn)
+```
+
+2.  Ajoutez une colonne superficie_km2 à AP_Vahatra en convertissant la valeur hectares en kilomètres carrés. Sélectionnez les colonnes nom, hectares et superficie_km2.
+
+```{r}
+exercice2 <- AP_Vahatra %>%
+  mutate(superficie_km2 = hectares/100) %>%
+  select(nom, hectares, superficie_km2)
+```
+
+3.  Triez les données par superficie_km2, par ordre décroissant (cherchez dans l'aide de la fonction `arrange` pour voir comment les classer).
+
+```{r}
+exercice2 %>%
+  arrange(desc(superficie_km2)) %>%
+  filter(row_number() <= 3)
+```
+
+
 4.  Trouvez le nom des 3 plus grandes aires protégées
 5.  Calculez la superficie totale de toutes les aires protégées
-6.  Produisez un résumé statistique (summary()) des valeurs de superficie_km2.
-7.  Filtrez les aires protégées ayant une superficie supérieure ou égale au 3ème quartile et calculez leur nombre.
+
+```{r}
+exercice2 %>%
+  summarise(superficie_totale = sum(superficie_km2))
+```
+
 
 ## Production de tableaux avec R
 
@@ -687,7 +714,7 @@ AP_superficie_annees <- AP_Vahatra %>%
 
 1.  **Résumer la superficie cumulée par année de création** : Utilisez `gt()` pour présenter les résultats de `AP_superficie_annees` de manière claire et lisible.
 
-2.  **Ajouter des colonnes d’explication** : Créez des colonnes qui expliquent chaque étape du processus (par exemple, année de création, superficie annuelle ajoutée, superficie cumulée).
+2.  **Ajouter des entêtes de colonne colonnes d’explication** : Créez des colonnes qui expliquent chaque étape du processus (par exemple, année de création, superficie annuelle ajoutée, superficie cumulée).
 
 3.  **Ajouter un titre et une note de source** : Le tableau devrait inclure un titre explicite et une note de source, similaire à l’exemple précédent.
 
