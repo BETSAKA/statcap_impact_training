@@ -714,7 +714,7 @@ AP_superficie_annees <- AP_Vahatra %>%
 
 1.  **Résumer la superficie cumulée par année de création** : Utilisez `gt()` pour présenter les résultats de `AP_superficie_annees` de manière claire et lisible.
 
-2.  **Ajouter des entêtes de colonne colonnes d’explication** : Créez des colonnes qui expliquent chaque étape du processus (par exemple, année de création, superficie annuelle ajoutée, superficie cumulée).
+2.  **Ajouter des entêtes de colonne colonnes ** : Créez des entêtes qui expliquent le contenu de chaque colonne (par exemple, année de création, superficie annuelle ajoutée, superficie cumulée).
 
 3.  **Ajouter un titre et une note de source** : Le tableau devrait inclure un titre explicite et une note de source, similaire à l’exemple précédent.
 
