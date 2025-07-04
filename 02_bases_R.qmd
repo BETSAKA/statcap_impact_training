@@ -705,16 +705,16 @@ Avant de créer un graphique en nuages de points, nous devons préparer un table
 ```{r}
 AP_superficie_annees <- AP_Vahatra %>%
   group_by(an_creation) %>%
-  summarise(superficie_annuelle = sum(superficie_km2, na.rm = TRUE)) %>%
+  summarise(superficie_nouvelle = sum(superficie_km2, na.rm = TRUE)) %>%
   arrange(an_creation) %>%
-  mutate(superficie_cumulée = cumsum(superficie_annuelle))
+  mutate(superficie_cumulee = cumsum(superficie_nouvelle))
 ```
 
 ### Exercice : Créer un tableau synthétique
 
 1.  **Résumer la superficie cumulée par année de création** : Utilisez `gt()` pour présenter les résultats de `AP_superficie_annees` de manière claire et lisible.
 
-2.  **Ajouter des entêtes de colonne colonnes ** : Créez des entêtes qui expliquent le contenu de chaque colonne (par exemple, année de création, superficie annuelle ajoutée, superficie cumulée).
+2.  **Ajouter des entêtes de colonne colonnes ** : Créez des entêtes qui expliquent le contenu de chaque colonne (par exemple, année de création, superficie  ajoutée, superficie cumulée).
 
 3.  **Ajouter un titre et une note de source** : Le tableau devrait inclure un titre explicite et une note de source, similaire à l’exemple précédent.
 
@@ -751,10 +751,10 @@ library(ggplot2)
 
 2.  **Créer la base du graphique** :
 
-La première étape consiste à spécifier les données et les mappings esthétiques. Par exemple, nous allons indiquer que l'axe des abscisses (`x`) représente l'année de création (`an_creation`) et l'axe des ordonnées (`y`) représente la superficie cumulée (`superficie_cumulée`).
+La première étape consiste à spécifier les données et les mappings esthétiques. Par exemple, nous allons indiquer que l'axe des abscisses (`x`) représente l'année de création (`an_creation`) et l'axe des ordonnées (`y`) représente la superficie cumulée (`superficie_cumulee`).
 
 ```{r}
-ggplot(data = AP_superficie_annees, aes(x = an_creation, y = superficie_cumulée))
+ggplot(data = AP_superficie_annees, aes(x = an_creation, y = superficie_cumulee))
 ```
 
 3.  **Ajouter des géométries** :
@@ -762,7 +762,7 @@ ggplot(data = AP_superficie_annees, aes(x = an_creation, y = superficie_cumulée
 Pour visualiser les données, nous ajoutons des points (`geom_point()`) et des lignes (`geom_line()`).
 
 ```{r}
-ggplot(data = AP_superficie_annees, aes(x = an_creation, y = superficie_cumulée)) +
+ggplot(data = AP_superficie_annees, aes(x = an_creation, y = superficie_cumulee)) +
   geom_point() +
   geom_line()
 ```
@@ -772,7 +772,7 @@ ggplot(data = AP_superficie_annees, aes(x = an_creation, y = superficie_cumulée
 Pour rendre le graphique plus compréhensible, nous ajoutons des labels pour les axes et un titre.
 
 ```{r}
-ggplot(data = AP_superficie_annees, aes(x = an_creation, y = superficie_cumulée)) +
+ggplot(data = AP_superficie_annees, aes(x = an_creation, y = superficie_cumulee)) +
   geom_point() +
   geom_line() +
   labs(x = "Année", y = "Superficie cumulée (km²)",
@@ -784,20 +784,20 @@ ggplot(data = AP_superficie_annees, aes(x = an_creation, y = superficie_cumulée
 Le thème permet de personnaliser l'apparence générale du graphique. Ici, nous utilisons `theme_minimal()` pour une apparence épurée.
 
 ```{r}
-ggplot(data = AP_superficie_annees, aes(x = an_creation, y = superficie_cumulée)) +
+ggplot(data = AP_superficie_annees, aes(x = an_creation, y = superficie_cumulee)) +
   geom_point() +
   geom_line() +
   labs(x = "Année", y = "Superficie cumulée (km²)",
        title = "Superficie cumulée en fonction de l'année de création") +
   theme_minimal()
+  ggsave("test.png")
+?gtsave
 ```
 
 ### Exercice : Créer un graphique avec ggplot2
 
-1.  **Créer un graphique en nuages de points** : Utilisez `ggplot2` pour créer un graphique qui montre la superficie annuelle des aires protégées en fonction de leur année de création.
+1.  **Créer un graphique en nuages de points** : Utilisez `ggplot2` pour créer un graphique de points qui montre la somme des superficies des aires protégées en fonction de leur année de création. 
 
-2.  **Ajouter des lignes de tendance** : Ajoutez une ligne de tendance (`geom_smooth()`) pour montrer l'évolution générale de la superficie annuelle au fil du temps.
-
-3.  **Facetter par catégorie IUCN** : Utilisez `facet_wrap()` pour créer des sous-graphiques qui montrent la superficie cumulée par année de création pour chaque catégorie IUCN.
+2.  **Ajouter des lignes de tendance** : Ajoutez une une ligne reliant les points et une ligne de tendance (`geom_smooth()`). 
 
 Ces étapes vous permettront de comprendre progressivement comment construire des graphiques en utilisant la grammaire des graphiques, et d'explorer différentes façons de visualiser vos données.

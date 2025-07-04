@@ -50,7 +50,7 @@ str(AP_Vahatra)
 
 ```{r}
 # Mode interactif pour explorer les données
-tmap_mode("view")
+tmap_mode("plot")
 
 # Créer une carte interactive des aires protégées
 tm_shape(AP_Vahatra) +
@@ -125,6 +125,29 @@ Exercices :
 
 - Visualisez les données `gadm_mada0` téléchargées avec tmap. De quel niveau administratif s'agit-il ? 
 - En utilisant les autres niveaux administratifs disponibles (1, 2, 3, 4), déduisez à quoi correspond chaque niveau dans la hiérarchie administrative de Madagascar. 
+
+```{r}
+mada1 <- gadm("Madagascar", level = 1, path = "data", resolution = 2) %>% 
+  st_as_sf()
+mada2 <- gadm("Madagascar", level = 2, path = "data", resolution = 2) %>% 
+  st_as_sf()
+mada3 <- gadm("Madagascar", level = 3, path = "data", resolution = 2) %>% 
+  st_as_sf()
+mada4 <- gadm("Madagascar", level = 4, path = "data", resolution = 2) %>% 
+  st_as_sf()
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(mada1) + 
+  tm_borders(lwd = 2) +
+tm_shape(mada2) + 
+  tm_borders(lwd = 1.5) +
+tm_shape(mada3) + 
+  tm_borders(lwd = 1) +
+tm_shape(mada4) + 
+  tm_borders(lwd = 0.5)
+```
 
 
 ## Données en raster

@@ -96,7 +96,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-3383e1fec2206739c2be01ed6fb25679.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e08530d2e68e5a7077f443dafb2866fa.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -1073,6 +1073,7 @@ div.csl-indent {
 # ℹ 88 more rows</code></pre>
 </div>
 </div>
+<p>On aurait pu ordonner les lignes par ordre inversement chronologique en utilisant <code>desc()</code> de la manière suivante <code>arrange(desc(date_creation))</code>.</p>
 <ul>
 <li>Calculer la superficie totale des aires protégées :</li>
 </ul>
@@ -1131,13 +1132,66 @@ div.csl-indent {
 <p>Pour cet exercice, utilisez les données AP_Vahatra que vous avez importées pour produire les statistiques suivantes :</p>
 <ol type="1">
 <li>Filtrez les aires protégées dont la catégorie IUCN est “II” et affichez uniquement leurs noms.</li>
-<li>Ajoutez une colonne superficie_km2 à AP_Vahatra en convertissant la valeur hectares en kilomètres carrés.</li>
-<li>Triez les données par superficie_km2 de manière décroissante.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(cat_iucn <span class="sc">==</span> <span class="st">"II"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, cat_iucn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 26 × 2
+   nom             cat_iucn
+   &lt;chr&gt;           &lt;chr&gt;   
+ 1 Analamazaotra   II      
+ 2 Andohahela      II      
+ 3 Andringitra     II      
+ 4 Ankarafantsika  II      
+ 5 Baie de Baly    II      
+ 6 Midongy du Sud  II      
+ 7 Bemaraha        II      
+ 8 Isalo           II      
+ 9 Kirindy - Mitea II      
+10 Lokobe          II      
+# ℹ 16 more rows</code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Ajoutez une colonne superficie_km2 à AP_Vahatra en convertissant la valeur hectares en kilomètres carrés. Sélectionnez les colonnes nom, hectares et superficie_km2.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>exercice2 <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares<span class="sc">/</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, hectares, superficie_km2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>Triez les données par superficie_km2, par ordre décroissant (cherchez dans l’aide de la fonction <code>arrange</code> pour voir comment les classer).</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>exercice2 <span class="sc">%&gt;%</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(superficie_km2)) <span class="sc">%&gt;%</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">&lt;=</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  nom                                   hectares superficie_km2
+  &lt;chr&gt;                                    &lt;dbl&gt;          &lt;dbl&gt;
+1 Complexe Zones Humides Mangoky Ihotry  426594.          4266.
+2 Makira                                 372179.          3722.
+3 Corridor Ankeniheny Zahamena           369153.          3692.</code></pre>
+</div>
+</div>
+<ol start="4" type="1">
 <li>Trouvez le nom des 3 plus grandes aires protégées</li>
 <li>Calculez la superficie totale de toutes les aires protégées</li>
-<li>Produisez un résumé statistique (summary()) des valeurs de superficie_km2.</li>
-<li>Filtrez les aires protégées ayant une superficie supérieure ou égale au 3ème quartile et calculez leur nombre.</li>
 </ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>exercice2 <span class="sc">%&gt;%</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_totale =</span> <span class="fu">sum</span>(superficie_km2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  superficie_totale
+              &lt;dbl&gt;
+1            63725.</code></pre>
+</div>
+</div>
 </section>
 </section>
 <section id="production-de-tableaux-avec-r" class="level2" data-number="2.6">
@@ -1153,45 +1207,45 @@ div.csl-indent {
 <h3 data-number="2.6.1" class="anchored" data-anchor-id="exemple-dutilisation-de-gt"><span class="header-section-number">2.6.1</span> Exemple d’utilisation de <code>gt</code></h3>
 <p>Voici un exemple d’utilisation de <code>gt</code> pour résumer les superficies des aires protégées par catégorie IUCN.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On va dabord convertir les superficies en hectares dans une nouvelle colonne</span></span>
-<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>)</span>
-<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul des superficies totales pour chaque catégorie IUCN</span></span>
-<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(cat_iucn)) <span class="sc">%&gt;%</span></span>
-<span id="cb74-10"><a href="#cb74-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cat_iucn) <span class="sc">%&gt;%</span></span>
-<span id="cb74-11"><a href="#cb74-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_totale =</span> <span class="fu">sum</span>(superficie_km2))</span>
-<span id="cb74-12"><a href="#cb74-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb74-13"><a href="#cb74-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Production du tableau</span></span>
-<span id="cb74-14"><a href="#cb74-14" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="sc">%&gt;%</span></span>
-<span id="cb74-15"><a href="#cb74-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb74-16"><a href="#cb74-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">cat_iucn =</span> <span class="st">"Catégorie IUCN"</span>,</span>
-<span id="cb74-17"><a href="#cb74-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">superficie_totale =</span> <span class="st">"Superficie totale (km²)"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb74-18"><a href="#cb74-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
-<span id="cb74-19"><a href="#cb74-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Aires protégées de Madagascar : superficies par catégorie IUCN"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb74-20"><a href="#cb74-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : données de l'association Vahatra"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb74-21"><a href="#cb74-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On va dabord convertir les superficies en hectares dans une nouvelle colonne</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>)</span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul des superficies totales pour chaque catégorie IUCN</span></span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb81-8"><a href="#cb81-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_km2 =</span> hectares <span class="sc">*</span> <span class="fl">0.01</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb81-9"><a href="#cb81-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(cat_iucn)) <span class="sc">%&gt;%</span></span>
+<span id="cb81-10"><a href="#cb81-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cat_iucn) <span class="sc">%&gt;%</span></span>
+<span id="cb81-11"><a href="#cb81-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_totale =</span> <span class="fu">sum</span>(superficie_km2))</span>
+<span id="cb81-12"><a href="#cb81-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-13"><a href="#cb81-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Production du tableau</span></span>
+<span id="cb81-14"><a href="#cb81-14" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_iucn <span class="sc">%&gt;%</span></span>
+<span id="cb81-15"><a href="#cb81-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb81-16"><a href="#cb81-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">cat_iucn =</span> <span class="st">"Catégorie IUCN"</span>,</span>
+<span id="cb81-17"><a href="#cb81-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">superficie_totale =</span> <span class="st">"Superficie totale (km²)"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb81-18"><a href="#cb81-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb81-19"><a href="#cb81-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Aires protégées de Madagascar : superficies par catégorie IUCN"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb81-20"><a href="#cb81-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : données de l'association Vahatra"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb81-21"><a href="#cb81-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="geqgfmgtrl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#geqgfmgtrl table {
+<div id="cdkhwdfxmr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#cdkhwdfxmr table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#geqgfmgtrl thead, #geqgfmgtrl tbody, #geqgfmgtrl tfoot, #geqgfmgtrl tr, #geqgfmgtrl td, #geqgfmgtrl th {
+#cdkhwdfxmr thead, #cdkhwdfxmr tbody, #cdkhwdfxmr tfoot, #cdkhwdfxmr tr, #cdkhwdfxmr td, #cdkhwdfxmr th {
   border-style: none;
 }
 
-#geqgfmgtrl p {
+#cdkhwdfxmr p {
   margin: 0;
   padding: 0;
 }
 
-#geqgfmgtrl .gt_table {
+#cdkhwdfxmr .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1217,12 +1271,12 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#geqgfmgtrl .gt_caption {
+#cdkhwdfxmr .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#geqgfmgtrl .gt_title {
+#cdkhwdfxmr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1234,7 +1288,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#geqgfmgtrl .gt_subtitle {
+#cdkhwdfxmr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1246,7 +1300,7 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#geqgfmgtrl .gt_heading {
+#cdkhwdfxmr .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1258,13 +1312,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#geqgfmgtrl .gt_bottom_border {
+#cdkhwdfxmr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#geqgfmgtrl .gt_col_headings {
+#cdkhwdfxmr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1279,7 +1333,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#geqgfmgtrl .gt_col_heading {
+#cdkhwdfxmr .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1299,7 +1353,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#geqgfmgtrl .gt_column_spanner_outer {
+#cdkhwdfxmr .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1311,15 +1365,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#geqgfmgtrl .gt_column_spanner_outer:first-child {
+#cdkhwdfxmr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#geqgfmgtrl .gt_column_spanner_outer:last-child {
+#cdkhwdfxmr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#geqgfmgtrl .gt_column_spanner {
+#cdkhwdfxmr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1331,11 +1385,11 @@ div.csl-indent {
   width: 100%;
 }
 
-#geqgfmgtrl .gt_spanner_row {
+#cdkhwdfxmr .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#geqgfmgtrl .gt_group_heading {
+#cdkhwdfxmr .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1361,7 +1415,7 @@ div.csl-indent {
   text-align: left;
 }
 
-#geqgfmgtrl .gt_empty_group_heading {
+#cdkhwdfxmr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1376,15 +1430,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#geqgfmgtrl .gt_from_md > :first-child {
+#cdkhwdfxmr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#geqgfmgtrl .gt_from_md > :last-child {
+#cdkhwdfxmr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#geqgfmgtrl .gt_row {
+#cdkhwdfxmr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1403,7 +1457,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#geqgfmgtrl .gt_stub {
+#cdkhwdfxmr .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1416,7 +1470,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#geqgfmgtrl .gt_stub_row_group {
+#cdkhwdfxmr .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1430,15 +1484,15 @@ div.csl-indent {
   vertical-align: top;
 }
 
-#geqgfmgtrl .gt_row_group_first td {
+#cdkhwdfxmr .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#geqgfmgtrl .gt_row_group_first th {
+#cdkhwdfxmr .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#geqgfmgtrl .gt_summary_row {
+#cdkhwdfxmr .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1448,16 +1502,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#geqgfmgtrl .gt_first_summary_row {
+#cdkhwdfxmr .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#geqgfmgtrl .gt_first_summary_row.thick {
+#cdkhwdfxmr .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#geqgfmgtrl .gt_last_summary_row {
+#cdkhwdfxmr .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1467,7 +1521,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#geqgfmgtrl .gt_grand_summary_row {
+#cdkhwdfxmr .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1477,7 +1531,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#geqgfmgtrl .gt_first_grand_summary_row {
+#cdkhwdfxmr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1487,7 +1541,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#geqgfmgtrl .gt_last_grand_summary_row_top {
+#cdkhwdfxmr .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1497,11 +1551,11 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#geqgfmgtrl .gt_striped {
+#cdkhwdfxmr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#geqgfmgtrl .gt_table_body {
+#cdkhwdfxmr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1510,7 +1564,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#geqgfmgtrl .gt_footnotes {
+#cdkhwdfxmr .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1524,7 +1578,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#geqgfmgtrl .gt_footnote {
+#cdkhwdfxmr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1533,7 +1587,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#geqgfmgtrl .gt_sourcenotes {
+#cdkhwdfxmr .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1547,7 +1601,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#geqgfmgtrl .gt_sourcenote {
+#cdkhwdfxmr .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1555,72 +1609,72 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#geqgfmgtrl .gt_left {
+#cdkhwdfxmr .gt_left {
   text-align: left;
 }
 
-#geqgfmgtrl .gt_center {
+#cdkhwdfxmr .gt_center {
   text-align: center;
 }
 
-#geqgfmgtrl .gt_right {
+#cdkhwdfxmr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#geqgfmgtrl .gt_font_normal {
+#cdkhwdfxmr .gt_font_normal {
   font-weight: normal;
 }
 
-#geqgfmgtrl .gt_font_bold {
+#cdkhwdfxmr .gt_font_bold {
   font-weight: bold;
 }
 
-#geqgfmgtrl .gt_font_italic {
+#cdkhwdfxmr .gt_font_italic {
   font-style: italic;
 }
 
-#geqgfmgtrl .gt_super {
+#cdkhwdfxmr .gt_super {
   font-size: 65%;
 }
 
-#geqgfmgtrl .gt_footnote_marks {
+#cdkhwdfxmr .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#geqgfmgtrl .gt_asterisk {
+#cdkhwdfxmr .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#geqgfmgtrl .gt_indent_1 {
+#cdkhwdfxmr .gt_indent_1 {
   text-indent: 5px;
 }
 
-#geqgfmgtrl .gt_indent_2 {
+#cdkhwdfxmr .gt_indent_2 {
   text-indent: 10px;
 }
 
-#geqgfmgtrl .gt_indent_3 {
+#cdkhwdfxmr .gt_indent_3 {
   text-indent: 15px;
 }
 
-#geqgfmgtrl .gt_indent_4 {
+#cdkhwdfxmr .gt_indent_4 {
   text-indent: 20px;
 }
 
-#geqgfmgtrl .gt_indent_5 {
+#cdkhwdfxmr .gt_indent_5 {
   text-indent: 25px;
 }
 
-#geqgfmgtrl .katex-display {
+#cdkhwdfxmr .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#geqgfmgtrl div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#cdkhwdfxmr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1676,18 +1730,18 @@ div.csl-indent {
 <h3 data-number="2.6.2" class="anchored" data-anchor-id="superficie-cumulée-par-année-de-création"><span class="header-section-number">2.6.2</span> Superficie cumulée par année de création</h3>
 <p>Avant de créer un graphique en nuages de points, nous devons préparer un tableau qui résume la superficie cumulée des aires protégées en fonction de leur année de création.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>AP_superficie_annees <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(an_creation) <span class="sc">%&gt;%</span></span>
-<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_annuelle =</span> <span class="fu">sum</span>(superficie_km2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(an_creation) <span class="sc">%&gt;%</span></span>
-<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(superficie_cumulée <span class="ot">=</span> <span class="fu">cumsum</span>(superficie_annuelle))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>AP_superficie_annees <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(an_creation) <span class="sc">%&gt;%</span></span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">superficie_nouvelle =</span> <span class="fu">sum</span>(superficie_km2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(an_creation) <span class="sc">%&gt;%</span></span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">superficie_cumulee =</span> <span class="fu">cumsum</span>(superficie_nouvelle))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="exercice-créer-un-tableau-synthétique" class="level3" data-number="2.6.3">
 <h3 data-number="2.6.3" class="anchored" data-anchor-id="exercice-créer-un-tableau-synthétique"><span class="header-section-number">2.6.3</span> Exercice : Créer un tableau synthétique</h3>
 <ol type="1">
 <li><p><strong>Résumer la superficie cumulée par année de création</strong> : Utilisez <code>gt()</code> pour présenter les résultats de <code>AP_superficie_annees</code> de manière claire et lisible.</p></li>
-<li><p><strong>Ajouter des colonnes d’explication</strong> : Créez des colonnes qui expliquent chaque étape du processus (par exemple, année de création, superficie annuelle ajoutée, superficie cumulée).</p></li>
+<li><p><strong>Ajouter des entêtes de colonne colonnes </strong> : Créez des entêtes qui expliquent le contenu de chaque colonne (par exemple, année de création, superficie ajoutée, superficie cumulée).</p></li>
 <li><p><strong>Ajouter un titre et une note de source</strong> : Le tableau devrait inclure un titre explicite et une note de source, similaire à l’exemple précédent.</p></li>
 </ol>
 <p>Ces étapes vous aideront à présenter les données de manière élégante et à faciliter la compréhension des tendances liées à la création des aires protégées.</p>
@@ -1717,19 +1771,19 @@ div.csl-indent {
 <li><strong>Importer le package et les données</strong> :</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="co"># On suppose que AP_superficie_annees est déjà créé</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="co"># On suppose que AP_superficie_annees est déjà créé</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
 <li><strong>Créer la base du graphique</strong> :</li>
 </ol>
-<p>La première étape consiste à spécifier les données et les mappings esthétiques. Par exemple, nous allons indiquer que l’axe des abscisses (<code>x</code>) représente l’année de création (<code>an_creation</code>) et l’axe des ordonnées (<code>y</code>) représente la superficie cumulée (<code>superficie_cumulée</code>).</p>
+<p>La première étape consiste à spécifier les données et les mappings esthétiques. Par exemple, nous allons indiquer que l’axe des abscisses (<code>x</code>) représente l’année de création (<code>an_creation</code>) et l’axe des ordonnées (<code>y</code>) représente la superficie cumulée (<code>superficie_cumulee</code>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulee))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_bases_R_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1739,13 +1793,13 @@ div.csl-indent {
 </ol>
 <p>Pour visualiser les données, nous ajoutons des points (<code>geom_point()</code>) et des lignes (<code>geom_line()</code>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulee)) <span class="sc">+</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_bases_R_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1755,15 +1809,15 @@ div.csl-indent {
 </ol>
 <p>Pour rendre le graphique plus compréhensible, nous ajoutons des labels pour les axes et un titre.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
-<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
-<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulee)) <span class="sc">+</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_bases_R_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1773,27 +1827,28 @@ div.csl-indent {
 </ol>
 <p>Le thème permet de personnaliser l’apparence générale du graphique. Ici, nous utilisons <code>theme_minimal()</code> pour une apparence épurée.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulée)) <span class="sc">+</span></span>
-<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
-<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>) <span class="sc">+</span></span>
-<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> AP_superficie_annees, <span class="fu">aes</span>(<span class="at">x =</span> an_creation, <span class="at">y =</span> superficie_cumulee)) <span class="sc">+</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Année"</span>, <span class="at">y =</span> <span class="st">"Superficie cumulée (km²)"</span>,</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Superficie cumulée en fonction de l'année de création"</span>) <span class="sc">+</span></span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_bases_R_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_bases_R_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(<span class="st">"test.png"</span>)</span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>?gtsave</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="exercice-créer-un-graphique-avec-ggplot2" class="level3" data-number="2.7.3">
 <h3 data-number="2.7.3" class="anchored" data-anchor-id="exercice-créer-un-graphique-avec-ggplot2"><span class="header-section-number">2.7.3</span> Exercice : Créer un graphique avec ggplot2</h3>
 <ol type="1">
-<li><p><strong>Créer un graphique en nuages de points</strong> : Utilisez <code>ggplot2</code> pour créer un graphique qui montre la superficie annuelle des aires protégées en fonction de leur année de création.</p></li>
-<li><p><strong>Ajouter des lignes de tendance</strong> : Ajoutez une ligne de tendance (<code>geom_smooth()</code>) pour montrer l’évolution générale de la superficie annuelle au fil du temps.</p></li>
-<li><p><strong>Facetter par catégorie IUCN</strong> : Utilisez <code>facet_wrap()</code> pour créer des sous-graphiques qui montrent la superficie cumulée par année de création pour chaque catégorie IUCN.</p></li>
+<li><p><strong>Créer un graphique en nuages de points</strong> : Utilisez <code>ggplot2</code> pour créer un graphique de points qui montre la somme des superficies des aires protégées en fonction de leur année de création.</p></li>
+<li><p><strong>Ajouter des lignes de tendance</strong> : Ajoutez une une ligne reliant les points et une ligne de tendance (<code>geom_smooth()</code>).</p></li>
 </ol>
 <p>Ces étapes vous permettront de comprendre progressivement comment construire des graphiques en utilisant la grammaire des graphiques, et d’explorer différentes façons de visualiser vos données.</p>
 
