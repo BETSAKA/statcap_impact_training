@@ -177,7 +177,7 @@ AP_Vahatra %>%
   portfolio_long() %>%
   filter(variable == "elevation_mean") %>%
   tm_shape() +
-  tm_polygons(col = "value", title = "Altitude Moyenne (m)")
+  tm_polygons(fill = "value", fill.legend = tm_legend(title = "Altitude Moyenne (m)"))
 ```
 
 Nous avons maintenant une carte interactive qui nous permet de voir les différences d'élévation entre les différentes aires protégées de notre portefeuille.

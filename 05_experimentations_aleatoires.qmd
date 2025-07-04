@@ -22,7 +22,6 @@ editor_options:
 Pour commencer, on charge les librairies requises (après les avoir installées si nécessaire).
 
 ```{r}
-# On charge les librairies utiles pour cette analyse
 library(tidyverse) # Facilite la manipulation de données
 library(gt) # Aide à formater de jolis tableaux de rendu
 library(broom) # Aide à formater les rendus de régressions
