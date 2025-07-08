@@ -149,7 +149,7 @@ balance_data %>%
     Diff = "Différence\n[SE]",
     Diff_std = "Différence\nstandardisée"
   ) %>%
-  tab_source_note("Source : Association Vahatra et données GFC")
+  tab_source_note("Source : Association Vahatra et données GFC (*: p < 0,1 ; **: p < 0,05 ; ***: p < 0,01)")
 
 
 ```
