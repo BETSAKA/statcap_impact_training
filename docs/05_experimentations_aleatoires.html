@@ -329,123 +329,127 @@ div.csl-indent {
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Définir les variables dans les bonnes unités</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>AP_RCT <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">portfolio_wide</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Groupe =</span> <span class="fu">ifelse</span>(<span class="fu">year</span>(date_creation) <span class="sc">&lt;</span> <span class="dv">2015</span>, <span class="st">"Traitement"</span>, <span class="st">"Contrôle"</span>),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">Traitement =</span> <span class="fu">ifelse</span>(Groupe <span class="sc">==</span> <span class="st">"Traitement"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Couvert forestier en 2000 (ha)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">treecover_area_2000-01-01_treecover_ha</span><span class="st">`</span>,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(AP_Vahatra)) <span class="sc">/</span> <span class="dv">10000</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Couvert forestier en 2000 (%)</span><span class="st">`</span> <span class="ot">=</span> </span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>           (<span class="st">`</span><span class="at">Couvert forestier en 2000 (ha)</span><span class="st">`</span> <span class="sc">/</span> <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span>)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Altitude moyenne (m)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">elevation_2000-02-01_elevation_mean_m</span><span class="st">`</span>,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Pente moyenne (degres)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">slope_2000-02-01_slope_mean_degrees</span><span class="st">`</span>,</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Temps de trajet (minutes)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes</span><span class="st">`</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Définir la fonction pour les étoiles de significativité</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>stars <span class="ot">&lt;-</span> <span class="cf">function</span>(p) {</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(p)) <span class="fu">return</span>(<span class="st">""</span>)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (p <span class="sc">&lt;</span> <span class="fl">0.01</span>) <span class="fu">return</span>(<span class="st">"***"</span>)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="cf">if</span> (p <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="fu">return</span>(<span class="st">"**"</span>)</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="cf">if</span> (p <span class="sc">&lt;</span> <span class="fl">0.10</span>) <span class="fu">return</span>(<span class="st">"*"</span>)</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="fu">return</span>(<span class="st">""</span>)</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Liste des covariables à inclure dans le tableau d’équilibre</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>covars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Surface (ha)"</span>, <span class="st">"Couvert forestier en 2000 (ha)"</span>, <span class="st">"Couvert forestier en 2000 (%)"</span>, <span class="st">"Altitude moyenne (m)"</span>, <span class="st">"Pente moyenne (degres)"</span>, <span class="st">"Temps de trajet (minutes)"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Altitude moyenne (m)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">elevation_2000-02-01_elevation_mean_m</span><span class="st">`</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Pente moyenne (degres)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">slope_2000-02-01_slope_mean_degrees</span><span class="st">`</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Temps de trajet (minutes)</span><span class="st">`</span> <span class="ot">=</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes</span><span class="st">`</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Couvert forestier en 2000 (ha)</span><span class="st">`</span> <span class="ot">=</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">treecover_area_2000-01-01_treecover_ha</span><span class="st">`</span>,  </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Couvert forestier en 2014 (ha)</span><span class="st">`</span> <span class="ot">=</span> </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">treecover_area_2014-01-01_treecover_ha</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Groupe =</span> <span class="fu">ifelse</span>(<span class="fu">year</span>(date_creation) <span class="sc">&lt;</span> <span class="dv">2015</span>, <span class="st">"Traitement"</span>, <span class="st">"Contrôle"</span>),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">Traitement =</span> <span class="fu">ifelse</span>(Groupe <span class="sc">==</span> <span class="st">"Traitement"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(AP_Vahatra)) <span class="sc">/</span> <span class="dv">10000</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Couvert forestier en 2000 (%)</span><span class="st">`</span> <span class="ot">=</span> </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>           (<span class="st">`</span><span class="at">Couvert forestier en 2000 (ha)</span><span class="st">`</span> <span class="sc">/</span> <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span>)<span class="sc">*</span><span class="dv">100</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Définir la fonction pour les étoiles de significativité</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>stars <span class="ot">&lt;-</span> <span class="cf">function</span>(p) {</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(p)) <span class="fu">return</span>(<span class="st">""</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (p <span class="sc">&lt;</span> <span class="fl">0.01</span>) <span class="fu">return</span>(<span class="st">"***"</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="cf">if</span> (p <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="fu">return</span>(<span class="st">"**"</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="cf">if</span> (p <span class="sc">&lt;</span> <span class="fl">0.10</span>) <span class="fu">return</span>(<span class="st">"*"</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="fu">return</span>(<span class="st">""</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Création du tableau d’équilibre</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>balance_data <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(covars, <span class="cf">function</span>(var) {</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Moyennes et écart-types par groupe</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>      stats <span class="ot">&lt;-</span> AP_RCT <span class="sc">%&gt;%</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(Groupe) <span class="sc">%&gt;%</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarise</span>(</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>          <span class="at">mean =</span> <span class="fu">mean</span>(.data[[var]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>          <span class="at">sd =</span> <span class="fu">sd</span>(.data[[var]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>          <span class="at">n =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(.data[[var]]))</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">%&gt;%</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ungroup</span>()</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Extraire les statistiques pour les deux groupes</span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>      treat <span class="ot">&lt;-</span> stats <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Groupe <span class="sc">==</span> <span class="st">"Traitement"</span>)</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>      control <span class="ot">&lt;-</span> stats <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Groupe <span class="sc">==</span> <span class="st">"Contrôle"</span>)</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Différence brute</span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>      diff <span class="ot">&lt;-</span> treat<span class="sc">$</span>mean <span class="sc">-</span> control<span class="sc">$</span>mean</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Estimation de l’erreur standard via régression avec erreurs robustes</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>      mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">"`"</span>, var, <span class="st">"` ~ Groupe"</span>)), <span class="at">data =</span> AP_RCT)</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>      coef_test <span class="ot">&lt;-</span> <span class="fu">coeftest</span>(mod, <span class="at">vcov. =</span> <span class="fu">vcovHC</span>(mod, <span class="at">type =</span> <span class="st">"HC1"</span>))</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>      se_diff <span class="ot">&lt;-</span> coef_test[<span class="st">"GroupeTraitement"</span>, <span class="st">"Std. Error"</span>]</span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        p_val <span class="ot">&lt;-</span> coef_test[<span class="st">"GroupeTraitement"</span>, <span class="st">"Pr(&gt;|t|)"</span>]</span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>        etoiles <span class="ot">&lt;-</span> <span class="fu">stars</span>(p_val)</span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Calcul de la différence standardisée</span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>      pooled_sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fl">0.5</span> <span class="sc">*</span> (treat<span class="sc">$</span>sd<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> control<span class="sc">$</span>sd<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>      std_diff <span class="ot">&lt;-</span> diff <span class="sc">/</span> pooled_sd</span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Construction de la ligne du tableau</span></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tibble</span>(</span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>        <span class="at">Variable =</span> var,</span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>        <span class="at">Moy_Traitement =</span> </span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>          <span class="fu">str_glue</span>(<span class="st">"{round(treat$mean, 2)}</span><span class="sc">\n</span><span class="st">({round(treat$sd, 2)})"</span>),</span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>        Moy_Contrôle <span class="ot">=</span> </span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>          <span class="fu">str_glue</span>(<span class="st">"{round(control$mean, 2)}</span><span class="sc">\n</span><span class="st">({round(control$sd, 2)})"</span>),</span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>        <span class="at">Diff =</span> <span class="fu">str_glue</span>(<span class="st">"{round(diff, 2)}{etoiles}</span><span class="sc">\n</span><span class="st">[{round(se_diff, 2)}]"</span>),</span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>        <span class="at">Diff_std =</span> <span class="fu">str_glue</span>(<span class="st">"{round(std_diff, 2)}"</span>)</span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">%&gt;%</span> <span class="fu">bind_rows</span>()</span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Test de significativité conjointe des covariables (p-value du F-test)</span></span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>  f_test_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(<span class="st">"Traitement ~"</span>, <span class="fu">paste0</span>(<span class="st">"`"</span>, covars, <span class="st">"`"</span>, <span class="at">collapse =</span> <span class="st">" + "</span>))), <span class="at">data =</span> AP_RCT)</span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>  f_test <span class="ot">&lt;-</span> <span class="fu">waldtest</span>(f_test_mod, <span class="at">vcov =</span> <span class="fu">vcovHC</span>(f_test_mod, <span class="at">type =</span> <span class="st">"HC1"</span>))</span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>  p_val_joint <span class="ot">&lt;-</span> <span class="fu">signif</span>(f_test<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">2</span>], <span class="dv">3</span>)</span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ajouter une ligne au tableau avec la p-value du F-test</span></span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>  balance_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>    balance_data,</span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(</span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>      <span class="at">Variable =</span> <span class="st">"P-value F-test conjoint"</span>,</span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>      <span class="at">Moy_Traitement =</span> <span class="st">""</span>, Moy_Contrôle <span class="ot">=</span> <span class="st">""</span>,</span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>      <span class="at">Diff =</span> <span class="fu">sprintf</span>(<span class="st">"p = %.3f"</span>, p_val_joint),</span>
-<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>      <span class="at">Diff_std =</span> <span class="st">""</span></span>
-<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage final</span></span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>balance_data <span class="sc">%&gt;%</span></span>
-<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
-<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Tableau de contrôle d'équilibre initial entre groupes"</span>,</span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"(exercice : </span><span class="sc">\"</span><span class="st">comme si</span><span class="sc">\"</span><span class="st"> c'était un RCT)"</span></span>
-<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
-<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">Variable =</span> <span class="st">"Variable"</span>,</span>
-<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>    <span class="at">Moy_Traitement =</span> <span class="st">"Traitement</span><span class="sc">\n</span><span class="st">(SD)"</span>,</span>
-<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>    Moy_Contrôle <span class="ot">=</span> <span class="st">"Contrôle</span><span class="sc">\n</span><span class="st">(SD)"</span>,</span>
-<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">Diff =</span> <span class="st">"Différence</span><span class="sc">\n</span><span class="st">[SE]"</span>,</span>
-<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">Diff_std =</span> <span class="st">"Différence</span><span class="sc">\n</span><span class="st">standardisée"</span></span>
-<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Association Vahatra et données GFC (*: p &lt; 0,1 ; **: p &lt; 0,05 ; ***: p &lt; 0,01)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Liste des covariables à inclure dans le tableau d’équilibre</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>covars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Surface (ha)"</span>, <span class="st">"Couvert forestier en 2000 (ha)"</span>, <span class="st">"Couvert forestier en 2000 (%)"</span>, <span class="st">"Altitude moyenne (m)"</span>, <span class="st">"Pente moyenne (degres)"</span>, <span class="st">"Temps de trajet (minutes)"</span>)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Création du tableau d’équilibre</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>balance_data <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(covars, <span class="cf">function</span>(var) {</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Moyennes et écart-types par groupe</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>      stats <span class="ot">&lt;-</span> AP_RCT <span class="sc">%&gt;%</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(Groupe) <span class="sc">%&gt;%</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarise</span>(</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>          <span class="at">mean =</span> <span class="fu">mean</span>(.data[[var]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>          <span class="at">sd =</span> <span class="fu">sd</span>(.data[[var]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>          <span class="at">n =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(.data[[var]]))</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ungroup</span>()</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Extraire les statistiques pour les deux groupes</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>      treat <span class="ot">&lt;-</span> stats <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Groupe <span class="sc">==</span> <span class="st">"Traitement"</span>)</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>      control <span class="ot">&lt;-</span> stats <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Groupe <span class="sc">==</span> <span class="st">"Contrôle"</span>)</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Différence brute</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>      diff <span class="ot">&lt;-</span> treat<span class="sc">$</span>mean <span class="sc">-</span> control<span class="sc">$</span>mean</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Estimation de l’erreur standard via régression avec erreurs robustes</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>      mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">"`"</span>, var, <span class="st">"` ~ Groupe"</span>)), <span class="at">data =</span> AP_RCT)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>      coef_test <span class="ot">&lt;-</span> <span class="fu">coeftest</span>(mod, <span class="at">vcov. =</span> <span class="fu">vcovHC</span>(mod, <span class="at">type =</span> <span class="st">"HC1"</span>))</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>      se_diff <span class="ot">&lt;-</span> coef_test[<span class="st">"GroupeTraitement"</span>, <span class="st">"Std. Error"</span>]</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>        p_val <span class="ot">&lt;-</span> coef_test[<span class="st">"GroupeTraitement"</span>, <span class="st">"Pr(&gt;|t|)"</span>]</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>        etoiles <span class="ot">&lt;-</span> <span class="fu">stars</span>(p_val)</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Calcul de la différence standardisée</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>      pooled_sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fl">0.5</span> <span class="sc">*</span> (treat<span class="sc">$</span>sd<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> control<span class="sc">$</span>sd<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>      std_diff <span class="ot">&lt;-</span> diff <span class="sc">/</span> pooled_sd</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Construction de la ligne du tableau</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tibble</span>(</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>        <span class="at">Variable =</span> var,</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>        <span class="at">Moy_Traitement =</span> </span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>          <span class="fu">str_glue</span>(<span class="st">"{round(treat$mean, 2)}</span><span class="sc">\n</span><span class="st">({round(treat$sd, 2)})"</span>),</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>        Moy_Contrôle <span class="ot">=</span> </span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>          <span class="fu">str_glue</span>(<span class="st">"{round(control$mean, 2)}</span><span class="sc">\n</span><span class="st">({round(control$sd, 2)})"</span>),</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        <span class="at">Diff =</span> <span class="fu">str_glue</span>(<span class="st">"{round(diff, 2)}{etoiles}</span><span class="sc">\n</span><span class="st">[{round(se_diff, 2)}]"</span>),</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>        <span class="at">Diff_std =</span> <span class="fu">str_glue</span>(<span class="st">"{round(std_diff, 2)}"</span>)</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">%&gt;%</span> <span class="fu">bind_rows</span>()</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Test de significativité conjointe des covariables (p-value du F-test)</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>  f_test_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(<span class="st">"Traitement ~"</span>, <span class="fu">paste0</span>(<span class="st">"`"</span>, covars, <span class="st">"`"</span>, <span class="at">collapse =</span> <span class="st">" + "</span>))), <span class="at">data =</span> AP_RCT)</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>  f_test <span class="ot">&lt;-</span> <span class="fu">waldtest</span>(f_test_mod, <span class="at">vcov =</span> <span class="fu">vcovHC</span>(f_test_mod, <span class="at">type =</span> <span class="st">"HC1"</span>))</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>  p_val_joint <span class="ot">&lt;-</span> <span class="fu">signif</span>(f_test<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">2</span>], <span class="dv">3</span>)</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ajouter une ligne au tableau avec la p-value du F-test</span></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>  balance_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>    balance_data,</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>      <span class="at">Variable =</span> <span class="st">"P-value F-test conjoint"</span>,</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>      <span class="at">Moy_Traitement =</span> <span class="st">""</span>, Moy_Contrôle <span class="ot">=</span> <span class="st">""</span>,</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>      <span class="at">Diff =</span> <span class="fu">sprintf</span>(<span class="st">"p = %.3f"</span>, p_val_joint),</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>      <span class="at">Diff_std =</span> <span class="st">""</span></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage final</span></span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>balance_data <span class="sc">%&gt;%</span></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Tableau de contrôle d'équilibre initial entre groupes"</span>,</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"(exercice : </span><span class="sc">\"</span><span class="st">comme si</span><span class="sc">\"</span><span class="st"> c'était un RCT)"</span></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">Variable =</span> <span class="st">"Variable"</span>,</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">Moy_Traitement =</span> <span class="st">"Traitement</span><span class="sc">\n</span><span class="st">(SD)"</span>,</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>    Moy_Contrôle <span class="ot">=</span> <span class="st">"Contrôle</span><span class="sc">\n</span><span class="st">(SD)"</span>,</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">Diff =</span> <span class="st">"Différence</span><span class="sc">\n</span><span class="st">[SE]"</span>,</span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>    <span class="at">Diff_std =</span> <span class="st">"Différence</span><span class="sc">\n</span><span class="st">standardisée"</span></span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Association Vahatra et données GFC (*: p &lt; 0,1 ; **: p &lt; 0,05 ; ***: p &lt; 0,01)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="eyqrcmsrsl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#eyqrcmsrsl table {
+<div id="yxobbjrelv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#yxobbjrelv table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#eyqrcmsrsl thead, #eyqrcmsrsl tbody, #eyqrcmsrsl tfoot, #eyqrcmsrsl tr, #eyqrcmsrsl td, #eyqrcmsrsl th {
+#yxobbjrelv thead, #yxobbjrelv tbody, #yxobbjrelv tfoot, #yxobbjrelv tr, #yxobbjrelv td, #yxobbjrelv th {
   border-style: none;
 }
 
-#eyqrcmsrsl p {
+#yxobbjrelv p {
   margin: 0;
   padding: 0;
 }
 
-#eyqrcmsrsl .gt_table {
+#yxobbjrelv .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -471,12 +475,12 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#eyqrcmsrsl .gt_caption {
+#yxobbjrelv .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#eyqrcmsrsl .gt_title {
+#yxobbjrelv .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -488,7 +492,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#eyqrcmsrsl .gt_subtitle {
+#yxobbjrelv .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -500,7 +504,7 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#eyqrcmsrsl .gt_heading {
+#yxobbjrelv .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -512,13 +516,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#eyqrcmsrsl .gt_bottom_border {
+#yxobbjrelv .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#eyqrcmsrsl .gt_col_headings {
+#yxobbjrelv .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -533,7 +537,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#eyqrcmsrsl .gt_col_heading {
+#yxobbjrelv .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -553,7 +557,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#eyqrcmsrsl .gt_column_spanner_outer {
+#yxobbjrelv .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -565,15 +569,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#eyqrcmsrsl .gt_column_spanner_outer:first-child {
+#yxobbjrelv .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#eyqrcmsrsl .gt_column_spanner_outer:last-child {
+#yxobbjrelv .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#eyqrcmsrsl .gt_column_spanner {
+#yxobbjrelv .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -585,11 +589,11 @@ div.csl-indent {
   width: 100%;
 }
 
-#eyqrcmsrsl .gt_spanner_row {
+#yxobbjrelv .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#eyqrcmsrsl .gt_group_heading {
+#yxobbjrelv .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -615,7 +619,7 @@ div.csl-indent {
   text-align: left;
 }
 
-#eyqrcmsrsl .gt_empty_group_heading {
+#yxobbjrelv .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -630,15 +634,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#eyqrcmsrsl .gt_from_md > :first-child {
+#yxobbjrelv .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#eyqrcmsrsl .gt_from_md > :last-child {
+#yxobbjrelv .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#eyqrcmsrsl .gt_row {
+#yxobbjrelv .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -657,7 +661,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#eyqrcmsrsl .gt_stub {
+#yxobbjrelv .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -670,7 +674,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#eyqrcmsrsl .gt_stub_row_group {
+#yxobbjrelv .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -684,15 +688,15 @@ div.csl-indent {
   vertical-align: top;
 }
 
-#eyqrcmsrsl .gt_row_group_first td {
+#yxobbjrelv .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#eyqrcmsrsl .gt_row_group_first th {
+#yxobbjrelv .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#eyqrcmsrsl .gt_summary_row {
+#yxobbjrelv .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -702,16 +706,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#eyqrcmsrsl .gt_first_summary_row {
+#yxobbjrelv .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#eyqrcmsrsl .gt_first_summary_row.thick {
+#yxobbjrelv .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#eyqrcmsrsl .gt_last_summary_row {
+#yxobbjrelv .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -721,7 +725,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#eyqrcmsrsl .gt_grand_summary_row {
+#yxobbjrelv .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -731,7 +735,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#eyqrcmsrsl .gt_first_grand_summary_row {
+#yxobbjrelv .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -741,7 +745,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#eyqrcmsrsl .gt_last_grand_summary_row_top {
+#yxobbjrelv .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -751,11 +755,11 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#eyqrcmsrsl .gt_striped {
+#yxobbjrelv .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#eyqrcmsrsl .gt_table_body {
+#yxobbjrelv .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -764,7 +768,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#eyqrcmsrsl .gt_footnotes {
+#yxobbjrelv .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -778,7 +782,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#eyqrcmsrsl .gt_footnote {
+#yxobbjrelv .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -787,7 +791,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#eyqrcmsrsl .gt_sourcenotes {
+#yxobbjrelv .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -801,7 +805,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#eyqrcmsrsl .gt_sourcenote {
+#yxobbjrelv .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -809,72 +813,72 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#eyqrcmsrsl .gt_left {
+#yxobbjrelv .gt_left {
   text-align: left;
 }
 
-#eyqrcmsrsl .gt_center {
+#yxobbjrelv .gt_center {
   text-align: center;
 }
 
-#eyqrcmsrsl .gt_right {
+#yxobbjrelv .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#eyqrcmsrsl .gt_font_normal {
+#yxobbjrelv .gt_font_normal {
   font-weight: normal;
 }
 
-#eyqrcmsrsl .gt_font_bold {
+#yxobbjrelv .gt_font_bold {
   font-weight: bold;
 }
 
-#eyqrcmsrsl .gt_font_italic {
+#yxobbjrelv .gt_font_italic {
   font-style: italic;
 }
 
-#eyqrcmsrsl .gt_super {
+#yxobbjrelv .gt_super {
   font-size: 65%;
 }
 
-#eyqrcmsrsl .gt_footnote_marks {
+#yxobbjrelv .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#eyqrcmsrsl .gt_asterisk {
+#yxobbjrelv .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#eyqrcmsrsl .gt_indent_1 {
+#yxobbjrelv .gt_indent_1 {
   text-indent: 5px;
 }
 
-#eyqrcmsrsl .gt_indent_2 {
+#yxobbjrelv .gt_indent_2 {
   text-indent: 10px;
 }
 
-#eyqrcmsrsl .gt_indent_3 {
+#yxobbjrelv .gt_indent_3 {
   text-indent: 15px;
 }
 
-#eyqrcmsrsl .gt_indent_4 {
+#yxobbjrelv .gt_indent_4 {
   text-indent: 20px;
 }
 
-#eyqrcmsrsl .gt_indent_5 {
+#yxobbjrelv .gt_indent_5 {
   text-indent: 25px;
 }
 
-#eyqrcmsrsl .katex-display {
+#yxobbjrelv .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#eyqrcmsrsl div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#yxobbjrelv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -970,7 +974,7 @@ div.csl-indent {
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>AP_RCT <span class="ot">&lt;-</span> AP_RCT <span class="sc">%&gt;%</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">taux_deforestation_2000_2014 =</span> </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>           <span class="sc">-</span>((<span class="st">`</span><span class="at">treecover_area_2014-01-01_treecover_ha</span><span class="st">`</span> <span class="sc">-</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>           <span class="sc">-</span>((<span class="st">`</span><span class="at">Couvert forestier en 2014 (ha)</span><span class="st">`</span> <span class="sc">-</span> </span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">`</span><span class="at">Couvert forestier en 2000 (ha)</span><span class="st">`</span>) <span class="sc">/</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">Couvert forestier en 2000 (ha)</span><span class="st">`</span>)<span class="sc">*</span> <span class="dv">100</span>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
@@ -995,23 +999,23 @@ div.csl-indent {
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Association Vahatra et données GFC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="bvwclfalbp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#bvwclfalbp table {
+<div id="tgsrdscbye" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tgsrdscbye table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#bvwclfalbp thead, #bvwclfalbp tbody, #bvwclfalbp tfoot, #bvwclfalbp tr, #bvwclfalbp td, #bvwclfalbp th {
+#tgsrdscbye thead, #tgsrdscbye tbody, #tgsrdscbye tfoot, #tgsrdscbye tr, #tgsrdscbye td, #tgsrdscbye th {
   border-style: none;
 }
 
-#bvwclfalbp p {
+#tgsrdscbye p {
   margin: 0;
   padding: 0;
 }
 
-#bvwclfalbp .gt_table {
+#tgsrdscbye .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1037,12 +1041,12 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#bvwclfalbp .gt_caption {
+#tgsrdscbye .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#bvwclfalbp .gt_title {
+#tgsrdscbye .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1054,7 +1058,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#bvwclfalbp .gt_subtitle {
+#tgsrdscbye .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1066,7 +1070,7 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#bvwclfalbp .gt_heading {
+#tgsrdscbye .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1078,13 +1082,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#bvwclfalbp .gt_bottom_border {
+#tgsrdscbye .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#bvwclfalbp .gt_col_headings {
+#tgsrdscbye .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1099,7 +1103,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#bvwclfalbp .gt_col_heading {
+#tgsrdscbye .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1119,7 +1123,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#bvwclfalbp .gt_column_spanner_outer {
+#tgsrdscbye .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1131,15 +1135,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#bvwclfalbp .gt_column_spanner_outer:first-child {
+#tgsrdscbye .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#bvwclfalbp .gt_column_spanner_outer:last-child {
+#tgsrdscbye .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#bvwclfalbp .gt_column_spanner {
+#tgsrdscbye .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1151,11 +1155,11 @@ div.csl-indent {
   width: 100%;
 }
 
-#bvwclfalbp .gt_spanner_row {
+#tgsrdscbye .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#bvwclfalbp .gt_group_heading {
+#tgsrdscbye .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1181,7 +1185,7 @@ div.csl-indent {
   text-align: left;
 }
 
-#bvwclfalbp .gt_empty_group_heading {
+#tgsrdscbye .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1196,15 +1200,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#bvwclfalbp .gt_from_md > :first-child {
+#tgsrdscbye .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#bvwclfalbp .gt_from_md > :last-child {
+#tgsrdscbye .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#bvwclfalbp .gt_row {
+#tgsrdscbye .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1223,7 +1227,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#bvwclfalbp .gt_stub {
+#tgsrdscbye .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1236,7 +1240,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#bvwclfalbp .gt_stub_row_group {
+#tgsrdscbye .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1250,15 +1254,15 @@ div.csl-indent {
   vertical-align: top;
 }
 
-#bvwclfalbp .gt_row_group_first td {
+#tgsrdscbye .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#bvwclfalbp .gt_row_group_first th {
+#tgsrdscbye .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#bvwclfalbp .gt_summary_row {
+#tgsrdscbye .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1268,16 +1272,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#bvwclfalbp .gt_first_summary_row {
+#tgsrdscbye .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#bvwclfalbp .gt_first_summary_row.thick {
+#tgsrdscbye .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#bvwclfalbp .gt_last_summary_row {
+#tgsrdscbye .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1287,7 +1291,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#bvwclfalbp .gt_grand_summary_row {
+#tgsrdscbye .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1297,7 +1301,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#bvwclfalbp .gt_first_grand_summary_row {
+#tgsrdscbye .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1307,7 +1311,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#bvwclfalbp .gt_last_grand_summary_row_top {
+#tgsrdscbye .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1317,11 +1321,11 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#bvwclfalbp .gt_striped {
+#tgsrdscbye .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#bvwclfalbp .gt_table_body {
+#tgsrdscbye .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1330,7 +1334,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#bvwclfalbp .gt_footnotes {
+#tgsrdscbye .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1344,7 +1348,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#bvwclfalbp .gt_footnote {
+#tgsrdscbye .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1353,7 +1357,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#bvwclfalbp .gt_sourcenotes {
+#tgsrdscbye .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1367,7 +1371,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#bvwclfalbp .gt_sourcenote {
+#tgsrdscbye .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1375,72 +1379,72 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#bvwclfalbp .gt_left {
+#tgsrdscbye .gt_left {
   text-align: left;
 }
 
-#bvwclfalbp .gt_center {
+#tgsrdscbye .gt_center {
   text-align: center;
 }
 
-#bvwclfalbp .gt_right {
+#tgsrdscbye .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#bvwclfalbp .gt_font_normal {
+#tgsrdscbye .gt_font_normal {
   font-weight: normal;
 }
 
-#bvwclfalbp .gt_font_bold {
+#tgsrdscbye .gt_font_bold {
   font-weight: bold;
 }
 
-#bvwclfalbp .gt_font_italic {
+#tgsrdscbye .gt_font_italic {
   font-style: italic;
 }
 
-#bvwclfalbp .gt_super {
+#tgsrdscbye .gt_super {
   font-size: 65%;
 }
 
-#bvwclfalbp .gt_footnote_marks {
+#tgsrdscbye .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#bvwclfalbp .gt_asterisk {
+#tgsrdscbye .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#bvwclfalbp .gt_indent_1 {
+#tgsrdscbye .gt_indent_1 {
   text-indent: 5px;
 }
 
-#bvwclfalbp .gt_indent_2 {
+#tgsrdscbye .gt_indent_2 {
   text-indent: 10px;
 }
 
-#bvwclfalbp .gt_indent_3 {
+#tgsrdscbye .gt_indent_3 {
   text-indent: 15px;
 }
 
-#bvwclfalbp .gt_indent_4 {
+#tgsrdscbye .gt_indent_4 {
   text-indent: 20px;
 }
 
-#bvwclfalbp .gt_indent_5 {
+#tgsrdscbye .gt_indent_5 {
   text-indent: 25px;
 }
 
-#bvwclfalbp .katex-display {
+#tgsrdscbye .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#bvwclfalbp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#tgsrdscbye div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>

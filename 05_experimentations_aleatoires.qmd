@@ -52,15 +52,19 @@ On commence par vérifier s'il existe des déséquilibres flagrants entre les ai
 # Définir les variables dans les bonnes unités
 AP_RCT <- AP_Vahatra %>%
   portfolio_wide() %>% 
-  mutate(Groupe = ifelse(year(date_creation) < 2015, "Traitement", "Contrôle"),
-         Traitement = ifelse(Groupe == "Traitement", 1, 0),
-         `Couvert forestier en 2000 (ha)` = `treecover_area_2000-01-01_treecover_ha`,
-         `Surface (ha)` = as.numeric(st_area(AP_Vahatra)) / 10000,
-         `Couvert forestier en 2000 (%)` = 
-           (`Couvert forestier en 2000 (ha)` / `Surface (ha)`)*100) %>%
   rename(`Altitude moyenne (m)` = `elevation_2000-02-01_elevation_mean_m`,
          `Pente moyenne (degres)` = `slope_2000-02-01_slope_mean_degrees`,
-         `Temps de trajet (minutes)` = `traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes`)
+         `Temps de trajet (minutes)` =
+           `traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes`,
+         `Couvert forestier en 2000 (ha)` = 
+           `treecover_area_2000-01-01_treecover_ha`,  
+         `Couvert forestier en 2014 (ha)` = 
+           `treecover_area_2014-01-01_treecover_ha`) %>%
+  mutate(Groupe = ifelse(year(date_creation) < 2015, "Traitement", "Contrôle"),
+         Traitement = ifelse(Groupe == "Traitement", 1, 0),
+         `Surface (ha)` = as.numeric(st_area(AP_Vahatra)) / 10000,
+         `Couvert forestier en 2000 (%)` = 
+           (`Couvert forestier en 2000 (ha)` / `Surface (ha)`)*100)
 
 
 # Définir la fonction pour les étoiles de significativité
@@ -166,7 +170,7 @@ On va maintenant s'intéresser aux différences de déforestation observées "ap
 
 AP_RCT <- AP_RCT %>%
   mutate(taux_deforestation_2000_2014 = 
-           -((`treecover_area_2014-01-01_treecover_ha` - 
+           -((`Couvert forestier en 2014 (ha)` - 
               `Couvert forestier en 2000 (ha)`) /
            `Couvert forestier en 2000 (ha)`)* 100)
 
