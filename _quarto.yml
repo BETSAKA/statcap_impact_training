@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 book:
-  site-url: https://betsaka.github.io/impact_training_mapme/
+  site-url: https://github.com/BETSAKA/statcap_impact_training/
   title: "Evaluation d'impact de politiques et projets"
   subtitle: "Formation théorique et application pratique sur les aires protégées à Madagascar"
   author: "Florent Bédécarrats (Coord.)"
