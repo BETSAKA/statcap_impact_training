@@ -146,7 +146,7 @@ generate_comparison_plot(1000)
 
 ## Pourquoi la randomisation?
 
-- **Attention !** L’hypothèse faite sur la validité du contrefactuel n’est valable qu’en moyenne (impossible de dire que \(X_i(1) = X_i(0)\) et que \(Y_i(1) = Y_i(0)\)).
+- **Attention !** L’hypothèse faite sur la validité du contrefactuel n’est valable qu’en moyenne (impossible de dire que $X_i(1) = X_i(0)$ et que $Y_i(1) = Y_i(0)$).
 
 - Nous pouvons uniquement essayer de mesurer l’**effet moyen** du programme qui est obtenu par :
 
@@ -386,9 +386,9 @@ La randomisation n’est pas la panacée : sa pertinence dépend du type d’int
 
 ## Principe de la régression linéaire simple
 
-- L'objectif de la régression linéaire simple est de modéliser la relation entre une variable dépendante \(y\) et une variable indépendante \(x\).
+- L'objectif de la régression linéaire simple est de modéliser la relation entre une variable dépendante $y$ et une variable indépendante $x$.
 - On fait l'hypothèse que cette relation est linéaire.
-- On recherche la ligne qui va minimiser la distance verticale entre chacun des points de données \(x_i, y_i\) et elle_même.
+- On recherche la ligne qui va minimiser la distance verticale entre chacun des points de données $(x_i, y_i)$ et elle_même.
 
 ```{r}
 
@@ -430,30 +430,36 @@ p1 + p2
 
 ## Estimation de la régression linéaire
 
-- On cherche à estimer les coefficients \(a\) et \(b\) de la droite : 
+- On cherche à estimer les coefficients $a$ et $b$ de la droite : 
 
 $$ \hat{y} = a + bx $$
-- Cette droite est notre estimateur de la relation entre \(x\) et \(y\) dans la population : 
+- Cette droite est notre estimateur de la relation entre $x$ et $y$ dans la population : 
 
 $$ y  = a + bx + u $$
-- Pour un individu \(i\), on a :
+- Pour un individu $i$, on a :
 
 $$ y_i = a + bx_i + u_i $$
 
 ## Estimation de la régression linéaire
 
-- On peut montrer que le coefficient \(b\) est donné par la formule :
+- On peut montrer que le coefficient $b$ est donné par la formule :
 
-$$ b = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2} $$
+$$ 
+\hat{b} = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2} 
+$$
 qui peut aussi s'écrire : 
 
-$$ b = \frac{Cov(x,y)}{Var(x)} $$
+$$ 
+\hat{b} = \frac{Cov(x,y)}{Var(x)} 
+$$
 
 ## Estimation de la régression linéaire
 
-- On peut ensuite utiliser le fait que la droite de régression passe nécessairement par le point moyen $(\bar{x}, \bar{y}))$ pour en déduire la valeur de \(a\) :
+- On peut ensuite utiliser le fait que la droite de régression passe nécessairement par le point moyen $(\bar{x}, \bar{y}))$ pour en déduire la valeur de $a$ :
 
-$$ a = \bar{y} - b\bar{x} $$
+$$ 
+\hat{a} = \bar{y} - \hat{b}\bar{x} 
+$$
 
 
 
@@ -533,12 +539,13 @@ knitr::kable(parcs, caption = "Données des 4 aires protégées")
 ```
 
 
-$$\
+$$
 \bar{x} = \frac{20 + 50 + 80 + 100}{4} = \frac{250}{4} = 62.5
 $$
 
-$$\
-\bar{y} = \frac{3.5 + 2.8 + 1.9 + 1.2}{4} = \frac{9.4}{4} = 2.35$$
+$$
+bar{y} = \frac{3.5 + 2.8 + 1.9 + 1.2}{4} = \frac{9.4}{4} = 2.35
+$$
 
 
 
@@ -571,7 +578,7 @@ $$
 
 ## Équation de la droite de régression
 
-$$\
+$$
 \hat{y} = 4.14 - 0.029 \cdot x
 $$
 
