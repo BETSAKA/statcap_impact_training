@@ -455,7 +455,7 @@ $$
 
 ## Estimation de la régression linéaire
 
-- On peut ensuite utiliser le fait que la droite de régression passe nécessairement par le point moyen $(\bar{x}, \bar{y}))$ pour en déduire la valeur de $a$ :
+- On peut ensuite utiliser le fait que la droite de régression passe nécessairement par le point moyen $(\bar{x}, \bar{y})$ pour en déduire la valeur de $a$ :
 
 $$ 
 \hat{a} = \bar{y} - \hat{b}\bar{x} 
@@ -505,7 +505,7 @@ p2
 :::
 
 
-## Exemple d'application
+## Exemple simplifié
 
 On modélise la relation entre la distance à la ville la plus proche et le taux de déforestation annuel de 4 aires protégées. 
 
@@ -544,7 +544,7 @@ $$
 $$
 
 $$
-bar{y} = \frac{3.5 + 2.8 + 1.9 + 1.2}{4} = \frac{9.4}{4} = 2.35
+\bar{y} = \frac{3.5 + 2.8 + 1.9 + 1.2}{4} = \frac{9.4}{4} = 2.35
 $$
 
 
