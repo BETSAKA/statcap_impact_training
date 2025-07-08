@@ -96,7 +96,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-e08530d2e68e5a7077f443dafb2866fa.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dee434b389764dea5ec69893ccf42e58.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -257,7 +257,6 @@ div.csl-indent {
   <li><a href="#préparation-des-données" id="toc-préparation-des-données" class="nav-link" data-scroll-target="#préparation-des-données"><span class="header-section-number">5.2</span> Préparation des données</a></li>
   <li><a href="#analyse-des-équilibres-initiaux" id="toc-analyse-des-équilibres-initiaux" class="nav-link" data-scroll-target="#analyse-des-équilibres-initiaux"><span class="header-section-number">5.3</span> Analyse des équilibres initiaux</a></li>
   <li><a href="#différences-de-déforestation-après-intervention" id="toc-différences-de-déforestation-après-intervention" class="nav-link" data-scroll-target="#différences-de-déforestation-après-intervention"><span class="header-section-number">5.4</span> Différences de déforestation “après intervention”</a></li>
-  <li><a href="#analyse-des-variables-topologiques-et-de-laccessibilité" id="toc-analyse-des-variables-topologiques-et-de-laccessibilité" class="nav-link" data-scroll-target="#analyse-des-variables-topologiques-et-de-laccessibilité"><span class="header-section-number">5.5</span> Analyse des variables topologiques et de l’accessibilité</a></li>
   </ul>
 </nav>
     </div>
@@ -298,21 +297,26 @@ div.csl-indent {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Facilite la manipulation de données</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># Aide à formater de jolis tableaux de rendu</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co"># Aide à formater les rendus de régressions</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer) <span class="co"># idem</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf) <span class="co"># Pour les données spatiales</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate) <span class="co"># Pour gérer des dates</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmltools)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapme.biodiversity)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(units)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Désactiver les notations scientifiques</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On charge les librairies utiles pour cette analyse</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Facilite la manipulation de données</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># Aide à formater de jolis tableaux de rendu</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co"># Aide à formater les rendus de régressions</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer) <span class="co"># idem</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf) <span class="co"># Pour les données spatiales</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate) <span class="co"># Pour gérer des dates</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmltools)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapme.biodiversity)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(units)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)      <span class="co"># Tests statistiques sur des modèles linéaires (waldtest, coeftest)</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sandwich)    <span class="co"># Calcul d'erreurs standards robustes (vcovHC pour heteroskedasticité)</span></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># On charge AP_Vahatra</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/AP_Vahatra_mapme.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Désactiver les notations scientifiques</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># On charge AP_Vahatra</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/AP_Vahatra_mapme.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -322,62 +326,126 @@ div.csl-indent {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(units)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Correctly define variables with units</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>AP_RCT <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">portfolio_wide</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Groupe =</span> <span class="fu">ifelse</span>(<span class="fu">year</span>(date_creation) <span class="sc">&lt;</span> <span class="dv">2015</span>, <span class="st">"Traitement"</span>, <span class="st">"Contrôle"</span>),</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Couvert forestier en 2000</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">treecover_area_2000-01-01_treecover_ha</span><span class="st">`</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(AP_Vahatra)) <span class="sc">/</span> <span class="dv">10000</span>,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Couvert forestier en 2000 (%)</span><span class="st">`</span> <span class="ot">=</span> (<span class="st">`</span><span class="at">Couvert forestier en 2000</span><span class="st">`</span> <span class="sc">/</span> <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span>)<span class="sc">*</span><span class="dv">100</span>)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># On fait une série de tests de comparaison de moyenne</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>t_tests <span class="ot">&lt;-</span> AP_RCT <span class="sc">%&gt;%</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span><span class="sc">:</span><span class="st">`</span><span class="at">Couvert forestier en 2000 (%)</span><span class="st">`</span>,</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">~</span> <span class="fu">t.test</span>(.[Groupe <span class="sc">==</span> <span class="st">"Contrôle"</span>], .[Groupe <span class="sc">==</span> <span class="st">"Traitement"</span>])<span class="sc">$</span>p.value)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Groupe =</span> <span class="st">"t-test"</span>)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>equilibre_avant <span class="ot">&lt;-</span> AP_RCT <span class="sc">%&gt;%</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Groupe) <span class="sc">%&gt;%</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">Nombre d'aires</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>(),</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span>),</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Couvert forestier en 2000 (%)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">Couvert forestier en 2000 (%)</span><span class="st">`</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(t_tests) <span class="sc">%&gt;%</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="sc">!</span>Groupe, <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">2</span>)))</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Ce qui suit est une série d'opérations pour formater le rendu en tableau</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>equilibre_avant <span class="sc">%&gt;%</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">colnames&lt;-</span><span class="st">`</span> (<span class="fu">filter</span>(., <span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">!=</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Équilibre des variables avant intervention"</span>,</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">"(exercice : </span><span class="sc">\"</span><span class="st">comme si</span><span class="sc">\"</span><span class="st"> c'était une RCT)"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Association Vahatra et données GFC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Définir les variables dans les bonnes unités</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>AP_RCT <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">portfolio_wide</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Groupe =</span> <span class="fu">ifelse</span>(<span class="fu">year</span>(date_creation) <span class="sc">&lt;</span> <span class="dv">2015</span>, <span class="st">"Traitement"</span>, <span class="st">"Contrôle"</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">Traitement =</span> <span class="fu">ifelse</span>(Groupe <span class="sc">==</span> <span class="st">"Traitement"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Couvert forestier en 2000 (ha)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">treecover_area_2000-01-01_treecover_ha</span><span class="st">`</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(AP_Vahatra)) <span class="sc">/</span> <span class="dv">10000</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Couvert forestier en 2000 (%)</span><span class="st">`</span> <span class="ot">=</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>           (<span class="st">`</span><span class="at">Couvert forestier en 2000 (ha)</span><span class="st">`</span> <span class="sc">/</span> <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span>)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Altitude moyenne (m)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">elevation_2000-02-01_elevation_mean_m</span><span class="st">`</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Pente moyenne (degres)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">slope_2000-02-01_slope_mean_degrees</span><span class="st">`</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Temps de trajet (minutes)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes</span><span class="st">`</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Définir la fonction pour les étoiles de significativité</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>stars <span class="ot">&lt;-</span> <span class="cf">function</span>(p) {</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(p)) <span class="fu">return</span>(<span class="st">""</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (p <span class="sc">&lt;</span> <span class="fl">0.01</span>) <span class="fu">return</span>(<span class="st">"***"</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="cf">if</span> (p <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="fu">return</span>(<span class="st">"**"</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="cf">if</span> (p <span class="sc">&lt;</span> <span class="fl">0.10</span>) <span class="fu">return</span>(<span class="st">"*"</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="fu">return</span>(<span class="st">""</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Liste des covariables à inclure dans le tableau d’équilibre</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>covars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Surface (ha)"</span>, <span class="st">"Couvert forestier en 2000 (ha)"</span>, <span class="st">"Couvert forestier en 2000 (%)"</span>, <span class="st">"Altitude moyenne (m)"</span>, <span class="st">"Pente moyenne (degres)"</span>, <span class="st">"Temps de trajet (minutes)"</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Création du tableau d’équilibre</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>balance_data <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(covars, <span class="cf">function</span>(var) {</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Moyennes et écart-types par groupe</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>      stats <span class="ot">&lt;-</span> AP_RCT <span class="sc">%&gt;%</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(Groupe) <span class="sc">%&gt;%</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarise</span>(</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>          <span class="at">mean =</span> <span class="fu">mean</span>(.data[[var]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>          <span class="at">sd =</span> <span class="fu">sd</span>(.data[[var]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>          <span class="at">n =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(.data[[var]]))</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ungroup</span>()</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Extraire les statistiques pour les deux groupes</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>      treat <span class="ot">&lt;-</span> stats <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Groupe <span class="sc">==</span> <span class="st">"Traitement"</span>)</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>      control <span class="ot">&lt;-</span> stats <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Groupe <span class="sc">==</span> <span class="st">"Contrôle"</span>)</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Différence brute</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>      diff <span class="ot">&lt;-</span> treat<span class="sc">$</span>mean <span class="sc">-</span> control<span class="sc">$</span>mean</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Estimation de l’erreur standard via régression avec erreurs robustes</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>      mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">"`"</span>, var, <span class="st">"` ~ Groupe"</span>)), <span class="at">data =</span> AP_RCT)</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>      coef_test <span class="ot">&lt;-</span> <span class="fu">coeftest</span>(mod, <span class="at">vcov. =</span> <span class="fu">vcovHC</span>(mod, <span class="at">type =</span> <span class="st">"HC1"</span>))</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>      se_diff <span class="ot">&lt;-</span> coef_test[<span class="st">"GroupeTraitement"</span>, <span class="st">"Std. Error"</span>]</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        p_val <span class="ot">&lt;-</span> coef_test[<span class="st">"GroupeTraitement"</span>, <span class="st">"Pr(&gt;|t|)"</span>]</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>        etoiles <span class="ot">&lt;-</span> <span class="fu">stars</span>(p_val)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Calcul de la différence standardisée</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>      pooled_sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fl">0.5</span> <span class="sc">*</span> (treat<span class="sc">$</span>sd<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> control<span class="sc">$</span>sd<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>      std_diff <span class="ot">&lt;-</span> diff <span class="sc">/</span> pooled_sd</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Construction de la ligne du tableau</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tibble</span>(</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>        <span class="at">Variable =</span> var,</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>        <span class="at">Moy_Traitement =</span> </span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>          <span class="fu">str_glue</span>(<span class="st">"{round(treat$mean, 2)}</span><span class="sc">\n</span><span class="st">({round(treat$sd, 2)})"</span>),</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>        Moy_Contrôle <span class="ot">=</span> </span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>          <span class="fu">str_glue</span>(<span class="st">"{round(control$mean, 2)}</span><span class="sc">\n</span><span class="st">({round(control$sd, 2)})"</span>),</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>        <span class="at">Diff =</span> <span class="fu">str_glue</span>(<span class="st">"{round(diff, 2)}{etoiles}</span><span class="sc">\n</span><span class="st">[{round(se_diff, 2)}]"</span>),</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>        <span class="at">Diff_std =</span> <span class="fu">str_glue</span>(<span class="st">"{round(std_diff, 2)}"</span>)</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">%&gt;%</span> <span class="fu">bind_rows</span>()</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Test de significativité conjointe des covariables (p-value du F-test)</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>  f_test_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(<span class="st">"Traitement ~"</span>, <span class="fu">paste0</span>(<span class="st">"`"</span>, covars, <span class="st">"`"</span>, <span class="at">collapse =</span> <span class="st">" + "</span>))), <span class="at">data =</span> AP_RCT)</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>  f_test <span class="ot">&lt;-</span> <span class="fu">waldtest</span>(f_test_mod, <span class="at">vcov =</span> <span class="fu">vcovHC</span>(f_test_mod, <span class="at">type =</span> <span class="st">"HC1"</span>))</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>  p_val_joint <span class="ot">&lt;-</span> <span class="fu">signif</span>(f_test<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">2</span>], <span class="dv">3</span>)</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ajouter une ligne au tableau avec la p-value du F-test</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>  balance_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>    balance_data,</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>      <span class="at">Variable =</span> <span class="st">"P-value F-test conjoint"</span>,</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>      <span class="at">Moy_Traitement =</span> <span class="st">""</span>, Moy_Contrôle <span class="ot">=</span> <span class="st">""</span>,</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>      <span class="at">Diff =</span> <span class="fu">sprintf</span>(<span class="st">"p = %.3f"</span>, p_val_joint),</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>      <span class="at">Diff_std =</span> <span class="st">""</span></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage final</span></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>balance_data <span class="sc">%&gt;%</span></span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Tableau de contrôle d'équilibre initial entre groupes"</span>,</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"(exercice : </span><span class="sc">\"</span><span class="st">comme si</span><span class="sc">\"</span><span class="st"> c'était un RCT)"</span></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">Variable =</span> <span class="st">"Variable"</span>,</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>    <span class="at">Moy_Traitement =</span> <span class="st">"Traitement</span><span class="sc">\n</span><span class="st">(SD)"</span>,</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>    Moy_Contrôle <span class="ot">=</span> <span class="st">"Contrôle</span><span class="sc">\n</span><span class="st">(SD)"</span>,</span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">Diff =</span> <span class="st">"Différence</span><span class="sc">\n</span><span class="st">[SE]"</span>,</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">Diff_std =</span> <span class="st">"Différence</span><span class="sc">\n</span><span class="st">standardisée"</span></span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Association Vahatra et données GFC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="nladwmrddq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#nladwmrddq table {
+<div id="iqnfeliaqc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#iqnfeliaqc table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#nladwmrddq thead, #nladwmrddq tbody, #nladwmrddq tfoot, #nladwmrddq tr, #nladwmrddq td, #nladwmrddq th {
+#iqnfeliaqc thead, #iqnfeliaqc tbody, #iqnfeliaqc tfoot, #iqnfeliaqc tr, #iqnfeliaqc td, #iqnfeliaqc th {
   border-style: none;
 }
 
-#nladwmrddq p {
+#iqnfeliaqc p {
   margin: 0;
   padding: 0;
 }
 
-#nladwmrddq .gt_table {
+#iqnfeliaqc .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -403,12 +471,12 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#nladwmrddq .gt_caption {
+#iqnfeliaqc .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#nladwmrddq .gt_title {
+#iqnfeliaqc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -420,7 +488,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#nladwmrddq .gt_subtitle {
+#iqnfeliaqc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -432,7 +500,7 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#nladwmrddq .gt_heading {
+#iqnfeliaqc .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -444,13 +512,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#nladwmrddq .gt_bottom_border {
+#iqnfeliaqc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#nladwmrddq .gt_col_headings {
+#iqnfeliaqc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -465,7 +533,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#nladwmrddq .gt_col_heading {
+#iqnfeliaqc .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -485,7 +553,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#nladwmrddq .gt_column_spanner_outer {
+#iqnfeliaqc .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -497,15 +565,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#nladwmrddq .gt_column_spanner_outer:first-child {
+#iqnfeliaqc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#nladwmrddq .gt_column_spanner_outer:last-child {
+#iqnfeliaqc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#nladwmrddq .gt_column_spanner {
+#iqnfeliaqc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -517,11 +585,11 @@ div.csl-indent {
   width: 100%;
 }
 
-#nladwmrddq .gt_spanner_row {
+#iqnfeliaqc .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#nladwmrddq .gt_group_heading {
+#iqnfeliaqc .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -547,7 +615,7 @@ div.csl-indent {
   text-align: left;
 }
 
-#nladwmrddq .gt_empty_group_heading {
+#iqnfeliaqc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -562,15 +630,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#nladwmrddq .gt_from_md > :first-child {
+#iqnfeliaqc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#nladwmrddq .gt_from_md > :last-child {
+#iqnfeliaqc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#nladwmrddq .gt_row {
+#iqnfeliaqc .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -589,7 +657,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#nladwmrddq .gt_stub {
+#iqnfeliaqc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -602,7 +670,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#nladwmrddq .gt_stub_row_group {
+#iqnfeliaqc .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -616,15 +684,15 @@ div.csl-indent {
   vertical-align: top;
 }
 
-#nladwmrddq .gt_row_group_first td {
+#iqnfeliaqc .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#nladwmrddq .gt_row_group_first th {
+#iqnfeliaqc .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#nladwmrddq .gt_summary_row {
+#iqnfeliaqc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -634,16 +702,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#nladwmrddq .gt_first_summary_row {
+#iqnfeliaqc .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#nladwmrddq .gt_first_summary_row.thick {
+#iqnfeliaqc .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#nladwmrddq .gt_last_summary_row {
+#iqnfeliaqc .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -653,7 +721,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#nladwmrddq .gt_grand_summary_row {
+#iqnfeliaqc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -663,7 +731,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#nladwmrddq .gt_first_grand_summary_row {
+#iqnfeliaqc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -673,7 +741,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#nladwmrddq .gt_last_grand_summary_row_top {
+#iqnfeliaqc .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -683,11 +751,11 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#nladwmrddq .gt_striped {
+#iqnfeliaqc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#nladwmrddq .gt_table_body {
+#iqnfeliaqc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -696,7 +764,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#nladwmrddq .gt_footnotes {
+#iqnfeliaqc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -710,7 +778,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#nladwmrddq .gt_footnote {
+#iqnfeliaqc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -719,7 +787,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#nladwmrddq .gt_sourcenotes {
+#iqnfeliaqc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -733,7 +801,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#nladwmrddq .gt_sourcenote {
+#iqnfeliaqc .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -741,72 +809,72 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#nladwmrddq .gt_left {
+#iqnfeliaqc .gt_left {
   text-align: left;
 }
 
-#nladwmrddq .gt_center {
+#iqnfeliaqc .gt_center {
   text-align: center;
 }
 
-#nladwmrddq .gt_right {
+#iqnfeliaqc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#nladwmrddq .gt_font_normal {
+#iqnfeliaqc .gt_font_normal {
   font-weight: normal;
 }
 
-#nladwmrddq .gt_font_bold {
+#iqnfeliaqc .gt_font_bold {
   font-weight: bold;
 }
 
-#nladwmrddq .gt_font_italic {
+#iqnfeliaqc .gt_font_italic {
   font-style: italic;
 }
 
-#nladwmrddq .gt_super {
+#iqnfeliaqc .gt_super {
   font-size: 65%;
 }
 
-#nladwmrddq .gt_footnote_marks {
+#iqnfeliaqc .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#nladwmrddq .gt_asterisk {
+#iqnfeliaqc .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#nladwmrddq .gt_indent_1 {
+#iqnfeliaqc .gt_indent_1 {
   text-indent: 5px;
 }
 
-#nladwmrddq .gt_indent_2 {
+#iqnfeliaqc .gt_indent_2 {
   text-indent: 10px;
 }
 
-#nladwmrddq .gt_indent_3 {
+#iqnfeliaqc .gt_indent_3 {
   text-indent: 15px;
 }
 
-#nladwmrddq .gt_indent_4 {
+#iqnfeliaqc .gt_indent_4 {
   text-indent: 20px;
 }
 
-#nladwmrddq .gt_indent_5 {
+#iqnfeliaqc .gt_indent_5 {
   text-indent: 25px;
 }
 
-#nladwmrddq .katex-display {
+#iqnfeliaqc .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#nladwmrddq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#iqnfeliaqc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -814,40 +882,72 @@ div.csl-indent {
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead>
 <tr class="gt_heading header">
-<th colspan="4" class="gt_heading gt_title gt_font_normal">Équilibre des variables avant intervention</th>
+<th colspan="5" class="gt_heading gt_title gt_font_normal">Tableau de contrôle d'équilibre initial entre groupes</th>
 </tr>
 <tr class="gt_heading even">
-<th colspan="4" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">(exercice : "comme si" c'était une RCT)</th>
+<th colspan="5" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">(exercice : "comme si" c'était un RCT)</th>
 </tr>
 <tr class="gt_col_headings header">
-<th id="Groupe" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Groupe</th>
-<th id="Contrôle" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Contrôle</th>
-<th id="Traitement" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Traitement</th>
-<th id="t-test" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">t-test</th>
+<th id="Variable" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Variable</th>
+<th id="Moy_Traitement" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Traitement (SD)</th>
+<th id="Moy_Contrôle" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Contrôle (SD)</th>
+<th id="Diff" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Différence [SE]</th>
+<th id="Diff_std" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Différence standardisée</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
 <tr class="odd">
-<td class="gt_row gt_left" headers="Groupe">Nombre d'aires</td>
-<td class="gt_row gt_right" headers="Contrôle">53</td>
-<td class="gt_row gt_right" headers="Traitement">45</td>
-<td class="gt_row gt_right" headers="t-test">NA</td>
+<td class="gt_row gt_left" headers="Variable">Surface (ha)</td>
+<td class="gt_row gt_center" headers="Moy_Traitement">63728 (78166.99)</td>
+<td class="gt_row gt_center" headers="Moy_Contrôle">66539.77 (104980.3)</td>
+<td class="gt_row gt_center" headers="Diff">-2811.77 [18541.73]</td>
+<td class="gt_row gt_center" headers="Diff_std">-0.03</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Groupe">Surface (ha)</td>
-<td class="gt_row gt_right" headers="Contrôle">66539.77</td>
-<td class="gt_row gt_right" headers="Traitement">63728.00</td>
-<td class="gt_row gt_right" headers="t-test">0.88</td>
+<td class="gt_row gt_left" headers="Variable">Couvert forestier en 2000 (ha)</td>
+<td class="gt_row gt_center" headers="Moy_Traitement">45507.19 (69945.04)</td>
+<td class="gt_row gt_center" headers="Moy_Contrôle">38974.21 (73268.24)</td>
+<td class="gt_row gt_center" headers="Diff">6532.98 [14574.56]</td>
+<td class="gt_row gt_center" headers="Diff_std">0.09</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Groupe">Couvert forestier en 2000 (%)</td>
-<td class="gt_row gt_right" headers="Contrôle">62.13</td>
-<td class="gt_row gt_right" headers="Traitement">71.95</td>
-<td class="gt_row gt_right" headers="t-test">0.14</td>
+<td class="gt_row gt_left" headers="Variable">Couvert forestier en 2000 (%)</td>
+<td class="gt_row gt_center" headers="Moy_Traitement">71.95 (29.03)</td>
+<td class="gt_row gt_center" headers="Moy_Contrôle">62.13 (35.26)</td>
+<td class="gt_row gt_center" headers="Diff">9.82 [6.53]</td>
+<td class="gt_row gt_center" headers="Diff_std">0.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Variable">Altitude moyenne (m)</td>
+<td class="gt_row gt_center" headers="Moy_Traitement">578.9 (482.84)</td>
+<td class="gt_row gt_center" headers="Moy_Contrôle">518.99 (578.2)</td>
+<td class="gt_row gt_center" headers="Diff">59.9 [107.19]</td>
+<td class="gt_row gt_center" headers="Diff_std">0.11</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Variable">Pente moyenne (degres)</td>
+<td class="gt_row gt_center" headers="Moy_Traitement">10.93 (6.61)</td>
+<td class="gt_row gt_center" headers="Moy_Contrôle">9.59 (6.45)</td>
+<td class="gt_row gt_center" headers="Diff">1.34 [1.32]</td>
+<td class="gt_row gt_center" headers="Diff_std">0.21</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Variable">Temps de trajet (minutes)</td>
+<td class="gt_row gt_center" headers="Moy_Traitement">255.12 (216.23)</td>
+<td class="gt_row gt_center" headers="Moy_Contrôle">147.08 (138.44)</td>
+<td class="gt_row gt_center" headers="Diff">108.04*** [37.41]</td>
+<td class="gt_row gt_center" headers="Diff_std">0.6</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Variable">P-value F-test conjoint</td>
+<td class="gt_row gt_center" headers="Moy_Traitement"></td>
+<td class="gt_row gt_center" headers="Moy_Contrôle"></td>
+<td class="gt_row gt_center" headers="Diff">p = 0.004</td>
+<td class="gt_row gt_center" headers="Diff_std"></td>
 </tr>
 </tbody><tfoot class="gt_sourcenotes">
 <tr class="odd">
-<td colspan="4" class="gt_sourcenote">Source : Association Vahatra et données GFC</td>
+<td colspan="5" class="gt_sourcenote">Source : Association Vahatra et données GFC</td>
 </tr>
 </tfoot>
 
@@ -859,7 +959,6 @@ div.csl-indent {
 <blockquote class="blockquote">
 <p><strong>Exercice</strong> : Analysez le résultat de cette table.</p>
 </blockquote>
-<p>En moyenne, les deux groupes sont assez proches en termes de surface et de couvert forestier, et le test de Student ne permet pas de rejeter l’hypothèse nulle concernant une différence de moyenne sur ces critères.</p>
 </section>
 <section id="différences-de-déforestation-après-intervention" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="différences-de-déforestation-après-intervention"><span class="header-section-number">5.4</span> Différences de déforestation “après intervention”</h2>
@@ -872,8 +971,8 @@ div.csl-indent {
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>AP_RCT <span class="ot">&lt;-</span> AP_RCT <span class="sc">%&gt;%</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">taux_deforestation_2000_2014 =</span> </span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>           <span class="sc">-</span>((<span class="st">`</span><span class="at">treecover_area_2014-01-01_treecover_ha</span><span class="st">`</span> <span class="sc">-</span> </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">`</span><span class="at">treecover_area_2000-01-01_treecover_ha</span><span class="st">`</span>) <span class="sc">/</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">treecover_area_2000-01-01_treecover_ha</span><span class="st">`</span>)<span class="sc">*</span> <span class="dv">100</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">`</span><span class="at">Couvert forestier en 2000 (ha)</span><span class="st">`</span>) <span class="sc">/</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">Couvert forestier en 2000 (ha)</span><span class="st">`</span>)<span class="sc">*</span> <span class="dv">100</span>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparer les taux de déforestation moyens entre les groupes</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>comparaison_deforestation <span class="ot">&lt;-</span> AP_RCT <span class="sc">%&gt;%</span></span>
@@ -896,23 +995,23 @@ div.csl-indent {
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Association Vahatra et données GFC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="xeagmsufwl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#xeagmsufwl table {
+<div id="gahfdezkec" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#gahfdezkec table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#xeagmsufwl thead, #xeagmsufwl tbody, #xeagmsufwl tfoot, #xeagmsufwl tr, #xeagmsufwl td, #xeagmsufwl th {
+#gahfdezkec thead, #gahfdezkec tbody, #gahfdezkec tfoot, #gahfdezkec tr, #gahfdezkec td, #gahfdezkec th {
   border-style: none;
 }
 
-#xeagmsufwl p {
+#gahfdezkec p {
   margin: 0;
   padding: 0;
 }
 
-#xeagmsufwl .gt_table {
+#gahfdezkec .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -938,12 +1037,12 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#xeagmsufwl .gt_caption {
+#gahfdezkec .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#xeagmsufwl .gt_title {
+#gahfdezkec .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -955,7 +1054,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#xeagmsufwl .gt_subtitle {
+#gahfdezkec .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -967,7 +1066,7 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#xeagmsufwl .gt_heading {
+#gahfdezkec .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -979,13 +1078,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#xeagmsufwl .gt_bottom_border {
+#gahfdezkec .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#xeagmsufwl .gt_col_headings {
+#gahfdezkec .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1000,7 +1099,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#xeagmsufwl .gt_col_heading {
+#gahfdezkec .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1020,7 +1119,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#xeagmsufwl .gt_column_spanner_outer {
+#gahfdezkec .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1032,15 +1131,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#xeagmsufwl .gt_column_spanner_outer:first-child {
+#gahfdezkec .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#xeagmsufwl .gt_column_spanner_outer:last-child {
+#gahfdezkec .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#xeagmsufwl .gt_column_spanner {
+#gahfdezkec .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1052,11 +1151,11 @@ div.csl-indent {
   width: 100%;
 }
 
-#xeagmsufwl .gt_spanner_row {
+#gahfdezkec .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#xeagmsufwl .gt_group_heading {
+#gahfdezkec .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1082,7 +1181,7 @@ div.csl-indent {
   text-align: left;
 }
 
-#xeagmsufwl .gt_empty_group_heading {
+#gahfdezkec .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1097,15 +1196,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#xeagmsufwl .gt_from_md > :first-child {
+#gahfdezkec .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#xeagmsufwl .gt_from_md > :last-child {
+#gahfdezkec .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#xeagmsufwl .gt_row {
+#gahfdezkec .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1124,7 +1223,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#xeagmsufwl .gt_stub {
+#gahfdezkec .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1137,7 +1236,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#xeagmsufwl .gt_stub_row_group {
+#gahfdezkec .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1151,15 +1250,15 @@ div.csl-indent {
   vertical-align: top;
 }
 
-#xeagmsufwl .gt_row_group_first td {
+#gahfdezkec .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#xeagmsufwl .gt_row_group_first th {
+#gahfdezkec .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#xeagmsufwl .gt_summary_row {
+#gahfdezkec .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1169,16 +1268,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#xeagmsufwl .gt_first_summary_row {
+#gahfdezkec .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#xeagmsufwl .gt_first_summary_row.thick {
+#gahfdezkec .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#xeagmsufwl .gt_last_summary_row {
+#gahfdezkec .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1188,7 +1287,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#xeagmsufwl .gt_grand_summary_row {
+#gahfdezkec .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1198,7 +1297,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#xeagmsufwl .gt_first_grand_summary_row {
+#gahfdezkec .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1208,7 +1307,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#xeagmsufwl .gt_last_grand_summary_row_top {
+#gahfdezkec .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1218,11 +1317,11 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#xeagmsufwl .gt_striped {
+#gahfdezkec .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#xeagmsufwl .gt_table_body {
+#gahfdezkec .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1231,7 +1330,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#xeagmsufwl .gt_footnotes {
+#gahfdezkec .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1245,7 +1344,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#xeagmsufwl .gt_footnote {
+#gahfdezkec .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1254,7 +1353,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#xeagmsufwl .gt_sourcenotes {
+#gahfdezkec .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1268,7 +1367,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#xeagmsufwl .gt_sourcenote {
+#gahfdezkec .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1276,72 +1375,72 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#xeagmsufwl .gt_left {
+#gahfdezkec .gt_left {
   text-align: left;
 }
 
-#xeagmsufwl .gt_center {
+#gahfdezkec .gt_center {
   text-align: center;
 }
 
-#xeagmsufwl .gt_right {
+#gahfdezkec .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#xeagmsufwl .gt_font_normal {
+#gahfdezkec .gt_font_normal {
   font-weight: normal;
 }
 
-#xeagmsufwl .gt_font_bold {
+#gahfdezkec .gt_font_bold {
   font-weight: bold;
 }
 
-#xeagmsufwl .gt_font_italic {
+#gahfdezkec .gt_font_italic {
   font-style: italic;
 }
 
-#xeagmsufwl .gt_super {
+#gahfdezkec .gt_super {
   font-size: 65%;
 }
 
-#xeagmsufwl .gt_footnote_marks {
+#gahfdezkec .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#xeagmsufwl .gt_asterisk {
+#gahfdezkec .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#xeagmsufwl .gt_indent_1 {
+#gahfdezkec .gt_indent_1 {
   text-indent: 5px;
 }
 
-#xeagmsufwl .gt_indent_2 {
+#gahfdezkec .gt_indent_2 {
   text-indent: 10px;
 }
 
-#xeagmsufwl .gt_indent_3 {
+#gahfdezkec .gt_indent_3 {
   text-indent: 15px;
 }
 
-#xeagmsufwl .gt_indent_4 {
+#gahfdezkec .gt_indent_4 {
   text-indent: 20px;
 }
 
-#xeagmsufwl .gt_indent_5 {
+#gahfdezkec .gt_indent_5 {
   text-indent: 25px;
 }
 
-#xeagmsufwl .katex-display {
+#gahfdezkec .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#xeagmsufwl div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#gahfdezkec div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1484,674 +1583,16 @@ div.csl-indent {
 <blockquote class="blockquote">
 <p><strong>Exercice</strong> : Analysez le résultat de cette table. Qu’est-ce qu’elle suggère ?</p>
 </blockquote>
-</section>
-<section id="analyse-des-variables-topologiques-et-de-laccessibilité" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="analyse-des-variables-topologiques-et-de-laccessibilité"><span class="header-section-number">5.5</span> Analyse des variables topologiques et de l’accessibilité</h2>
-<p>On analyse ensuite la relation aux variables topologiques (altitude, pente) et de temps de trajet à la ville la plus proche en 2015. Le seuil retenu ici pour considérer une localité comme une ville est qu’elle ait au moins 5000 habitants.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On fait une série de tests de comparaison de moyenne pour les variables topologiques</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>t_tests_topo <span class="ot">&lt;-</span> AP_RCT <span class="sc">%&gt;%</span> </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="st">`</span><span class="at">elevation_2000-02-01_elevation_mean_m</span><span class="st">`</span>, </span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                   <span class="st">`</span><span class="at">slope_2000-02-01_slope_mean_degrees</span><span class="st">`</span>, </span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                   <span class="st">`</span><span class="at">traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes</span><span class="st">`</span>),</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">~</span> <span class="fu">t.test</span>(<span class="fu">as.numeric</span>(.[Groupe <span class="sc">==</span> <span class="st">"Contrôle"</span>]), <span class="fu">as.numeric</span>(.[Groupe <span class="sc">==</span> <span class="st">"Traitement"</span>]))<span class="sc">$</span>p.value)) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Altitude moyenne (m)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">elevation_2000-02-01_elevation_mean_m</span><span class="st">`</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Pente moyenne (degrés)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">slope_2000-02-01_slope_mean_degrees</span><span class="st">`</span>,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Temps de trajet moyen (minutes)</span><span class="st">`</span> <span class="ot">=</span> </span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Groupe =</span> <span class="st">"t-test"</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>equilibre_topo <span class="ot">&lt;-</span> AP_RCT <span class="sc">%&gt;%</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Groupe) <span class="sc">%&gt;%</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">Nombre d'aires</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>(),</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Altitude moyenne (m)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">elevation_2000-02-01_elevation_mean_m</span><span class="st">`</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Pente moyenne (degrés)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">slope_2000-02-01_slope_mean_degrees</span><span class="st">`</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Temps de trajet moyen (minutes)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes</span><span class="st">`</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(t_tests_topo) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="sc">!</span>Groupe, <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">2</span>)))</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Ce qui suit est une série d'opérations pour formater le rendu en tableau</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>equilibre_topo <span class="sc">%&gt;%</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">colnames&lt;-</span><span class="st">`</span> (<span class="fu">filter</span>(., <span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">!=</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Équilibre entre les groupes en matière topologique"</span>,</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">"(exercice : </span><span class="sc">\"</span><span class="st">comme si</span><span class="sc">\"</span><span class="st"> c'était une RCT)"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Nasa SRTM, Nelson et al."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div id="qbwppbrvlk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#qbwppbrvlk table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#qbwppbrvlk thead, #qbwppbrvlk tbody, #qbwppbrvlk tfoot, #qbwppbrvlk tr, #qbwppbrvlk td, #qbwppbrvlk th {
-  border-style: none;
-}
-
-#qbwppbrvlk p {
-  margin: 0;
-  padding: 0;
-}
-
-#qbwppbrvlk .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#qbwppbrvlk .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#qbwppbrvlk .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#qbwppbrvlk .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#qbwppbrvlk .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#qbwppbrvlk .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#qbwppbrvlk .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#qbwppbrvlk .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#qbwppbrvlk .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#qbwppbrvlk .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#qbwppbrvlk .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#qbwppbrvlk .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#qbwppbrvlk .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#qbwppbrvlk .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#qbwppbrvlk .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#qbwppbrvlk .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#qbwppbrvlk .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#qbwppbrvlk .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#qbwppbrvlk .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#qbwppbrvlk .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#qbwppbrvlk .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#qbwppbrvlk .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#qbwppbrvlk .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#qbwppbrvlk .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#qbwppbrvlk .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#qbwppbrvlk .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#qbwppbrvlk .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#qbwppbrvlk .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#qbwppbrvlk .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#qbwppbrvlk .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#qbwppbrvlk .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#qbwppbrvlk .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#qbwppbrvlk .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#qbwppbrvlk .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#qbwppbrvlk .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#qbwppbrvlk .gt_left {
-  text-align: left;
-}
-
-#qbwppbrvlk .gt_center {
-  text-align: center;
-}
-
-#qbwppbrvlk .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#qbwppbrvlk .gt_font_normal {
-  font-weight: normal;
-}
-
-#qbwppbrvlk .gt_font_bold {
-  font-weight: bold;
-}
-
-#qbwppbrvlk .gt_font_italic {
-  font-style: italic;
-}
-
-#qbwppbrvlk .gt_super {
-  font-size: 65%;
-}
-
-#qbwppbrvlk .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#qbwppbrvlk .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#qbwppbrvlk .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#qbwppbrvlk .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#qbwppbrvlk .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#qbwppbrvlk .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#qbwppbrvlk .gt_indent_5 {
-  text-indent: 25px;
-}
-
-#qbwppbrvlk .katex-display {
-  display: inline-flex !important;
-  margin-bottom: 0.75em !important;
-}
-
-#qbwppbrvlk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
-  height: 0px !important;
-}
-</style>
-
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="gt_heading header">
-<th colspan="4" class="gt_heading gt_title gt_font_normal">Équilibre entre les groupes en matière topologique</th>
-</tr>
-<tr class="gt_heading even">
-<th colspan="4" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">(exercice : "comme si" c'était une RCT)</th>
-</tr>
-<tr class="gt_col_headings header">
-<th id="Groupe" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Groupe</th>
-<th id="Contrôle" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Contrôle</th>
-<th id="Traitement" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Traitement</th>
-<th id="t-test" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">t-test</th>
-</tr>
-</thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="Groupe">Nombre d'aires</td>
-<td class="gt_row gt_right" headers="Contrôle">53</td>
-<td class="gt_row gt_right" headers="Traitement">45</td>
-<td class="gt_row gt_right" headers="t-test">NA</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="Groupe">Altitude moyenne (m)</td>
-<td class="gt_row gt_right" headers="Contrôle">518.99</td>
-<td class="gt_row gt_right" headers="Traitement">578.90</td>
-<td class="gt_row gt_right" headers="t-test">0.58</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="Groupe">Pente moyenne (degrés)</td>
-<td class="gt_row gt_right" headers="Contrôle">9.59</td>
-<td class="gt_row gt_right" headers="Traitement">10.93</td>
-<td class="gt_row gt_right" headers="t-test">0.31</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="Groupe">Temps de trajet moyen (minutes)</td>
-<td class="gt_row gt_right" headers="Contrôle">147.08</td>
-<td class="gt_row gt_right" headers="Traitement">255.12</td>
-<td class="gt_row gt_right" headers="t-test">0.01</td>
-</tr>
-</tbody><tfoot class="gt_sourcenotes">
-<tr class="odd">
-<td colspan="4" class="gt_sourcenote">Source : Nasa SRTM, Nelson et al.</td>
-</tr>
-</tfoot>
-
-</table>
-
-</div>
-</div>
-</div>
-<p>Le temps de trajet aux villes est significativement distinct entre les deux groupes.</p>
-<p>On essaye de limiter ce biais en ajoutant le temps de trajet à une ville comme variable de contrôle à notre régression.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>AP_RCT2 <span class="ot">&lt;-</span> AP_RCT <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Temps de trajet moyen (minutes)</span><span class="st">`</span> <span class="ot">=</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes</span><span class="st">`</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># On exécute une régression pour la période 2000-2014</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>def_2000_2014 <span class="ot">&lt;-</span> <span class="fu">lm</span>(taux_deforestation_2000_2014 <span class="sc">~</span> </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                      Groupe <span class="sc">+</span> <span class="st">`</span><span class="at">Temps de trajet moyen (minutes)</span><span class="st">`</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> AP_RCT2)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># On consolide les résultats des régressions dans une table qu'on formate</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># avec le package stargazer</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>rct_out2 <span class="ot">&lt;-</span> <span class="fu">stargazer</span>(def_2000_2014, <span class="at">type =</span> <span class="st">"html"</span>,</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">title =</span> <span class="st">"Impact de la conservation sur la perte de couvert forestier (en contrôlant pour l'accessibilité)"</span>,</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">notes =</span> <span class="st">"Données : Association Vahatra et données GFC"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div style="width: 500px;">
-<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<caption><strong>Impact de la conservation sur la perte de couvert forestier (en contrôlant pour l'accessibilité)</strong></caption>
-<tbody>
-<tr class="odd">
-<td colspan="2" style="border-bottom: 1px solid black"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td><em>Dependent variable:</em></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td style="border-bottom: 1px solid black"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>taux_deforestation_2000_2014</td>
-</tr>
-<tr class="odd">
-<td colspan="2" style="border-bottom: 1px solid black"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">GroupeTraitement</td>
-<td>-3.636<sup>*</sup></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td>(1.867)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">`Temps de trajet moyen (minutes)`</td>
-<td>-0.005</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>(0.005)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Constant</td>
-<td>9.491<sup>***</sup></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td>(1.407)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td colspan="2" style="border-bottom: 1px solid black"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Observations</td>
-<td>97</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">R<sup>2</sup></td>
-<td>0.065</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Adjusted R<sup>2</sup></td>
-<td>0.045</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Residual Std. Error</td>
-<td>8.715 (df = 94)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">F Statistic</td>
-<td>3.286<sup>**</sup> (df = 2; 94)</td>
-</tr>
-<tr class="odd">
-<td colspan="2" style="border-bottom: 1px solid black"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><em>Note:</em></td>
-<td style="text-align: right;"><sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: right;">Données : Association Vahatra et données GFC</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
 <blockquote class="blockquote">
-<p>Exercice : interprétez le résultat</p>
+<p><strong>Rappel sur les régressions</strong></p>
 </blockquote>
+<blockquote class="blockquote">
+<p><strong>Application finale</strong> :</p>
+</blockquote>
+<ul>
+<li><p>Régressez à nouveau le taux de déforestation moyen entre 2000 et 2014 sur la variable de traitement en ajoutant le taux de déforestation en 2000 comme variable de contrôle (vous ajoutez un deuxième régresseur en plus de ‘Groupe’).</p></li>
+<li><p>Utilisez le même modèle pour estimer l’effet du traitement sur le pourcentage de couvert forestier en 2023.</p></li>
+</ul>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">

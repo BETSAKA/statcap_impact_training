@@ -161,9 +161,9 @@ generate_comparison_plot(1000)
   $$ Y_i = \alpha + \beta T_i + \epsilon_i $$
   avec :
   
-  - \( \beta \) : l’effet moyen du traitement
-  - \( \alpha \) : la moyenne de \( Y_i \) pour les non-traités
-  - \( \epsilon \) : le terme d’erreur
+  - $\beta$ : l’effet moyen du traitement
+  - $\alpha$ : la moyenne de $Y_i$ pour les non-traités
+  - $\epsilon$ : le terme d’erreur
 
 ## Comment randomiser?
 
@@ -180,26 +180,26 @@ Quel est le processus à suivre pour "randomiser" un projet/programme/interventi
 
 ::: {.columns}
 
-::: {.column width="40%"}
+::: {.column width="35%"}
 
 ```{mermaid, echo=FALSE}
 
 flowchart TD
-    A["Population éligible"] ---> AB(Faisabilité)
-    AB ---> B["Échantillon étudié"]
-    B ---> C("3. Assignation aléatoire")
-    C ---> D["Groupe de traitement"]
-    C ---> E["Groupe de contrôle"]
+    A["Population<br/>éligible"] --> AB(Faisabilité)
+    AB --> B["Échantillon<br/>étudié"]
+    B --> C("Assignation<br/>aléatoire")
+    C --> D["Groupe de<br/>traitement"]
+    C --> E["Groupe de<br/>contrôle"]
 
-    style A fill:#d3d3d3,stroke:#000000
-    style B fill:#d3d3d3,stroke:#000000
-    style D fill:#3cb371,stroke:#000000
-    style E fill:#ff6347,stroke:#000000
+    style A fill:#d3d3d3,color:#000000
+    style B fill:#d3d3d3,color:#000000
+    style D fill:#3cb371,color:#000000
+    style E fill:#ff6347,color:#000000
 ```
 
 :::
 
-::: {.column width="60%"}
+::: {.column width="65%"}
 
 ```{r, echo=FALSE, fig.height=10}
 suppressPackageStartupMessages(library(dplyr))
@@ -214,11 +214,11 @@ dataset <- bind_rows(
   base_grid %>% mutate(stage = "Population éligible", size = 0.1, color = "darkgrey"),
   base_grid %>% mutate(
     stage = "Échantillon d'étude",
-    size = ifelse(y <= 10, 0.2, 0.1),
+    size = ifelse(y <= 10, 0.3, 0.1),
     color = ifelse(y <= 10, "black", "darkgrey")),
   base_grid %>% mutate(
     stage = "Assignation aléatoire",
-    size = ifelse(y <= 10, 0.2, 0.1),
+    size = ifelse(y <= 10, 0.3, 0.1),
     color = ifelse(y <= 10, sample(c("red", "green"), n(), replace = TRUE), 
                    "darkgrey")))
 
