@@ -1,0 +1,391 @@
+---
+title: "Méthodes d'appariement"
+subtitle: "Atelier Mapme : Evaluation d'impact sur données spatiales"
+author: "Melvin Wong, Florent Bédécarrats (sur une base élaborée par Jeanne de Montalembert et Marin Ferry)"
+date: "Octobre 2024"
+format: 
+  clean-revealjs:
+    slide-number: true
+    self-contained: true
+class: small-text
+editor_options: 
+  chunk_output_type: console
+---
+
+## Problème de départ
+
+Est-ce que le statut d'Aire Protégée a un impact sur le couvert forestier ?
+
+C'est-à-dire : $E[CF1|AP = 1] - E[CF1|AP = 0]$
+
+avec $CF1$ le couvert forestier d'une zone si c'est une AP et $CF0$ le couvert forestier si ce n'est pas une AP, **pour la même zone et au même moment**.
+
+. . .
+
+Le problème évident : on n’observe jamais simultanément les deux états pour la même unité.
+
+. . .
+
+$\Rightarrow$ Quel contrefactuel utiliser ?
+
+- Comparer des zones différentes ?
+- Risque de confusion avec des effets structurels.
+
+---
+
+## Illustration intuitive
+
+:::: {.columns}
+::: {.column}
+
+| Zone       | Couvert forestier |
+|------------|-------------------|
+| **Makira** | $$CF_M = M + AP$$ |
+| **Autre**  | $$CF_A = A$$      |
+
+$M$, $A$ : effets fixes des zones
+
+:::
+
+::: {.column}
+
+Différence observée :
+
+$$CF_M - CF_A = M + AP - A = (M - A) + AP$$
+
+Biais potentiel : $M - A$
+
+:::
+::::
+
+---
+
+## Principe du matching
+
+On cherche une zone non traitée **qui ressemble le plus possible** à la zone traitée : son "jumeau".
+
+L’idée est de comparer les résultats entre unités aux caractéristiques observables $X$ proches, en supposant que **toute la sélection dans le traitement passe par $X$**.
+
+---
+
+## Hypothèses fondamentales
+
+- **Indépendance conditionnelle (CIA)** :  
+  $$(Y(1), Y(0)) \perp T \mid X$$
+
+  $\Rightarrow$ À caractéristiques observables identiques, l’assignation est as-if aléatoire.
+
+- **Support commun (overlap)** :  
+  Pour chaque $X$, il existe des unités traitées et non traitées.
+
+---
+
+## Hypothèse CIA : ATT vs ATE
+
+- Pour identifier l’**ATT** (effet moyen sur les traités), on suppose seulement :
+  $$
+  Y(0) \perp T \mid X
+  $$
+
+- Pour identifier l’**ATE**, il faut que $Y(0)$ et $Y(1)$ soient indépendants de $T$ conditionnellement à $X$.
+
+$\Rightarrow$ Hypothèse plus forte.
+
+---
+
+## Risques liés à la CIA
+
+- La CIA suppose qu’aucune variable inobservée ne détermine à la fois $T$ et $Y$.
+- Si certaines valeurs de $X$ déterminent avec certitude le traitement, pas d'unité comparable.
+
+$\Rightarrow$ Il faut des jumeaux **observables** et **non systématiquement traités**.
+
+---
+
+## Hypothèse de support commun
+
+On suppose qu’il existe, pour chaque valeur de $X$, des unités traitées et non traitées.
+
+Sinon, impossible de construire un groupe de comparaison.
+
+$\Rightarrow$ Vérification graphique et exclusion des zones hors support.
+
+---
+
+## Objectif du matching
+
+Comparer $Y(1)$ d’une unité traitée avec $Y(0)$ d’une unité non traitée **ayant les mêmes $X$**.
+
+$$
+ATT = E[Y(1) - Y(0) \mid T=1]
+$$
+
+$$
+\approx \frac{1}{N_1} \sum_{i \in T=1} \left( Y_i - Y_{j(i)} \right)
+$$
+
+où $j(i)$ est le "jumeau" de l’unité $i$.
+
+---
+
+## Méthodes d’appariement
+
+Plusieurs façons de définir les paires (ou groupes) appariés :
+
+- `"exact"` : appariement exact sur les covariables
+- `"coarsened-exact"` : appariement exact après discrétisation
+- `"nearest-neighbor"` : plus proche voisin
+- `"optimal"` : minimise la distance totale globale
+- `"full"` : chaque unité est utilisée, poids variables
+
+---
+
+## Mesures de distance
+
+Pour définir "le plus proche", plusieurs métriques :
+
+- **Distance euclidienne** : simple somme des différences
+- **Distance de Mahalanobis** : tient compte de la variance et des corrélations entre covariables
+- **Score de propension** : probabilité d’être traité conditionnellement à $X$
+
+---
+
+## Voisin le plus proche
+
+- Méthode intuitive : on apparie chaque unité traitée avec sa plus proche unité contrôle.
+
+- On peut :
+  - Apparier avec un seul jumeau
+  - Appariement à $m$ plus proches voisins
+  - Exclure les paires trop éloignées (caliper)
+
+---
+
+## Appariement avec ou sans remise
+
+- **Sans remise** : chaque unité non traitée est utilisée une seule fois  
+- **Avec remise** : on peut utiliser la même unité plusieurs fois
+
+Avantage du *avec remise* : plus de flexibilité, meilleure qualité des appariements dans petits échantillons.
+
+---
+
+## Limites du plus proche voisin
+
+- Unité la plus proche ≠ unité vraiment proche  
+- Unités appariées peuvent être assez différentes en réalité
+
+$\Rightarrow$ Biais possible
+
+- Ne mobilise qu’un seul contrôle : perte d’information
+
+---
+
+## Choix de la fenêtre (caliper)
+
+- Caliper = seuil maximal de distance pour accepter un appariement  
+- Plus petit caliper = appariements plus proches, mais risque d’exclure des observations
+
+Aucun consensus sur le bon seuil. Dépend du contexte.
+
+---
+
+## Biais vs variance
+
+- Appariement simple : faible variance mais possible biais  
+- Appariement plus souple (kernel, pondéré) : plus précis mais risque de mauvais matches
+
+$\Rightarrow$ Toujours tester la sensibilité aux méthodes
+
+---
+
+## Curse of dimensionality
+
+Plus on utilise de covariables $X$, plus il est difficile de trouver un jumeau exact ou proche.
+
+$\Rightarrow$ Risque de mauvais appariements ou d’exclusion massive.
+
+---
+
+## Score de propension : motivation
+
+Rosenbaum & Rubin (1983) montrent que, sous CIA :
+
+$$
+(Y(0), Y(1)) \perp T \mid X \Rightarrow (Y(0), Y(1)) \perp T \mid \pi(X)
+$$
+
+où $\pi(X)$ est la probabilité d’être traité conditionnellement à $X$.
+
+$\Rightarrow$ Le score résume les $X$ en une seule dimension.
+
+---
+
+## Estimation du score de propension
+
+Le score est généralement estimé par un modèle logit ou probit :
+
+$$
+\pi(X_i) = P(T_i = 1 \mid X_i)
+$$
+
+Attention : la forme fonctionnelle est inconnue en pratique. D’où l’importance des tests de sensibilité.
+
+---
+
+## Vérification du support commun
+
+- Tracer les distributions de $\pi(X)$ pour les traités et les contrôles  
+- Vérifier qu’il y a recouvrement : pas de $X$ où seuls des traités sont présents
+
+Exclusion des observations hors support = pratique courante.
+
+## Test visuel du support commun 
+
+On peut représenter le support commun à partir de la distribution des scores de propension des unités traitées et non-traitées.
+
+En pratique, on représente les histogrammes de probabilité estimée d’être traité pour les unités bénéficiaires et des non bénéficiaires du traitement étudié.
+
+On peut ensuite vérifier l’étendue des valeurs de $\pi(X_i)$ pour lesquelles on observe un nombre suffisant d’unités traitées et non-traitées, i.e. la largeur du support commun.
+
+## Test visuel du support commun
+
+```{r}
+#| label: fig-exemple
+#| fig-cap: "Exemple de support commun"
+
+# Load necessary libraries
+library(ggplot2)
+
+# Simulate propensity scores for the two groups with more overlap
+set.seed(123)
+n <- 1000
+propensity_nonenrolled <- rbeta(n, 2, 4)  # Adjusted parameters for more overlap
+propensity_enrolled <- rbeta(n, 4, 2)     # Adjusted parameters for more overlap
+
+# Create a data frame combining both groups
+data <- data.frame(
+  propensity_score = c(propensity_nonenrolled, propensity_enrolled),
+  group = factor(c(rep("Non traités", n), rep("Traités", n)))
+)
+
+# Define common support area based on visual inspection of densities
+common_support_min <- min(propensity_enrolled[propensity_enrolled > 0])
+common_support_max <- max(propensity_nonenrolled[propensity_nonenrolled > 0])
+
+# Plot the density curves for both groups
+ggplot(data, aes(x = propensity_score, fill = group, color = group)) +
+  geom_density(alpha = 0.5) +  # Create density plots with transparency
+  # Shaded common support area
+  annotate("rect", xmin = common_support_min, xmax = common_support_max, 
+           ymin = 0, ymax = Inf, alpha = 0.2, fill = "black") +
+  # Text annotation
+  annotate("text", x = (common_support_min + common_support_max) / 2, y = 0.30, 
+           label = "Support commun", size = 4, angle = 0, hjust = 0.5) +
+  # Arrows
+  annotate("segment", x = common_support_min, xend = common_support_max, 
+           y = 0.22, yend = 0.22, arrow = arrow(length = unit(0.2, "cm")), 
+           size = 1) +
+  annotate("segment", x = common_support_max, xend = common_support_min, 
+           y = 0.22, yend = 0.22, arrow = arrow(length = unit(0.2, "cm")), 
+           size = 1) +
+  # Layout
+  labs(x = "Score de propension", y = "Densité", fill = "Groupe", 
+       color = "Groupe") +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+```
+
+## Enjeux liés au support commun 
+
+```{r}
+#| label: fig-enjeux
+#| fig-cap: "Exemple de support commun et validité externe"
+
+# Plot the density curves for both groups with French labels
+ggplot(data, aes(x = propensity_score, fill = group, color = group)) +
+  geom_density(alpha = 0.5) +  # Create density plots with transparency
+  
+  # Shaded common support area based on the range where the densities overlap
+  annotate("rect", xmin = 0, xmax = common_support_min, ymin = 0, ymax = Inf, 
+           alpha = 0.2, fill = "black")+
+  annotate("rect", xmin = common_support_max, xmax = 1, ymin = 0, ymax = Inf, 
+           alpha = 0.2, fill = "black") + 
+  # Add arrows left
+  annotate("segment", x = 0, xend = common_support_min, 
+           y = 0.22, yend = 0.22, arrow = arrow(length = unit(0.2, "cm")), 
+           size = 1) +
+   annotate("segment", x = common_support_min, xend = 0, 
+           y = 0.22, yend = 0.22, arrow = arrow(length = unit(0.2, "cm")), 
+           size = 1) +
+  # Add arrows right
+  annotate("segment", x = common_support_max, xend = 1, 
+           y = 0.22, yend = 0.22, arrow = arrow(length = unit(0.2, "cm")), 
+           size = 1) +
+   annotate("segment", x = 1, xend = common_support_max, 
+           y = 0.22, yend = 0.22, arrow = arrow(length = unit(0.2, "cm")), 
+           size = 1) +
+    # Add text annotation for common support, higher at y = 0.30
+  annotate("text", x = common_support_min, y = 0.30, 
+           label = "Jamais traités", size = 4, angle = 0, hjust = 0.5) + 
+  annotate("text", x = common_support_max, y = 0.30, 
+           label = "Toujours traités", size = 4, angle = 0, hjust = 0.5) +
+  
+  # Customize labels and theme
+  labs(x = "Score de propension",  y = "Densité", fill = "Groupe", 
+       color = "Groupe") +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+```
+
+## Imposer un support commun 
+
+### Méthode du min/max
+
+- Pour estimer l’ATT, Dehejia et Wahba (1999) proposent d'éliminer :
+
+    1. les unités non traitées ayant un score inférieur au minimum observé sur les unités traitées, c.à.d. *"Jamais traités"*
+    2. les unités traitées ayant un score supérieur au maximum observé pour les unités non traitées, c.à.d *"always treated"*
+    
+**Attention** : Ce qui est alors estimé, ce n'est plus un *ATE* (average treatment effect), ni même un *ATT* (average treatement effect on the treated) mais un *ATM* (average teatment effect on the matched observations)
+
+## Quelles variables de conditionnement/contrôle ? 
+
+L’hypothèse d’indépendance conditionnelle demande d’observer les caractéristiques qui déterminent l’allocation du traitement.
+
+En pratique, il doit s’agir de variables qui peuvent avoir un impact sur la variable d’intérêt (e.g. déforestation) et sur le choix de bénéficier du dispositif (e.g. Aire Protégée).
+
+**Deux points de vigilance :**
+- Il ne faut pas utiliser de variables mesurées après la mise en place du dispositif et qui peuvent également affecter celui-ci → problème d’endogénéité
+- Il faut qu’il existe une part d’aléa ou d’exogénéité dans la sélection des unités traitées sinon il n’y a plus de support commun puisque la participation au programme est entièrement déterminée par des caractéristiques des unités.
+
+## Estimateur
+
+L’effet moyen estimé sur les traités correspond à la moyenne de ces effets estimés :
+
+$$\hat{E}[Y_i(1) - Y_i(0) | T_i = 1] = \frac{1}{n_1} {\sum}_{i \in E_1}^{n} \left( y_i(1) - \hat{y}_i(0) \right)$$
+où :   
+- $n_1$ est le nombre d’unités traitées   
+- $E_1$ est l’ensemble des unités traitées   
+- $y_i(1)$ le résultat observé de l’individu $i$   
+- $\hat{y}_i(0)$ le résultat du plus proche voisin non traité de $i$
+
+## Résumé
+
+Pour mettre en œuvre une méthode d’appariement, il faut :
+
+- Identifier les unités traitées et les non-traitées
+- Observer les caractéristiques qui déterminent le traitement pour chaque unité
+- Choisir une méthode d’estimation : plus proche(s) voisin(s), PSM ?
+- Dans le cas d’un appariement sur le score de propension, il faut l’estimer
+- Estimer les effets (ATT et/ou ATE)
+
+## Résumé
+
+La crédibilité des estimateurs estimés repose sur l’hypothèse très forte d’indépendance conditionnelle.
+
+- Tiens aux observables **disponibles et utilisées** pour la comparaison
+- Si on dispose de peu d’informations dans nos données sur les choix entre les variables, il ne sera pas possible d’éliminer le **biais de sélection**
+

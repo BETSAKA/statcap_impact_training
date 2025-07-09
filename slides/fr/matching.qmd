@@ -1,8 +1,8 @@
 ---
 title: "Méthodes d'appariement"
 subtitle: "Atelier Mapme : Evaluation d'impact sur données spatiales"
-author: "Melvin Wong, Florent Bédécarrats (sur une base élaborée par Jeanne de Montalembert et Marin Ferry"
-date: "Octobre 2024"
+author: "Thomas Thivillon, Florent Bédécarrats (sur une base élaborée par Jeanne de Montalembert et Marin Ferry)"
+date: "Juillet 2025"
 format: 
   clean-revealjs:
     slide-number: true
@@ -20,7 +20,7 @@ C'est à dire :
 
 $$E[CF1|AP = 1] - E[CF1|AP = 0]$$
 
-avec $CF1$ le couvert forestier d'une zone si c'est une AP et $CF0$ le couvert forestier s’il n’y a pas d’AP, **pour la même zone et au même moment**.
+avec $CF1$ le couvert forestier d'une zone si c'est une AP et $CF0$ le couvert forestier si ce n'est pas une AP, **pour la même zone et au même moment**.
 
 . . .
 
@@ -34,37 +34,45 @@ Le problème évident est qu'on n’observe pas simultanément les deux états :
 
 -   Comparer des zones différentes ?
 
-## Principe des méthodes d'appariement 
+## Principe des méthodes d'appariement: Illustration 
 
 :::: {.columns}
 
 ::: {.column}
 
- Exemple sur une aire protégée :
+**Comparaison naïve entre deux zones :**
 
-| Zone       | Couvert forestier |
-|------------|-------------------|
-| **Makira** | $$CF_M = M + AP$$ |
-| **Autre**  | $$CF_A = A$$      |
-*Note :* $M$ représente l'effet fixe Makira et $A$ l'effet fixe de l'Autre.
+| Zone       | Couvert forestier observé |
+|------------|----------------------------|
+| **Makira** | $$CF_M = M + AP$$          |
+| **Autre**  | $$CF_A = A$$               |
+
+*Remarque :*  
+$M$ = caractéristiques propres à Makira (relief, climat, accès...)  
+$A$ = caractéristiques propres à la zone non protégée  
+$AP$ = effet de l’aire protégée
 
 :::
 
 ::: {.column}
 
-Effet causal :
+**Différence observée :**
 
-$$CF_M - CF_A = M + \underbrace{AP}_{effet} - A$$
+$$
+CF_M - CF_A = (M + AP) - A = AP + (M - A)
+$$
 
-$$ \Rightarrow M - A $$
+**Problème :**  
+On voudrait isoler $AP$,  
+mais on capte aussi $(M - A)$.
 
-$M - A$ correspond aux différences de couvert forestier sans AP
+$\Rightarrow$ **biais de sélection** dû aux différences structurelles entre zones.
 
-$\Rightarrow$ [biais]{style="color:red;"}
+$\Rightarrow$ L’appariement vise à trouver une zone non protégée où $M \approx A$.
 
 :::
 
-::::
+::::  
 
 
 
@@ -139,7 +147,7 @@ $\Rightarrow$ Pour chaque valeur de $X$, on suppose qu’il existe des unités q
 
 **Méthodes d’appariement**
 
-our évaluer l’effet moyen sur les traités (ATE), cela revient à [comparer]{style="color:blue;"} le résultat $Y1$ de chaque unité traitée avec le résultat $Y0$ de l’unité non traitée ayant exactement les mêmes caractéristiques observables.
+Pour évaluer l’effet moyen sur les traités (ATT), cela revient à [comparer]{style="color:blue;"} le résultat $Y1$ de chaque unité traitée avec le résultat $Y0$ de l’unité non traitée ayant exactement les mêmes caractéristiques observables.
 
 Cela revient en symétrie à exclure de l'analyse les unités qui ne sont pas comparables.
 
@@ -152,17 +160,16 @@ Cela revient en symétrie à exclure de l'analyse les unités qui ne sont pas co
 $\Rightarrow$ Pour évaluer l’effet moyen sur les traités (ATE), cela revient à [comparer]{style="color:blue;"} le résultat $Y1$ de chaque unité traitée avec le résultat $Y0$ de l’unité non traitée ayant exactement les mêmes caractéristiques observables.
 
 
-## Le principe
+## Méthodes d’appariement
 
-Plusieurs variantes dans la manière de construire le contrefactuel de chaque unité et donc la manière de trouver un [jumeau]{style="color:blue;"} varient en fonction de la technique utilisée :
+Plusieurs façons de définir les paires (ou groupes) appariés :
 
-- Voisin le plus proche
-- Voisins les plus proches
-- Score de propension...
+- `"exact"` : appariement exact sur les covariables
+- `"coarsened-exact"` : appariement exact après discrétisation
+- `"nearest-neighbor"` : voisin le plus proche
+- `"optimal"` : minimise la distance totale globale
+- `"full"` : chaque unité est utilisée, poids variables
 
-::: {.notes}
-Vérifier la typologie des approches : nearest neighbor basé sur PSM
-:::
 
 ## Voisin le plus proche 
 
@@ -398,29 +405,6 @@ ggplot(data, aes(x = propensity_score, fill = group, color = group)) +
     
 **Attention** : Ce qui est alors estimé, ce n'est plus un *ATE* (average treatment effect), ni même un *ATT* (average treatement effect on the treated) mais un *ATM* (average teatment effect on the matched observations)
 
-## Le Coarsened Exact Matching (CEM)
-
-CEM : appariement sur variables regroupées en classes (traduction approximative).
-
-Une approche qui se passe de régression linéaires ou de mesures de distance.
-
-
-##
-
-![](figs/CEM_01.png)
-
-##
-
-![](figs/CEM_02.png)
-
-##
-
-![](figs/CEM_03.png)
-
-##
-
-![](figs/CEM_04.png)
-
 ## Quelles variables de conditionnement/contrôle ? 
 
 L’hypothèse d’indépendance conditionnelle demande d’observer les caractéristiques qui déterminent l’allocation du traitement.
@@ -436,9 +420,6 @@ En pratique, il doit s’agir de variables qui peuvent avoir un impact sur la va
 L’effet moyen estimé sur les traités correspond à la moyenne de ces effets estimés :
 
 $$\hat{E}[Y_i(1) - Y_i(0) | T_i = 1] = \frac{1}{n_1} {\sum}_{i \in E_1}^{n} \left( y_i(1) - \hat{y}_i(0) \right)$$
-
-
-
 où :   
 - $n_1$ est le nombre d’unités traitées   
 - $E_1$ est l’ensemble des unités traitées   
