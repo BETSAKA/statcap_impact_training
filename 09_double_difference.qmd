@@ -14,13 +14,13 @@ editor_options:
 
 [Cliquer ici pour télécharger la présentation](slides/fr/TVM_Double_difference.pdf).
 
-Pour cette analyse, nous allons appliquer la méthode des doubles différences pour estimer l'impact des aires protégéesa déforestation à Madagascar entre 2000 et 2021. Cette méthode est particulièrement utile lorsque l'intervention (la création des aires protégées) a lieu à des dates différentes pour chaque unité d'observation, ce que l'on appelle un échelonnement (staggered diff-in-diff). La méthode proposée par Callaway et Sant'Anna [-@callaway2021] permet de gérer cette situation en utilisant une approche qui tient compte de ces dates de mise en œuvre différentes. Le package {did} [@did] en R permet d'appliquer cette méthode facilement.
+Pour cette analyse, nous allons appliquer la méthode des doubles différences pour estimer l'impact des aires protégéesa déforestation à Madagascar entre 2000 et 2023. Cette méthode est particulièrement utile lorsque l'intervention (la création des aires protégées) a lieu à des dates différentes pour chaque unité d'observation, ce que l'on appelle doubles différences avec traitement échelonné dans le temps (staggered diff-in-diff). La méthode proposée par Callaway et Sant'Anna [-@callaway2021] permet de gérer cette situation en utilisant une approche qui tient compte de ces dates de mise en œuvre différentes. Le package {did} [@did] en R permet d'appliquer cette méthode facilement.
 
 ## Application aux mailles de territoire
 
 Dans cette section, nous appliquons la méthode des doubles différences aux mailles de territoire pour évaluer l'effet des aires protégées sur la réduction de la déforestation. Nous allons d'abord préparer les données afin de les rendre conformes aux exigences de la fonction `att_gt()` du package {did}.
 
-Nous travaillons avec un jeu de données spatial qui représente des mailles de 1 km² chacune, et nous avons des informations sur la couverture forestière pour chaque année. Le traitement consiste à identifier les mailles qui sont "intérieures" aux aires protégées (traitées) par rapport aux autres (non traitées).
+Nous travaillons avec un jeu de données spatial qui représente des mailles de 5 km² chacune, et nous avons des informations sur la couverture forestière pour chaque année. Le traitement consiste à identifier les mailles qui sont "intérieures" aux aires protégées (traitées) par rapport aux autres (non traitées).
 
 ```{r}
 library(did) # Pour des doubles-différences échelonnées
@@ -29,7 +29,6 @@ library(lubridate) # Pour modifier les dates
 library(gt) # Pour de jolis tableaux
 library(mapme.biodiversity) # Pour réutiliser des fonctions portfolio_long
 library(sf) # Pour des opérations spatiales sur vecteurs
-library(tictoc) # Pour mesurer les temps de traitement
 
 # On charge les données par mailles créées précédemment
 grille_matched <- read_rds("data/grille_matched.rds")
@@ -68,14 +67,14 @@ grille_matched <- grille_matched %>%
 
 
 
-> **Exercice** : 
+> **Exercice** :    
 - pour explorer le jeu de données grilles_matched, groupez les données par statut de traitement `traitement` et année de création `an_creation`. Que remarquez-vous ?
 
 ### Estimation des effets moyens du traitement
 
 Nous utilisons la fonction att_gt() pour estimer l'effet moyen du traitement (ATT) sur le taux de déforestation au fil du temps. Les poids provenant du processus de matching sont utilisés pour ajuster les estimations.
 
-La fonction `ggdid()` permet de visualiser les résultats obtenus. Les graphiques suivants montrent l'évolution de l'ATT au fil du temps, ce qui nous permet d'observer l'impact des aires protégées sur la déforestation. **Attention** : il s'agit ici d'une première estimation à des fins didactiques, sans variables de contrôle.
+La fonction `ggdid()` permet de visualiser les résultats obtenus. Les graphiques suivants montrent l'évolution de l'ATM au fil du temps, ce qui nous permet d'observer l'impact des aires protégées sur la déforestation. **Attention** : il s'agit ici d'une première estimation à des fins didactiques, sans variables de contrôle.
 
 ```{r}
 # Les mailles en dehors des aires protégées sont considérées comme jamais traitées

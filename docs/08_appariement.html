@@ -307,7 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>         <span class="at">pente =</span> <span class="st">`</span><span class="at">slope_2000-02-01_slope_mean_degrees</span><span class="st">`</span>,</span>
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>         <span class="at">dist_ville =</span> <span class="st">`</span><span class="at">traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes</span><span class="st">`</span>,</span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>         <span class="at">traitement =</span> <span class="fu">ifelse</span>(<span class="fu">year</span>(date_creation) <span class="sc">&lt;</span> <span class="dv">2015</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>         <span class="at">taux_deforestation_2000_2014 =</span> </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>         <span class="at">taux_annuel_deforestation_2000_2014 =</span> </span>
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>           <span class="sc">-</span>((<span class="st">`</span><span class="at">treecover_area_2014-01-01_treecover_ha</span><span class="st">`</span> <span class="sc">/</span> </span>
 <span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>              <span class="st">`</span><span class="at">treecover_area_2000-01-01_treecover_ha</span><span class="st">`</span>)<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">14</span>) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(couv_foret_2000), <span class="sc">!</span><span class="fu">is.na</span>(dist_ville), <span class="sc">!</span><span class="fu">is.na</span>(altitude), <span class="sc">!</span><span class="fu">is.na</span>(pente))</span>
@@ -332,23 +332,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Association Vahatra et données GFC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="zsrkjhtayh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#zsrkjhtayh table {
+<div id="uardnysjrf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#uardnysjrf table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#zsrkjhtayh thead, #zsrkjhtayh tbody, #zsrkjhtayh tfoot, #zsrkjhtayh tr, #zsrkjhtayh td, #zsrkjhtayh th {
+#uardnysjrf thead, #uardnysjrf tbody, #uardnysjrf tfoot, #uardnysjrf tr, #uardnysjrf td, #uardnysjrf th {
   border-style: none;
 }
 
-#zsrkjhtayh p {
+#uardnysjrf p {
   margin: 0;
   padding: 0;
 }
 
-#zsrkjhtayh .gt_table {
+#uardnysjrf .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -374,12 +374,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#zsrkjhtayh .gt_caption {
+#uardnysjrf .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#zsrkjhtayh .gt_title {
+#uardnysjrf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -391,7 +391,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#zsrkjhtayh .gt_subtitle {
+#uardnysjrf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -403,7 +403,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#zsrkjhtayh .gt_heading {
+#uardnysjrf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -415,13 +415,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#zsrkjhtayh .gt_bottom_border {
+#uardnysjrf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#zsrkjhtayh .gt_col_headings {
+#uardnysjrf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -436,7 +436,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#zsrkjhtayh .gt_col_heading {
+#uardnysjrf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -456,7 +456,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#zsrkjhtayh .gt_column_spanner_outer {
+#uardnysjrf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -468,15 +468,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#zsrkjhtayh .gt_column_spanner_outer:first-child {
+#uardnysjrf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#zsrkjhtayh .gt_column_spanner_outer:last-child {
+#uardnysjrf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#zsrkjhtayh .gt_column_spanner {
+#uardnysjrf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -488,11 +488,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#zsrkjhtayh .gt_spanner_row {
+#uardnysjrf .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#zsrkjhtayh .gt_group_heading {
+#uardnysjrf .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -518,7 +518,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#zsrkjhtayh .gt_empty_group_heading {
+#uardnysjrf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -533,15 +533,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#zsrkjhtayh .gt_from_md > :first-child {
+#uardnysjrf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#zsrkjhtayh .gt_from_md > :last-child {
+#uardnysjrf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#zsrkjhtayh .gt_row {
+#uardnysjrf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -560,7 +560,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#zsrkjhtayh .gt_stub {
+#uardnysjrf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -573,7 +573,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#zsrkjhtayh .gt_stub_row_group {
+#uardnysjrf .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -587,15 +587,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#zsrkjhtayh .gt_row_group_first td {
+#uardnysjrf .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#zsrkjhtayh .gt_row_group_first th {
+#uardnysjrf .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#zsrkjhtayh .gt_summary_row {
+#uardnysjrf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -605,16 +605,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#zsrkjhtayh .gt_first_summary_row {
+#uardnysjrf .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#zsrkjhtayh .gt_first_summary_row.thick {
+#uardnysjrf .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#zsrkjhtayh .gt_last_summary_row {
+#uardnysjrf .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -624,7 +624,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#zsrkjhtayh .gt_grand_summary_row {
+#uardnysjrf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -634,7 +634,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#zsrkjhtayh .gt_first_grand_summary_row {
+#uardnysjrf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -644,7 +644,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#zsrkjhtayh .gt_last_grand_summary_row_top {
+#uardnysjrf .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -654,11 +654,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#zsrkjhtayh .gt_striped {
+#uardnysjrf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#zsrkjhtayh .gt_table_body {
+#uardnysjrf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -667,7 +667,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#zsrkjhtayh .gt_footnotes {
+#uardnysjrf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -681,7 +681,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#zsrkjhtayh .gt_footnote {
+#uardnysjrf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -690,7 +690,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#zsrkjhtayh .gt_sourcenotes {
+#uardnysjrf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -704,7 +704,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#zsrkjhtayh .gt_sourcenote {
+#uardnysjrf .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -712,72 +712,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#zsrkjhtayh .gt_left {
+#uardnysjrf .gt_left {
   text-align: left;
 }
 
-#zsrkjhtayh .gt_center {
+#uardnysjrf .gt_center {
   text-align: center;
 }
 
-#zsrkjhtayh .gt_right {
+#uardnysjrf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#zsrkjhtayh .gt_font_normal {
+#uardnysjrf .gt_font_normal {
   font-weight: normal;
 }
 
-#zsrkjhtayh .gt_font_bold {
+#uardnysjrf .gt_font_bold {
   font-weight: bold;
 }
 
-#zsrkjhtayh .gt_font_italic {
+#uardnysjrf .gt_font_italic {
   font-style: italic;
 }
 
-#zsrkjhtayh .gt_super {
+#uardnysjrf .gt_super {
   font-size: 65%;
 }
 
-#zsrkjhtayh .gt_footnote_marks {
+#uardnysjrf .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#zsrkjhtayh .gt_asterisk {
+#uardnysjrf .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#zsrkjhtayh .gt_indent_1 {
+#uardnysjrf .gt_indent_1 {
   text-indent: 5px;
 }
 
-#zsrkjhtayh .gt_indent_2 {
+#uardnysjrf .gt_indent_2 {
   text-indent: 10px;
 }
 
-#zsrkjhtayh .gt_indent_3 {
+#uardnysjrf .gt_indent_3 {
   text-indent: 15px;
 }
 
-#zsrkjhtayh .gt_indent_4 {
+#uardnysjrf .gt_indent_4 {
   text-indent: 20px;
 }
 
-#zsrkjhtayh .gt_indent_5 {
+#uardnysjrf .gt_indent_5 {
   text-indent: 25px;
 }
 
-#zsrkjhtayh .katex-display {
+#uardnysjrf .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#zsrkjhtayh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#uardnysjrf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1089,7 +1089,7 @@ Discarded       5       5</code></pre>
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Spécification du modèle pour l'impact</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>estimp <span class="ot">&lt;-</span> taux_deforestation_2000_2014 <span class="sc">~</span>   </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>estimp <span class="ot">&lt;-</span> taux_annuel_deforestation_2000_2014 <span class="sc">~</span>   </span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                          traitement <span class="sc">+</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                          surface_ha <span class="sc">+</span> </span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                          couv_foret_2000 <span class="sc">+</span> </span>
@@ -1134,7 +1134,7 @@ Discarded       5       5</code></pre>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td>taux_deforestation_2000_2014</td>
+<td>taux_annuel_deforestation_2000_2014</td>
 </tr>
 <tr class="odd">
 <td colspan="2" style="border-bottom: 1px solid black"></td>

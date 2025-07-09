@@ -96,7 +96,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-dee434b389764dea5ec69893ccf42e58.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3383e1fec2206739c2be01ed6fb25679.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -287,12 +287,12 @@ div.csl-indent {
 <h2 data-number="9.1" class="anchored" data-anchor-id="méthode-des-doubles-différences"><span class="header-section-number">9.1</span> Méthode des doubles différences</h2>
 <iframe src="slides/fr/TVM_Double_difference.pdf" width="100%" height="400px"></iframe>
 <p><a href="slides/fr/TVM_Double_difference.pdf">Cliquer ici pour télécharger la présentation</a>.</p>
-<p>Pour cette analyse, nous allons appliquer la méthode des doubles différences pour estimer l’impact des aires protégéesa déforestation à Madagascar entre 2000 et 2021. Cette méthode est particulièrement utile lorsque l’intervention (la création des aires protégées) a lieu à des dates différentes pour chaque unité d’observation, ce que l’on appelle un échelonnement (staggered diff-in-diff). La méthode proposée par Callaway et Sant’Anna <span class="citation" data-cites="callaway2021">(<a href="11_references.html#ref-callaway2021" role="doc-biblioref">2021b</a>)</span> permet de gérer cette situation en utilisant une approche qui tient compte de ces dates de mise en œuvre différentes. Le package {did} <span class="citation" data-cites="did">(<a href="11_references.html#ref-did" role="doc-biblioref">Callaway and Sant’Anna 2021a</a>)</span> en R permet d’appliquer cette méthode facilement.</p>
+<p>Pour cette analyse, nous allons appliquer la méthode des doubles différences pour estimer l’impact des aires protégéesa déforestation à Madagascar entre 2000 et 2023. Cette méthode est particulièrement utile lorsque l’intervention (la création des aires protégées) a lieu à des dates différentes pour chaque unité d’observation, ce que l’on appelle doubles différences avec traitement échelonné dans le temps (staggered diff-in-diff). La méthode proposée par Callaway et Sant’Anna <span class="citation" data-cites="callaway2021">(<a href="11_references.html#ref-callaway2021" role="doc-biblioref">2021b</a>)</span> permet de gérer cette situation en utilisant une approche qui tient compte de ces dates de mise en œuvre différentes. Le package {did} <span class="citation" data-cites="did">(<a href="11_references.html#ref-did" role="doc-biblioref">Callaway and Sant’Anna 2021a</a>)</span> en R permet d’appliquer cette méthode facilement.</p>
 </section>
 <section id="application-aux-mailles-de-territoire" class="level2" data-number="9.2">
 <h2 data-number="9.2" class="anchored" data-anchor-id="application-aux-mailles-de-territoire"><span class="header-section-number">9.2</span> Application aux mailles de territoire</h2>
 <p>Dans cette section, nous appliquons la méthode des doubles différences aux mailles de territoire pour évaluer l’effet des aires protégées sur la réduction de la déforestation. Nous allons d’abord préparer les données afin de les rendre conformes aux exigences de la fonction <code>att_gt()</code> du package {did}.</p>
-<p>Nous travaillons avec un jeu de données spatial qui représente des mailles de 1 km² chacune, et nous avons des informations sur la couverture forestière pour chaque année. Le traitement consiste à identifier les mailles qui sont “intérieures” aux aires protégées (traitées) par rapport aux autres (non traitées).</p>
+<p>Nous travaillons avec un jeu de données spatial qui représente des mailles de 5 km² chacune, et nous avons des informations sur la couverture forestière pour chaque année. Le traitement consiste à identifier les mailles qui sont “intérieures” aux aires protégées (traitées) par rapport aux autres (non traitées).</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -302,20 +302,19 @@ div.csl-indent {
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># Pour de jolis tableaux</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapme.biodiversity) <span class="co"># Pour réutiliser des fonctions portfolio_long</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf) <span class="co"># Pour des opérations spatiales sur vecteurs</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tictoc) <span class="co"># Pour mesurer les temps de traitement</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># On charge les données par mailles créées précédemment</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>grille_matched <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/grille_matched.rds"</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Dans la version ci-dessus, on n'a gardé que les données de déforestation</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># par année. On va récupérer dans la version précédente, le calcul qu'on avait pour toutes les années</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>grille_mada_mapme <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/grille_mada_mapme.rds"</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># On isole l'identifiant de la cellule et les indicateurs de perte de couvert forestier</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>treecover_data <span class="ot">&lt;-</span> grille_mada_mapme <span class="sc">%&gt;%</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(assetid, treecover_area)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># On incorpore les données détaillées de couvert forestier dans les données matchées</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>grille_matched <span class="ot">&lt;-</span> grille_matched <span class="sc">%&gt;%</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(treecover_data, <span class="at">by =</span> <span class="st">"assetid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># On charge les données par mailles créées précédemment</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>grille_matched <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/grille_matched.rds"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Dans la version ci-dessus, on n'a gardé que les données de déforestation</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># par année. On va récupérer dans la version précédente, le calcul qu'on avait pour toutes les années</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>grille_mada_mapme <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/grille_mada_mapme.rds"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># On isole l'identifiant de la cellule et les indicateurs de perte de couvert forestier</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>treecover_data <span class="ot">&lt;-</span> grille_mada_mapme <span class="sc">%&gt;%</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(assetid, treecover_area)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># On incorpore les données détaillées de couvert forestier dans les données matchées</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>grille_matched <span class="ot">&lt;-</span> grille_matched <span class="sc">%&gt;%</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(treecover_data, <span class="at">by =</span> <span class="st">"assetid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Ici, nous avons associé les données sur la perte de couverture forestière à chaque maille correspondant aux aires protégées et aux zones non protégées.</p>
@@ -340,12 +339,13 @@ div.csl-indent {
 </details>
 </div>
 <blockquote class="blockquote">
-<p><strong>Exercice</strong> : - pour explorer le jeu de données grilles_matched, groupez les données par statut de traitement <code>traitement</code> et année de création <code>an_creation</code>. Que remarquez-vous ?</p>
+<p><strong>Exercice</strong> :<br>
+- pour explorer le jeu de données grilles_matched, groupez les données par statut de traitement <code>traitement</code> et année de création <code>an_creation</code>. Que remarquez-vous ?</p>
 </blockquote>
 <section id="estimation-des-effets-moyens-du-traitement" class="level3" data-number="9.2.1">
 <h3 data-number="9.2.1" class="anchored" data-anchor-id="estimation-des-effets-moyens-du-traitement"><span class="header-section-number">9.2.1</span> Estimation des effets moyens du traitement</h3>
 <p>Nous utilisons la fonction att_gt() pour estimer l’effet moyen du traitement (ATT) sur le taux de déforestation au fil du temps. Les poids provenant du processus de matching sont utilisés pour ajuster les estimations.</p>
-<p>La fonction <code>ggdid()</code> permet de visualiser les résultats obtenus. Les graphiques suivants montrent l’évolution de l’ATT au fil du temps, ce qui nous permet d’observer l’impact des aires protégées sur la déforestation. <strong>Attention</strong> : il s’agit ici d’une première estimation à des fins didactiques, sans variables de contrôle.</p>
+<p>La fonction <code>ggdid()</code> permet de visualiser les résultats obtenus. Les graphiques suivants montrent l’évolution de l’ATM au fil du temps, ce qui nous permet d’observer l’impact des aires protégées sur la déforestation. <strong>Attention</strong> : il s’agit ici d’une première estimation à des fins didactiques, sans variables de contrôle.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -378,46 +378,46 @@ Reference: Callaway, Brantly and Pedro H.C. Sant'Anna.  "Difference-in-Differenc
 
 Overall summary of ATT's based on event-study/dynamic aggregation:  
      ATT    Std. Error     [ 95%  Conf. Int.]  
- -0.6038        0.1241    -0.8471     -0.3605 *
+ -0.6038        0.1231    -0.8451     -0.3625 *
 
 
 Dynamic Effects:
  Event time Estimate Std. Error [95% Simult.  Conf. Band]  
-        -13   0.1535     0.0374        0.0399      0.2670 *
-        -12   0.0921     0.0435       -0.0400      0.2242  
-        -11  -0.1521     0.0405       -0.2753     -0.0290 *
-        -10   0.1907     0.0380        0.0754      0.3060 *
-         -9   0.3622     0.0469        0.2196      0.5047 *
-         -8  -0.2713     0.0774       -0.5066     -0.0361 *
-         -7   0.0891     0.0762       -0.1424      0.3206  
-         -6   0.0248     0.0784       -0.2133      0.2628  
-         -5  -0.1555     0.0790       -0.3953      0.0843  
-         -4  -0.3934     0.0825       -0.6439     -0.1429 *
-         -3   0.0927     0.0750       -0.1350      0.3205  
-         -2  -0.2609     0.0629       -0.4521     -0.0697 *
-         -1  -0.1315     0.0813       -0.3785      0.1155  
-          0   0.0233     0.0715       -0.1940      0.2406  
-          1  -0.4453     0.0842       -0.7009     -0.1897 *
-          2  -0.3679     0.1169       -0.7229     -0.0129 *
-          3   0.3815     0.1423       -0.0508      0.8138  
-          4   0.0381     0.1110       -0.2991      0.3753  
-          5  -0.3516     0.1030       -0.6645     -0.0388 *
-          6  -0.5031     0.1005       -0.8083     -0.1978 *
-          7  -0.6586     0.1129       -1.0014     -0.3158 *
-          8  -0.7840     0.1386       -1.2049     -0.3630 *
-          9  -1.2830     0.0702       -1.4962     -1.0697 *
-         10  -1.5345     0.0815       -1.7821     -1.2870 *
-         11  -2.0019     0.1112       -2.3397     -1.6641 *
-         12  -2.2578     0.1748       -2.7888     -1.7268 *
-         13  -2.0607     0.1519       -2.5221     -1.5993 *
-         14   1.4668     0.5712       -0.2680      3.2016  
-         15  -1.5404     0.3083       -2.4768     -0.6041 *
-         16  -1.5246     0.3058       -2.4533     -0.5959 *
-         17  -2.1570     0.2201       -2.8255     -1.4884 *
-         18  -0.9486     0.4073       -2.1857      0.2885  
-         19   0.6915     0.6019       -1.1366      2.5195  
-         20   1.4917     0.5596       -0.2079      3.1914  
-         21   1.0431     0.7686       -1.2911      3.3774  
+        -13   0.1535     0.0375        0.0375      0.2694 *
+        -12   0.0921     0.0475       -0.0551      0.2393  
+        -11  -0.1521     0.0404       -0.2772     -0.0271 *
+        -10   0.1907     0.0388        0.0707      0.3107 *
+         -9   0.3622     0.0499        0.2078      0.5165 *
+         -8  -0.2713     0.0724       -0.4954     -0.0472 *
+         -7   0.0891     0.0773       -0.1502      0.3283  
+         -6   0.0248     0.0829       -0.2319      0.2815  
+         -5  -0.1555     0.0832       -0.4132      0.1021  
+         -4  -0.3934     0.0785       -0.6365     -0.1504 *
+         -3   0.0927     0.0767       -0.1448      0.3303  
+         -2  -0.2609     0.0595       -0.4452     -0.0767 *
+         -1  -0.1315     0.0812       -0.3829      0.1198  
+          0   0.0233     0.0811       -0.2276      0.2743  
+          1  -0.4453     0.0750       -0.6773     -0.2133 *
+          2  -0.3679     0.1207       -0.7415      0.0057  
+          3   0.3815     0.1414       -0.0564      0.8194  
+          4   0.0381     0.1136       -0.3136      0.3897  
+          5  -0.3516     0.1058       -0.6792     -0.0241 *
+          6  -0.5031     0.1131       -0.8531     -0.1530 *
+          7  -0.6586     0.1163       -1.0186     -0.2986 *
+          8  -0.7840     0.1393       -1.2152     -0.3527 *
+          9  -1.2830     0.0710       -1.5029     -1.0630 *
+         10  -1.5345     0.0730       -1.7606     -1.3084 *
+         11  -2.0019     0.1053       -2.3278     -1.6760 *
+         12  -2.2578     0.1601       -2.7536     -1.7621 *
+         13  -2.0607     0.1470       -2.5158     -1.6056 *
+         14   1.4668     0.5759       -0.3162      3.2498  
+         15  -1.5404     0.3174       -2.5231     -0.5578 *
+         16  -1.5246     0.3182       -2.5096     -0.5396 *
+         17  -2.1570     0.1993       -2.7741     -1.5399 *
+         18  -0.9486     0.4230       -2.2581      0.3610  
+         19   0.6915     0.5550       -1.0267      2.4096  
+         20   1.4917     0.5955       -0.3518      3.3353  
+         21   1.0431     0.7115       -1.1596      3.2458  
 ---
 Signif. codes: `*' confidence band does not cover 0
 
@@ -531,7 +531,7 @@ Callaway, Brantly, and Pedro H. C. Sant’Anna. 2021a. <span>“Difference-in-Di
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/betsaka\.github\.io\/impact_training_mapme\/");
+        var filterRegex = new RegExp("https:\/\/github\.com\/BETSAKA\/statcap_impact_training\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

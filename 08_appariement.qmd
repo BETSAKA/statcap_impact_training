@@ -50,7 +50,7 @@ Vahatra_defor_noNA <- AP_Vahatra %>%
          pente = `slope_2000-02-01_slope_mean_degrees`,
          dist_ville = `traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes`,
          traitement = ifelse(year(date_creation) < 2015, 1, 0),
-         taux_deforestation_2000_2014 = 
+         taux_annuel_deforestation_2000_2014 = 
            -((`treecover_area_2014-01-01_treecover_ha` / 
               `treecover_area_2000-01-01_treecover_ha`)^(1/14) - 1) * 100) %>%
   filter(!is.na(couv_foret_2000), !is.na(dist_ville), !is.na(altitude), !is.na(pente))
@@ -150,7 +150,7 @@ Le modèle qu'on utilise pour estimer l'impact est très proche de celui exposé
 
 ```{r}
 # Spécification du modèle pour l'impact
-estimp <- taux_deforestation_2000_2014 ~   
+estimp <- taux_annuel_deforestation_2000_2014 ~   
                           traitement +
                           surface_ha + 
                           couv_foret_2000 + 
