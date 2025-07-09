@@ -156,7 +156,8 @@ estimp <- taux_deforestation_2000_2014 ~
                           couv_foret_2000 + 
                           altitude +
                           pente + 
-                          dist_ville
+                          dist_ville +
+                          province
 ```
 
 On va donc réaliser une régression, en tenant compte des pondérations générées par l'algorithme d'appariement (variable "weight").
@@ -171,7 +172,8 @@ def_00_14_match_est <- lm(formula = estimp,
                           weights = weights)
 
 # Présentation des résultats
-match_out2 <- stargazer(def_00_14_match_est, type = "html")
+match_out2 <- stargazer(def_00_14_match_est, type = "html",
+                        digits = 10)
 ```
 ```{r, echo = FALSE}
 # On fait un rendu en html (en 2 fois pour régler la largeur)
@@ -187,7 +189,7 @@ Analysez, interprétez et critiquez les résultats ci-dessus.
 
 ### Exercice intermédiaire
 
-Ajoutez des variables d'intérêt et modifiez les paramètres de la fonction de matching.
+Retirez du score de propension et du calcul la variable de surface des aires protégées et réestimez le résultat. 
 
 ### Exercice avancé
 
@@ -195,7 +197,7 @@ Réalisez une analyse analogue avec les données de feux. Rédigez une analyse i
 
 ## Application sur les données en mailles
 
-L'exercice ci-dessous consiste à réaliser un appariement sur des données d'une taille relativement grande. Cet exercice comporte des limites, car on dispose d'un nombre limité d'observations à comparer.
+L'exercice ci-dessus consiste à réaliser un appariement sur des données d'une taille relativement grande. Cet exercice comporte des limites, car on dispose d'un nombre limité d'observations à comparer.
 
 Une approche plus appropriée consiste à utiliser le maillage du territoire effectué dans la section @sec-mailles pour comparer des parcelles d'aires passées sous protection pendant la période d'étude (2000-2023) à des zones d'ayant jamais été protégées.
 
@@ -319,4 +321,4 @@ out_html4 <- browsable(HTML(paste(cellmatch_out2, collapse = "")))
 browsable(div(style = "width: 300px;", out_html4))
 ```
 
-> Exercice : interpréter le résultat
+> Exercice : interprétez le résultat

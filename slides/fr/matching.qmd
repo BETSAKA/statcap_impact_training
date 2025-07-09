@@ -59,7 +59,8 @@ $AP$ = effet de l’aire protégée
 **Différence observée :**
 
 $$
-CF_M - CF_A = (M + AP) - A = AP + (M - A)
+CF_M - CF_A = (M + AP) - A 
+  = AP + (M - A)
 $$
 
 **Problème :**  
@@ -157,7 +158,7 @@ Cela revient en symétrie à exclure de l'analyse les unités qui ne sont pas co
 
 - L'idée est de comparer les résultats ($Y1$) de chaque unité avec les résultats ($Y0$) de son "jumeau".
 
-$\Rightarrow$ Pour évaluer l’effet moyen sur les traités (ATE), cela revient à [comparer]{style="color:blue;"} le résultat $Y1$ de chaque unité traitée avec le résultat $Y0$ de l’unité non traitée ayant exactement les mêmes caractéristiques observables.
+$\Rightarrow$ Pour évaluer l’effet moyen sur les traités (ATT), cela revient à [comparer]{style="color:blue;"} le résultat $Y1$ de chaque unité traitée avec le résultat $Y0$ de l’unité non traitée ayant exactement les mêmes caractéristiques observables.
 
 
 ## Méthodes d’appariement
