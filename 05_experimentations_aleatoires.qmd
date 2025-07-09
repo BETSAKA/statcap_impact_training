@@ -166,7 +166,7 @@ balance_data %>%
 On va maintenant s'intéresser aux différences de déforestation observées "après intervention" dans le groupe de traitement, entre 2000 et 2014.
 
 ```{r}
-# Calculer le taux annuel de déforestation moyen pour la période 2000-2014
+# Calculer le taux de déforestation pour la période 2000-2014
 
 AP_RCT <- AP_RCT %>%
   mutate(taux_deforestation_2000_2014 = 
@@ -174,11 +174,11 @@ AP_RCT <- AP_RCT %>%
               `Couvert forestier en 2000 (ha)`) /
            `Couvert forestier en 2000 (ha)`)* 100)
 
-# Comparer les taux de déforestation moyens entre les groupes
+# Comparer les taux de déforestation entre les groupes
 comparaison_deforestation <- AP_RCT %>%
   st_drop_geometry() %>%
   group_by(Groupe) %>%
-  summarise(`Taux annuel de déforestation moyen 2000-2014 (%)` = 
+  summarise(`Taux de déforestation 2000-2014 (%)` = 
               mean(taux_deforestation_2000_2014, na.rm = TRUE)) %>%
   mutate(across(!Groupe, ~round(., 2)))
 
@@ -190,7 +190,7 @@ comparaison_deforestation %>%
   `colnames<-` (filter(., row_number() == 1)) %>%
   filter(row_number() != 1) %>%
   gt() %>%
-  tab_header(title = "Moyennes des taux annuels de déforestation",
+  tab_header(title = "Moyennes des taux de déforestation",
              subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
   tab_source_note("Source : Association Vahatra et données GFC")
 ```
@@ -223,6 +223,6 @@ browsable(div(style = "width: 300px;", output_html))
 
 > **Application finale** : 
 
-- Régressez à nouveau le taux de déforestation moyen entre 2000 et 2014 sur la variable de traitement en ajoutant le taux de déforestation en 2000 comme variable de contrôle (vous ajoutez un deuxième régresseur en plus de 'Groupe').
+- Régressez à nouveau le taux de déforestation entre 2000 et 2014 sur la variable de traitement en ajoutant le taux de déforestation en 2000 comme variable de contrôle (vous ajoutez un deuxième régresseur en plus de 'Groupe').
 
 - Utilisez le même modèle pour estimer l'effet du traitement sur le pourcentage de couvert forestier en 2023.
