@@ -289,528 +289,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># Pour faire de jolies tables</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer) <span class="co"># Pour présenter les résultats de régressions</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapme.biodiversity)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmltools)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Désactiver les notations scientifiques</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Charger les données</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/AP_Vahatra_mapme.rds"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">portfolio_wide</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Groupe =</span> <span class="fu">ifelse</span>(<span class="fu">year</span>(date_creation) <span class="sc">&lt;</span> <span class="dv">2015</span>, <span class="st">"Traitement"</span>, <span class="st">"Contrôle"</span>))</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Préparer les données sans valeurs manquantes</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>Vahatra_defor_noNA <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">surface_ha =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(AP_Vahatra)) <span class="sc">/</span> <span class="dv">10000</span>, </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">couv_foret_2000 =</span> <span class="st">`</span><span class="at">treecover_area_2000-01-01_treecover_ha</span><span class="st">`</span> <span class="sc">/</span> surface_ha <span class="sc">*</span> <span class="dv">100</span>,</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">altitude =</span> <span class="st">`</span><span class="at">elevation_2000-02-01_elevation_mean_m</span><span class="st">`</span>,</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>         <span class="at">pente =</span> <span class="st">`</span><span class="at">slope_2000-02-01_slope_mean_degrees</span><span class="st">`</span>,</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>         <span class="at">dist_ville =</span> <span class="st">`</span><span class="at">traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes</span><span class="st">`</span>,</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>         <span class="at">traitement =</span> <span class="fu">ifelse</span>(<span class="fu">year</span>(date_creation) <span class="sc">&lt;</span> <span class="dv">2015</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>         <span class="at">taux_annuel_deforestation_2000_2014 =</span> </span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>           <span class="sc">-</span>((<span class="st">`</span><span class="at">treecover_area_2014-01-01_treecover_ha</span><span class="st">`</span> <span class="sc">/</span> </span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>              <span class="st">`</span><span class="at">treecover_area_2000-01-01_treecover_ha</span><span class="st">`</span>)<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">14</span>) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(couv_foret_2000), <span class="sc">!</span><span class="fu">is.na</span>(dist_ville), <span class="sc">!</span><span class="fu">is.na</span>(altitude), <span class="sc">!</span><span class="fu">is.na</span>(pente))</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Vahatra_defor_noNA)</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>Vahatra_defor_noNA <span class="sc">%&gt;%</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Groupe, traitement) <span class="sc">%&gt;%</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">effectif =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmltools) <span class="co"># Pour des graphs qui s'affichent bien sur une page web</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(units) <span class="co"># pour passer de m2 à km2</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Désactiver les notations scientifiques</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Charger les données</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/AP_Vahatra_mapme.rds"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">portfolio_wide</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Groupe =</span> <span class="fu">ifelse</span>(<span class="fu">year</span>(date_creation) <span class="sc">&lt;</span> <span class="dv">2015</span>, <span class="st">"Traitement"</span>, <span class="st">"Contrôle"</span>))</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Préparer les données sans valeurs manquantes</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>Vahatra_defor_noNA <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">surface_m2 =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(.)),</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">surface_ha =</span> surface_m2 <span class="sc">/</span> <span class="dv">10000</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>         <span class="at">surface_km2 =</span> surface_m2 <span class="sc">/</span> <span class="dv">1000000</span>,</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>         <span class="at">couv_foret_2000 =</span> <span class="st">`</span><span class="at">treecover_area_2000-01-01_treecover_ha</span><span class="st">`</span> <span class="sc">/</span> surface_ha <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>         <span class="at">altitude =</span> <span class="st">`</span><span class="at">elevation_2000-02-01_elevation_mean_m</span><span class="st">`</span>,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>         <span class="at">pente =</span> <span class="st">`</span><span class="at">slope_2000-02-01_slope_mean_degrees</span><span class="st">`</span>,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>         <span class="at">dist_ville =</span> <span class="st">`</span><span class="at">traveltime_2015-01-01_5k_110mio_traveltime_mean_minutes</span><span class="st">`</span>,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>         <span class="at">traitement =</span> <span class="fu">ifelse</span>(<span class="fu">year</span>(date_creation) <span class="sc">&lt;</span> <span class="dv">2015</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">taux_annuel_deforestation_2000_2014 =</span> </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>           <span class="sc">-</span>((<span class="st">`</span><span class="at">treecover_area_2014-01-01_treecover_ha</span><span class="st">`</span> <span class="sc">/</span> </span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>              <span class="st">`</span><span class="at">treecover_area_2000-01-01_treecover_ha</span><span class="st">`</span>)<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">14</span>) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(couv_foret_2000), <span class="sc">!</span><span class="fu">is.na</span>(dist_ville), <span class="sc">!</span><span class="fu">is.na</span>(altitude), <span class="sc">!</span><span class="fu">is.na</span>(pente))</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Vahatra_defor_noNA)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>Vahatra_defor_noNA <span class="sc">%&gt;%</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Groupe, traitement) <span class="sc">%&gt;%</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">effectif =</span> <span class="fu">n</span>())</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>Vahatra_defor_noNA <span class="sc">%&gt;%</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Groupe) <span class="sc">%&gt;%</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="st">`</span><span class="at">Nombre d'aires protégées</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="st">"Observations par groupe avant appariemment"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Association Vahatra et données GFC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Vahatra_defor_noNA <span class="sc">%&gt;%</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Groupe) <span class="sc">%&gt;%</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="st">`</span><span class="at">Nombre d'aires protégées</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="st">"Observations par groupe avant appariemment"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Association Vahatra et données GFC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div id="uardnysjrf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#uardnysjrf table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#uardnysjrf thead, #uardnysjrf tbody, #uardnysjrf tfoot, #uardnysjrf tr, #uardnysjrf td, #uardnysjrf th {
-  border-style: none;
-}
-
-#uardnysjrf p {
-  margin: 0;
-  padding: 0;
-}
-
-#uardnysjrf .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#uardnysjrf .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#uardnysjrf .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#uardnysjrf .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#uardnysjrf .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#uardnysjrf .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#uardnysjrf .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#uardnysjrf .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#uardnysjrf .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#uardnysjrf .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#uardnysjrf .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#uardnysjrf .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#uardnysjrf .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#uardnysjrf .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#uardnysjrf .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#uardnysjrf .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#uardnysjrf .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#uardnysjrf .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#uardnysjrf .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#uardnysjrf .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#uardnysjrf .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#uardnysjrf .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#uardnysjrf .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#uardnysjrf .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#uardnysjrf .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#uardnysjrf .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#uardnysjrf .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#uardnysjrf .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#uardnysjrf .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#uardnysjrf .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#uardnysjrf .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#uardnysjrf .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#uardnysjrf .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#uardnysjrf .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#uardnysjrf .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#uardnysjrf .gt_left {
-  text-align: left;
-}
-
-#uardnysjrf .gt_center {
-  text-align: center;
-}
-
-#uardnysjrf .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#uardnysjrf .gt_font_normal {
-  font-weight: normal;
-}
-
-#uardnysjrf .gt_font_bold {
-  font-weight: bold;
-}
-
-#uardnysjrf .gt_font_italic {
-  font-style: italic;
-}
-
-#uardnysjrf .gt_super {
-  font-size: 65%;
-}
-
-#uardnysjrf .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#uardnysjrf .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#uardnysjrf .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#uardnysjrf .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#uardnysjrf .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#uardnysjrf .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#uardnysjrf .gt_indent_5 {
-  text-indent: 25px;
-}
-
-#uardnysjrf .katex-display {
-  display: inline-flex !important;
-  margin-bottom: 0.75em !important;
-}
-
-#uardnysjrf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
-  height: 0px !important;
-}
-</style>
-
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="gt_heading header">
-<th colspan="2" class="gt_heading gt_title gt_font_normal gt_bottom_border">Observations par groupe avant appariemment</th>
-</tr>
-<tr class="gt_col_headings even">
-<th id="Groupe" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Groupe</th>
-<th id="Nombre-d'aires-protégées" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Nombre d'aires protégées</th>
-</tr>
-</thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="Groupe">Contrôle</td>
-<td class="gt_row gt_right" headers="Nombre d'aires protégées">53</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="Groupe">Traitement</td>
-<td class="gt_row gt_right" headers="Nombre d'aires protégées">44</td>
-</tr>
-</tbody><tfoot class="gt_sourcenotes">
-<tr class="odd">
-<td colspan="2" class="gt_sourcenote">Source : Association Vahatra et données GFC</td>
-</tr>
-</tfoot>
-
-</table>
-
-</div>
-</div>
 </div>
 </section>
 <section id="mesure-de-la-propension" class="level2" data-number="8.2">
@@ -820,24 +339,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Spécification du modèle probit</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>pscor <span class="ot">&lt;-</span> traitement <span class="sc">~</span>  surface_ha <span class="sc">+</span> </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                       couv_foret_2000 <span class="sc">+</span> </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                       altitude <span class="sc">+</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                       pente <span class="sc">+</span> </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                       dist_ville</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Spécification du modèle probit</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>pscor <span class="ot">&lt;-</span> traitement <span class="sc">~</span>  surface_km2 <span class="sc">+</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                       couv_foret_2000 <span class="sc">+</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                       altitude <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                       pente <span class="sc">+</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                       dist_ville</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>On va maintenant réaliser une régression pour connaître l’influence de ces facteurs dans la désignation des aires comme protégées.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Régression probit</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>reg_select <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">formula =</span> pscor,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"probit"</span>),</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> Vahatra_defor_noNA)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>match_out1 <span class="ot">&lt;-</span> <span class="fu">stargazer</span>(reg_select, <span class="at">type =</span> <span class="st">"html"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Régression probit</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>reg_select <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">formula =</span> pscor,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"probit"</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> Vahatra_defor_noNA)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>match_out1 <span class="ot">&lt;-</span> <span class="fu">stargazer</span>(reg_select, <span class="at">type =</span> <span class="st">"html"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
@@ -864,12 +383,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td colspan="2" style="border-bottom: 1px solid black"></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">surface_ha</td>
-<td>-0.00000</td>
+<td style="text-align: left;">surface_km2</td>
+<td>-0.0002</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td>(0.00000)</td>
+<td>(0.0002)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -972,16 +491,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul du matching</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>def_00_14_match <span class="ot">&lt;-</span> <span class="fu">matchit</span>(<span class="at">formula =</span> pscor,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"probit"</span>),</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">method =</span> <span class="st">"nearest"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">discard =</span> <span class="st">"both"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">replace =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">distance =</span> <span class="st">"glm"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">data =</span> Vahatra_defor_noNA)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(def_00_14_match)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul du matching</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>def_00_14_match <span class="ot">&lt;-</span> <span class="fu">matchit</span>(<span class="at">formula =</span> pscor,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">method =</span> <span class="st">"nearest"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">discard =</span> <span class="st">"both"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">replace =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">distance =</span> <span class="st">"glm"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">data =</span> Vahatra_defor_noNA)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(def_00_14_match)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A `matchit` object
@@ -992,32 +511,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  - common support: units from both groups dropped
  - number of obs.: 97 (original), 78 (matched)
  - target estimand: ATT
- - covariates: surface_ha, couv_foret_2000, altitude, pente, dist_ville</code></pre>
+ - covariates: surface_km2, couv_foret_2000, altitude, pente, dist_ville</code></pre>
 </div>
 </div>
 <p>On peut maintenant observer les équilibres entre les groupes traités et contrôle avant et après l’appariement.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(def_00_14_match)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(def_00_14_match)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
 matchit(formula = pscor, data = Vahatra_defor_noNA, method = "nearest", 
-    distance = "glm", discard = "both", replace = FALSE, family = binomial(link = "probit"))
+    distance = "glm", discard = "both", replace = FALSE, family = binomial(link = "logit"))
 
 Summary of Balance for All Data:
                 Means Treated Means Control Std. Mean Diff. Var. Ratio
 distance               0.5143        0.4032          0.5970     1.9343
-surface_ha         65093.8897    66539.7728         -0.0184     0.5595
+surface_km2          650.9389      665.3977         -0.0184     0.5595
 couv_foret_2000       71.9537       62.1290          0.3384     0.6778
 altitude             589.4707      518.9928          0.1459     0.6982
 pente                 11.0161        9.5870          0.2145     1.0678
 dist_ville           260.4379      147.0780          0.5255     2.4284
                 eCDF Mean eCDF Max
 distance           0.1840   0.3049
-surface_ha         0.0993   0.2517
+surface_km2        0.0993   0.2517
 couv_foret_2000    0.0915   0.2333
 altitude           0.0943   0.2294
 pente              0.0729   0.1758
@@ -1026,14 +545,14 @@ dist_ville         0.1822   0.3263
 Summary of Balance for Matched Data:
                 Means Treated Means Control Std. Mean Diff. Var. Ratio
 distance               0.4666        0.4483          0.0983     1.1599
-surface_ha         67525.2840    53400.1694          0.1799     0.9542
+surface_km2          675.2528      534.0017          0.1799     0.9542
 couv_foret_2000       70.1568       72.2206         -0.0711     0.8134
 altitude             563.7866      449.9603          0.2356     0.9791
 pente                 10.6267        9.8470          0.1171     1.0674
 dist_ville           204.5025      168.8781          0.1651     0.9053
                 eCDF Mean eCDF Max Std. Pair Dist.
 distance           0.0404   0.1795          0.1149
-surface_ha         0.1049   0.2564          1.0223
+surface_km2        0.1049   0.2564          1.0223
 couv_foret_2000    0.0634   0.2051          0.8333
 altitude           0.0843   0.2308          1.0357
 pente              0.0550   0.1538          1.0324
@@ -1054,12 +573,12 @@ Discarded       5       5</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(def_00_14_match, <span class="at">type =</span> <span class="st">"jitter"</span>, <span class="at">interactive =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(def_00_14_match, <span class="at">type =</span> <span class="st">"jitter"</span>, <span class="at">interactive =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="08_appariement_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="08_appariement_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1068,12 +587,12 @@ Discarded       5       5</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bal.plot</span>(def_00_14_match, <span class="at">var.name =</span> <span class="st">"dist_ville"</span>, <span class="at">which =</span> <span class="st">"both"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bal.plot</span>(def_00_14_match, <span class="at">var.name =</span> <span class="st">"dist_ville"</span>, <span class="at">which =</span> <span class="st">"both"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="08_appariement_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="08_appariement_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1088,32 +607,30 @@ Discarded       5       5</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Spécification du modèle pour l'impact</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>estimp <span class="ot">&lt;-</span> taux_annuel_deforestation_2000_2014 <span class="sc">~</span>   </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                          traitement <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                          surface_ha <span class="sc">+</span> </span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                          couv_foret_2000 <span class="sc">+</span> </span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                          altitude <span class="sc">+</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                          pente <span class="sc">+</span> </span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                          dist_ville <span class="sc">+</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                          province</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Spécification du modèle pour l'impact</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>estimp <span class="ot">&lt;-</span> taux_annuel_deforestation_2000_2014 <span class="sc">~</span>   </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                          traitement <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                          surface_km2 <span class="sc">+</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                          couv_foret_2000 <span class="sc">+</span> </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                          altitude <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                          pente <span class="sc">+</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                          dist_ville</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>On va donc réaliser une régression, en tenant compte des pondérations générées par l’algorithme d’appariement (variable “weight”).</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On extrait les données de l'appariement</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>def_00_14_match_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(def_00_14_match)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Régression avec pondérations</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>def_00_14_match_est <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> estimp,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> def_00_14_match_data,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">weights =</span> weights)</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Présentation des résultats</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>match_out2 <span class="ot">&lt;-</span> <span class="fu">stargazer</span>(def_00_14_match_est, <span class="at">type =</span> <span class="st">"html"</span>,</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">digits =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On extrait les données de l'appariement</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>def_00_14_match_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(def_00_14_match)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Régression avec pondérations</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>def_00_14_match_est <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> estimp,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> def_00_14_match_data,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">weights =</span> weights)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Présentation des résultats</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>match_out2 <span class="ot">&lt;-</span> <span class="fu">stargazer</span>(def_00_14_match_est, <span class="at">type =</span> <span class="st">"html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
@@ -1141,23 +658,23 @@ Discarded       5       5</code></pre>
 </tr>
 <tr class="even">
 <td style="text-align: left;">traitement</td>
-<td>-0.2552479000</td>
+<td>-0.278<sup>*</sup></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td>(0.1822237000)</td>
+<td>(0.158)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">surface_ha</td>
-<td>0.0000037498<sup>***</sup></td>
+<td style="text-align: left;">surface_km2</td>
+<td>0.0003<sup>***</sup></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td>(0.0000013097)</td>
+<td>(0.0001)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
@@ -1165,11 +682,11 @@ Discarded       5       5</code></pre>
 </tr>
 <tr class="even">
 <td style="text-align: left;">couv_foret_2000</td>
-<td>-0.0009757590</td>
+<td>-0.001</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td>(0.0035173110)</td>
+<td>(0.003)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -1177,11 +694,11 @@ Discarded       5       5</code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">altitude</td>
-<td>0.0000729170</td>
+<td>0.0001</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td>(0.0003213739)</td>
+<td>(0.0002)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
@@ -1189,11 +706,11 @@ Discarded       5       5</code></pre>
 </tr>
 <tr class="even">
 <td style="text-align: left;">pente</td>
-<td>-0.0177448000</td>
+<td>-0.009</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td>(0.0207945300)</td>
+<td>(0.017)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -1201,259 +718,55 @@ Discarded       5       5</code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">dist_ville</td>
-<td>-0.0002535332</td>
+<td>-0.001</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td>(0.0012082560)</td>
+<td>(0.001)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
 <td></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">provinceAntananarivo, Fianarantsoa, Toamasina</td>
-<td>-0.1705127000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td>(1.1744760000)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">provinceAntananarivo, Toamasina</td>
-<td>0.8784938000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>(1.0668390000)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">provinceAntsiranana</td>
-<td>0.4538247000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td>(0.8537598000)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td>0.1543867000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>(1.1288520000)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">provinceAntsiranana, Mahajanga</td>
-<td>-0.0948680000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td>(0.9325972000)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">provinceAntsiranana, Mahajanga, Toamasina</td>
-<td>-1.0477540000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>(1.2231320000)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">provinceAntsiranana, Toamasina</td>
-<td>-0.6244141000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td>(1.1843680000)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">provinceFianarantsoa</td>
-<td>-0.0988979700</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>(0.8381072000)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>0.1125224000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td>(1.0540680000)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">provinceFianarantsoa, Toliary</td>
-<td>0.1133138000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>(1.1464500000)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">provinceMahajanga</td>
-<td>-0.0755728300</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td>(0.8348748000)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td>1.0342590000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>(1.0965350000)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>0.3722176000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td>(1.0704010000)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">provinceToamasina</td>
-<td>0.2341841000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>(0.8370393000)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>0.2397146000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td>(1.1446630000)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">provinceToamasina, Mahajanga</td>
-<td>0.3292132000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>(1.0744090000)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">provinceToliary</td>
-<td>0.4186160000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td>(0.8291170000)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;">Constant</td>
-<td>0.4876865000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>(0.8155666000)</td>
+<td>0.795<sup>***</sup></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td></td>
+<td>(0.228)</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;"></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td colspan="2" style="border-bottom: 1px solid black"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Observations</td>
 <td>78</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">R<sup>2</sup></td>
-<td>0.2948917000</td>
+<td>0.156</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Adjusted R<sup>2</sup></td>
-<td>-0.0054321880</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Residual Std. Error</td>
-<td>0.7222621000 (df = 54)</td>
+<td>0.084</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">F Statistic</td>
-<td>0.9819122000 (df = 23; 54)</td>
+<td style="text-align: left;">Residual Std. Error</td>
+<td>0.689 (df = 71)</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">F Statistic</td>
+<td>2.184<sup>*</sup> (df = 6; 71)</td>
+</tr>
+<tr class="odd">
 <td colspan="2" style="border-bottom: 1px solid black"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"><em>Note:</em></td>
 <td style="text-align: right;"><sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01</td>
 </tr>
@@ -1486,53 +799,57 @@ Discarded       5       5</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapme.biodiversity)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cobalt)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmltools) <span class="co"># Pour avoir de plus jolies tables</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geodata) <span class="co"># Pour les frontières de Madagascar</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>grille_mada_summary_AP <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/grille_mada_summary_AP.rds"</span>)</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co"># On référence le nom des variables qui vont servir à l'analyse</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>variables_analyse <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"assetid"</span>,</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"traitement"</span>,</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"couv_foret_2000"</span>,</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"pop_km2"</span>,</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"altitude"</span>,</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"pente"</span>,</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"dist_ville"</span>,</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"taux_deforestation_2000_2023"</span>)</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="co"># On renomme le ficher 'df' (dataframe) : plus concis dans les commandes ensuite</span></span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> grille_mada_summary_AP <span class="sc">%&gt;%</span></span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># On supprime toutes les lignes pour lesquelles au moins 1 valeur variable </span></span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># est manquante parmi les variables d'analyse</span></span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">traitement =</span> position_ap <span class="sc">==</span> <span class="st">"Intérieur"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(<span class="fu">any_of</span>(variables_analyse))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapme.biodiversity)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cobalt)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmltools) <span class="co"># Pour avoir de plus jolies tables</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geodata) <span class="co"># Pour les frontières de Madagascar</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>grille_mada_summary_AP <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/grille_mada_summary_AP.rds"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># on passe le taux de déforestation en annuel</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">taux_annuel_deforestation_2000_2023 =</span> </span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">1</span> <span class="sc">-</span> (<span class="dv">1</span> <span class="sc">-</span> taux_deforestation_2000_2023 <span class="sc">/</span> <span class="dv">100</span>)<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">22</span>)) <span class="sc">*</span> <span class="dv">100</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"># On référence le nom des variables qui vont servir à l'analyse</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>variables_analyse <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"assetid"</span>,</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"traitement"</span>,</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"couv_foret_2000"</span>,</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"pop_km2"</span>,</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"altitude"</span>,</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"pente"</span>,</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"dist_ville"</span>,</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"taux_annuel_deforestation_2000_2023"</span>)</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="co"># On renomme le ficher 'df' (dataframe) : plus concis dans les commandes ensuite</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> grille_mada_summary_AP <span class="sc">%&gt;%</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># On supprime toutes les lignes pour lesquelles au moins 1 valeur variable </span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># est manquante parmi les variables d'analyse</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">traitement =</span> position_ap <span class="sc">==</span> <span class="st">"Intérieur"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(<span class="fu">any_of</span>(variables_analyse))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>On analyse maintenant le score de propension.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get propensity scores</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>glm_out <span class="ot">&lt;-</span> <span class="fu">glm</span>(traitement <span class="sc">~</span> couv_foret_2000 <span class="sc">+</span> </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                           pop_km2 <span class="sc">+</span> </span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                           altitude <span class="sc">+</span> </span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                           pente <span class="sc">+</span> </span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                           dist_ville,  </span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"probit"</span>),</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> df)</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>cellmatch_out1 <span class="ot">&lt;-</span> <span class="fu">stargazer</span>(glm_out,</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                            <span class="at">summary =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                            <span class="at">type =</span> <span class="st">"html"</span>,</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>                            <span class="at">title =</span> <span class="st">"Score de propension"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get propensity scores</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>glm_out <span class="ot">&lt;-</span> <span class="fu">glm</span>(traitement <span class="sc">~</span> couv_foret_2000 <span class="sc">+</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                           pop_km2 <span class="sc">+</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                           altitude <span class="sc">+</span> </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                           pente <span class="sc">+</span> </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                           dist_ville,  </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> df)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>cellmatch_out1 <span class="ot">&lt;-</span> <span class="fu">stargazer</span>(glm_out,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>                            <span class="at">summary =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                            <span class="at">type =</span> <span class="st">"html"</span>,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>                            <span class="at">title =</span> <span class="st">"Score de propension"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
@@ -1561,11 +878,11 @@ Discarded       5       5</code></pre>
 </tr>
 <tr class="even">
 <td style="text-align: left;">couv_foret_2000</td>
-<td>0.013<sup>***</sup></td>
+<td>0.025<sup>***</sup></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td>(0.0002)</td>
+<td>(0.0005)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -1573,7 +890,7 @@ Discarded       5       5</code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">pop_km2</td>
-<td>-0.021<sup>***</sup></td>
+<td>-0.047<sup>***</sup></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -1589,30 +906,6 @@ Discarded       5       5</code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td>(0.00002)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">pente</td>
-<td>-0.041<sup>***</sup></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td>(0.002)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">dist_ville</td>
-<td>0.0004<sup>***</sup></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
 <td>(0.00004)</td>
 </tr>
 <tr class="even">
@@ -1620,12 +913,36 @@ Discarded       5       5</code></pre>
 <td></td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Constant</td>
-<td>-1.574<sup>***</sup></td>
+<td style="text-align: left;">pente</td>
+<td>-0.075<sup>***</sup></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td>(0.017)</td>
+<td>(0.003)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dist_ville</td>
+<td>0.001<sup>***</sup></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td>(0.0001)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Constant</td>
+<td>-2.820<sup>***</sup></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td>(0.034)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
@@ -1636,15 +953,15 @@ Discarded       5       5</code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Observations</td>
-<td>58,514</td>
+<td>58,509</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Log Likelihood</td>
-<td>-18,220.730</td>
+<td>-18,035.800</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Akaike Inf. Crit.</td>
-<td>36,453.460</td>
+<td>36,083.610</td>
 </tr>
 <tr class="even">
 <td colspan="2" style="border-bottom: 1px solid black"></td>
@@ -1664,19 +981,19 @@ Discarded       5       5</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>m_out <span class="ot">&lt;-</span> <span class="fu">matchit</span>(traitement <span class="sc">~</span> couv_foret_2000 <span class="sc">+</span> </span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                           pop_km2 <span class="sc">+</span> </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                           altitude <span class="sc">+</span> </span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                           pente <span class="sc">+</span> </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                           dist_ville,</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> df,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"nearest"</span>,</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">replace =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">distance =</span> <span class="st">"glm"</span>, </span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">discard =</span> <span class="st">"both"</span>, <span class="co"># common support: drop units from both groups </span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">link =</span> <span class="st">"probit"</span>)</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(m_out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>m_out <span class="ot">&lt;-</span> <span class="fu">matchit</span>(traitement <span class="sc">~</span> couv_foret_2000 <span class="sc">+</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                           pop_km2 <span class="sc">+</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                           altitude <span class="sc">+</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                           pente <span class="sc">+</span> </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                           dist_ville,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> df,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"nearest"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">replace =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">distance =</span> <span class="st">"glm"</span>, </span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">discard =</span> <span class="st">"both"</span>, <span class="co"># common support: drop units from both groups </span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">link =</span> <span class="st">"probit"</span>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(m_out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A `matchit` object
@@ -1685,56 +1002,121 @@ Discarded       5       5</code></pre>
 
              - estimated with probit regression
  - common support: units from both groups dropped
- - number of obs.: 58514 (original), 12670 (matched)
+ - number of obs.: 58509 (original), 12666 (matched)
  - target estimand: ATT
  - covariates: couv_foret_2000, pop_km2, altitude, pente, dist_ville</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print(summary(m_out, un = FALSE))</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>bal_table <span class="ot">&lt;-</span> <span class="fu">bal.tab</span>(m_out, <span class="at">un =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(bal_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print(summary(m_out, un = FALSE))</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>bal_table <span class="ot">&lt;-</span> <span class="fu">bal.tab</span>(m_out, <span class="at">un =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(bal_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Balance Measures
                     Type Diff.Un Diff.Adj
 distance        Distance  0.9619   0.0000
-couv_foret_2000  Contin.  0.7786  -0.0001
-pop_km2          Contin. -1.2823  -0.0729
-altitude         Contin.  0.3385  -0.0240
-pente            Contin.  0.1808   0.0344
-dist_ville       Contin.  0.4796  -0.0240
+couv_foret_2000  Contin.  0.7784  -0.0014
+pop_km2          Contin. -1.2824  -0.0784
+altitude         Contin.  0.3385  -0.0258
+pente            Contin.  0.1807   0.0346
+dist_ville       Contin.  0.4795  -0.0274
 
 Sample sizes
                       Control Treated
-All                  51300.      7214
-Matched (ESS)         3928.27    7199
-Matched (Unweighted)  5471.      7199
-Unmatched            45294.         0
+All                  51295.      7214
+Matched (ESS)         3904.59    7199
+Matched (Unweighted)  5467.      7199
+Unmatched            45293.         0
 Discarded              535.        15</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>grille_matched <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m_out) <span class="sc">%&gt;%</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_sf</span>()</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">"data/grille_matched.rds"</span>)) {</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_rds</span>(grille_matched, <span class="st">"data/grille_matched.rds"</span>)</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>contour_mada <span class="ot">&lt;-</span> <span class="fu">gadm</span>(<span class="st">"Madagascar"</span>, <span class="at">level =</span> <span class="dv">0</span>, <span class="at">path =</span> <span class="st">"data"</span>) <span class="sc">%&gt;%</span> <span class="fu">st_as_sf</span>()</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># On visualise les données appareillées</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(contour_mada) <span class="sc">+</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>() <span class="sc">+</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(grille_matched) <span class="sc">+</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"traitement"</span>,</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale</span>(<span class="at">values =</span> <span class="st">"brewer.set1"</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Contrôle"</span>, <span class="st">"Traitement"</span>)),</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Groupes d'appariement"</span>)</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">legend.outside =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_title</span>(<span class="st">"Localisation des groupes de traitement et de contrôle"</span>, </span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>           <span class="at">position =</span> <span class="fu">c</span>(<span class="st">"center"</span>, <span class="st">"top"</span>), <span class="at">size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>grille_matched <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m_out) <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_sf</span>()</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">"data/grille_matched.rds"</span>)) {</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_rds</span>(grille_matched, <span class="st">"data/grille_matched.rds"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>contour_mada <span class="ot">&lt;-</span> <span class="fu">gadm</span>(<span class="st">"Madagascar"</span>, <span class="at">level =</span> <span class="dv">0</span>, <span class="at">path =</span> <span class="st">"data"</span>) <span class="sc">%&gt;%</span> <span class="fu">st_as_sf</span>()</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># On visualise les données appareillées</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(contour_mada) <span class="sc">+</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>() <span class="sc">+</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(grille_matched) <span class="sc">+</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"traitement"</span>,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale</span>(<span class="at">values =</span> <span class="st">"brewer.set1"</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Contrôle"</span>, <span class="st">"Traitement"</span>)),</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Groupes post-appariement"</span>)</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">legend.outside =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="08_appariement_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Exercice: Réaliser des tests d’équilibre</p>
+</blockquote>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+matchit(formula = traitement ~ couv_foret_2000 + pop_km2 + altitude + 
+    pente + dist_ville, data = df, method = "nearest", distance = "glm", 
+    link = "probit", discard = "both", replace = TRUE)
+
+Summary of Balance for All Data:
+                Means Treated Means Control Std. Mean Diff. Var. Ratio
+distance               0.2507        0.1059          0.9619     2.2797
+couv_foret_2000       75.9817       50.1663          0.7784     0.7665
+pop_km2               11.3610       27.9297         -1.2824     0.0178
+altitude             617.3927      433.9686          0.3385     1.5847
+pente                 10.7017        9.4236          0.1807     1.4981
+dist_ville           333.0405      198.4916          0.4795     2.3677
+                eCDF Mean eCDF Max
+distance           0.2858   0.4437
+couv_foret_2000    0.2238   0.3156
+pop_km2            0.1280   0.2337
+altitude           0.0859   0.1973
+pente              0.0713   0.1081
+dist_ville         0.1461   0.2047
+
+Summary of Balance for Matched Data:
+                Means Treated Means Control Std. Mean Diff. Var. Ratio
+distance               0.2497        0.2497          0.0000     0.9999
+couv_foret_2000       75.9338       75.9786         -0.0014     0.9966
+pop_km2               11.3641       12.3766         -0.0784     0.8900
+altitude             614.4045      628.3593         -0.0258     1.4263
+pente                 10.6975       10.4530          0.0346     1.6646
+dist_ville           331.8206      339.4963         -0.0274     1.0271
+                eCDF Mean eCDF Max Std. Pair Dist.
+distance           0.0000   0.0015          0.0004
+couv_foret_2000    0.0256   0.1043          0.5019
+pop_km2            0.0213   0.0440          0.7552
+altitude           0.0659   0.1064          0.8127
+pente              0.0646   0.1181          0.9690
+dist_ville         0.0217   0.0658          0.8226
+
+Sample Sizes:
+               Control Treated
+All           51295.      7214
+Matched (ESS)  3904.59    7199
+Matched        5467.      7199
+Unmatched     45293.         0
+Discarded       535.        15</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m_out, <span class="at">type =</span> <span class="st">"jitter"</span>, <span class="at">interactive =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1743,24 +1125,43 @@ Discarded              535.        15</code></pre>
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bal.plot</span>(m_out, <span class="at">var.name =</span> <span class="st">"dist_ville"</span>, <span class="at">which =</span> <span class="st">"both"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="08_appariement_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<blockquote class="blockquote">
-<p>Exercice: Réaliser des tests d’équilibre</p>
-</blockquote>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bal.plot</span>(m_out, <span class="at">var.name =</span> <span class="st">"couv_foret_2000"</span>, <span class="at">which =</span> <span class="st">"both"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="08_appariement_files/figure-html/unnamed-chunk-16-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>On réalise la régression.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>modele <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> taux_deforestation_2000_2023 <span class="sc">~</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>               traitement <span class="sc">+</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>               couv_foret_2000 <span class="sc">+</span> </span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>               pop_km2 <span class="sc">+</span> </span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>               altitude <span class="sc">+</span> </span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>               pente <span class="sc">+</span> </span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>               dist_ville,</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> grille_matched,</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">weights =</span> weights)</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>cellmatch_out2 <span class="ot">&lt;-</span> <span class="fu">stargazer</span>(modele, <span class="at">type =</span> <span class="st">"html"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>modele <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> taux_annuel_deforestation_2000_2023 <span class="sc">~</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>               traitement <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>               couv_foret_2000 <span class="sc">+</span> </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>               pop_km2 <span class="sc">+</span> </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>               altitude <span class="sc">+</span> </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>               pente <span class="sc">+</span> </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>               dist_ville,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> grille_matched,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">weights =</span> weights)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>cellmatch_out2 <span class="ot">&lt;-</span> <span class="fu">stargazer</span>(modele, <span class="at">type =</span> <span class="st">"html"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
@@ -1781,18 +1182,18 @@ Discarded              535.        15</code></pre>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td>taux_deforestation_2000_2023</td>
+<td>taux_annuel_deforestation_2000_2023</td>
 </tr>
 <tr class="odd">
 <td colspan="2" style="border-bottom: 1px solid black"></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">traitement</td>
-<td>-12.880<sup>***</sup></td>
+<td>-0.783<sup>***</sup></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td>(0.403)</td>
+<td>(0.050)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -1800,11 +1201,11 @@ Discarded              535.        15</code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">couv_foret_2000</td>
-<td>0.186<sup>***</sup></td>
+<td>0.013<sup>***</sup></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td>(0.007)</td>
+<td>(0.001)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
@@ -1812,11 +1213,11 @@ Discarded              535.        15</code></pre>
 </tr>
 <tr class="even">
 <td style="text-align: left;">pop_km2</td>
-<td>0.100<sup>***</sup></td>
+<td>0.002</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td>(0.016)</td>
+<td>(0.002)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -1824,11 +1225,11 @@ Discarded              535.        15</code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">altitude</td>
-<td>-0.018<sup>***</sup></td>
+<td>-0.001<sup>***</sup></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td>(0.001)</td>
+<td>(0.0001)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
@@ -1836,11 +1237,11 @@ Discarded              535.        15</code></pre>
 </tr>
 <tr class="even">
 <td style="text-align: left;">pente</td>
-<td>-0.045</td>
+<td>-0.019<sup>***</sup></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td>(0.043)</td>
+<td>(0.005)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -1848,11 +1249,11 @@ Discarded              535.        15</code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">dist_ville</td>
-<td>-0.008<sup>***</sup></td>
+<td>-0.001<sup>***</sup></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td>(0.001)</td>
+<td>(0.0001)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
@@ -1860,11 +1261,11 @@ Discarded              535.        15</code></pre>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Constant</td>
-<td>28.387<sup>***</sup></td>
+<td>2.145<sup>***</sup></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td>(0.577)</td>
+<td>(0.072)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -1875,23 +1276,23 @@ Discarded              535.        15</code></pre>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Observations</td>
-<td>12,670</td>
+<td>12,666</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">R<sup>2</sup></td>
-<td>0.194</td>
+<td>0.072</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Adjusted R<sup>2</sup></td>
-<td>0.194</td>
+<td>0.071</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Residual Std. Error</td>
-<td>22.403 (df = 12663)</td>
+<td>2.801 (df = 12659)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">F Statistic</td>
-<td>509.360<sup>***</sup> (df = 6; 12663)</td>
+<td>162.580<sup>***</sup> (df = 6; 12659)</td>
 </tr>
 <tr class="odd">
 <td colspan="2" style="border-bottom: 1px solid black"></td>

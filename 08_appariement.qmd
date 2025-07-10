@@ -1,7 +1,7 @@
 ---
 output: html_document
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 # Méthodes d'appariement
@@ -32,7 +32,8 @@ library(cobalt) # Pour les tests d'équilibre sur l'appariement
 library(gt) # Pour faire de jolies tables
 library(stargazer) # Pour présenter les résultats de régressions
 library(mapme.biodiversity)
-library(htmltools)
+library(htmltools) # Pour des graphs qui s'affichent bien sur une page web
+library(units) # pour passer de m2 à km2
 
 # Désactiver les notations scientifiques
 options(scipen = 999)
@@ -44,7 +45,9 @@ AP_Vahatra <- read_rds("data/AP_Vahatra_mapme.rds") %>%
 
 # Préparer les données sans valeurs manquantes
 Vahatra_defor_noNA <- AP_Vahatra %>%
-  mutate(surface_ha = as.numeric(st_area(AP_Vahatra)) / 10000, 
+  mutate(surface_m2 = as.numeric(st_area(.)),
+         surface_ha = surface_m2 / 10000,
+         surface_km2 = surface_m2 / 1000000,
          couv_foret_2000 = `treecover_area_2000-01-01_treecover_ha` / surface_ha * 100,
          altitude = `elevation_2000-02-01_elevation_mean_m`,
          pente = `slope_2000-02-01_slope_mean_degrees`,
@@ -61,8 +64,7 @@ Vahatra_defor_noNA %>%
   st_drop_geometry() %>%
   group_by(Groupe, traitement) %>%
   summarise(effectif = n())
-```
-```{r}
+ 
 Vahatra_defor_noNA %>%
   st_drop_geometry() %>%
   group_by(Groupe) %>%
@@ -80,7 +82,7 @@ Cette spécification peut se représenter selon l'équation suivante qui représ
 
 ```{r}
 # Spécification du modèle probit
-pscor <- traitement ~  surface_ha + 
+pscor <- traitement ~  surface_km2 + 
                        couv_foret_2000 + 
                        altitude +
                        pente + 
@@ -112,7 +114,7 @@ On va maintenant utiliser ce modèle pour comparer les aires protégées traité
 ```{r}
 # Calcul du matching
 def_00_14_match <- matchit(formula = pscor,
-                           family = binomial(link = "probit"),
+                           family = binomial(link = "logit"),
                            method = "nearest",
                            discard = "both",
                            replace = FALSE,
@@ -152,12 +154,11 @@ Le modèle qu'on utilise pour estimer l'impact est très proche de celui exposé
 # Spécification du modèle pour l'impact
 estimp <- taux_annuel_deforestation_2000_2014 ~   
                           traitement +
-                          surface_ha + 
+                          surface_km2 + 
                           couv_foret_2000 + 
                           altitude +
                           pente + 
-                          dist_ville +
-                          province
+                          dist_ville
 ```
 
 On va donc réaliser une régression, en tenant compte des pondérations générées par l'algorithme d'appariement (variable "weight").
@@ -172,8 +173,7 @@ def_00_14_match_est <- lm(formula = estimp,
                           weights = weights)
 
 # Présentation des résultats
-match_out2 <- stargazer(def_00_14_match_est, type = "html",
-                        digits = 10)
+match_out2 <- stargazer(def_00_14_match_est, type = "html")
 ```
 ```{r, echo = FALSE}
 # On fait un rendu en html (en 2 fois pour régler la largeur)
@@ -214,7 +214,11 @@ library(tmap)
 library(htmltools) # Pour avoir de plus jolies tables
 library(geodata) # Pour les frontières de Madagascar
 
-grille_mada_summary_AP <- read_rds("data/grille_mada_summary_AP.rds")
+grille_mada_summary_AP <- read_rds("data/grille_mada_summary_AP.rds") %>%
+  # on passe le taux de déforestation en annuel
+  mutate(taux_annuel_deforestation_2000_2023 = 
+           (1 - (1 - taux_deforestation_2000_2023 / 100)^(1/22)) * 100)
+
 
 # On référence le nom des variables qui vont servir à l'analyse
 variables_analyse <- c("assetid",
@@ -224,7 +228,7 @@ variables_analyse <- c("assetid",
                        "altitude",
                        "pente",
                        "dist_ville",
-                       "taux_deforestation_2000_2023")
+                       "taux_annuel_deforestation_2000_2023")
 
 # On renomme le ficher 'df' (dataframe) : plus concis dans les commandes ensuite
 df <- grille_mada_summary_AP %>%
@@ -244,7 +248,7 @@ glm_out <- glm(traitement ~ couv_foret_2000 +
                            altitude + 
                            pente + 
                            dist_ville,  
-               family = binomial(link = "probit"),
+               family = binomial(link = "logit"),
                data = df)
 
 cellmatch_out1 <- stargazer(glm_out,
@@ -292,20 +296,26 @@ tm_shape(contour_mada) +
   tm_fill(
     fill = "traitement",
     fill.scale = tm_scale(values = "brewer.set1", labels = c("Contrôle", "Traitement")),
-    fill.legend = tm_legend(title = "Groupes d'appariement")
+    fill.legend = tm_legend(title = "Groupes post-appariement")
   ) +
-  tm_layout(legend.outside = TRUE) +
-  tm_title("Localisation des groupes de traitement et de contrôle", 
-           position = c("center", "top"), size = 1)
+  tm_layout(legend.outside = TRUE) 
 ```
 
 > Exercice: Réaliser des tests d'équilibre
 
 
+```{r}
+summary(m_out)
+plot(m_out, type = "jitter", interactive = FALSE)
+bal.plot(m_out, var.name = "dist_ville", which = "both")
+bal.plot(m_out, var.name = "couv_foret_2000", which = "both")
+```
+
+
 On réalise la régression.
 
 ```{r, output = FALSE}
-modele <- lm(formula = taux_deforestation_2000_2023 ~
+modele <- lm(formula = taux_annuel_deforestation_2000_2023 ~
                traitement +
                couv_foret_2000 + 
                pop_km2 + 
