@@ -7,10 +7,10 @@ book:
   title: "Evaluation d'impact de politiques et projets"
   subtitle: "Formation théorique et application pratique sur les aires protégées à Madagascar"
   author: "Florent Bédécarrats (Coord.)"
-  repo-url: https://github.com/BETSAKA/mapme_impact_training
+  repo-url: https://github.com/BETSAKA/statcap_impact_training
   cover-image: figs/IRD_010664_ORI_small_title_copyright.png
   cover-image-alt: "Déforestation à Madagascar © IRD - Bernard Moizo"
-  date: "10/09/2024"
+  date: "11/07/2025"
   chapters:
     - index.qmd
     - 00_programme.qmd
