@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1&nbsp; Introduction – Evaluation d'impact de politiques et projets</title>
+<title>9&nbsp; Double différence – Evaluation d'impact de politiques et projets</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -50,8 +85,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./02_bases_R.html" rel="next">
-<link href="./00_programme.html" rel="prev">
+<link href="./10_synthese.html" rel="next">
+<link href="./08_appariement.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -102,7 +137,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_introduction.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09_double_difference.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Double différence</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -144,7 +179,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01_introduction.html" class="sidebar-item-text sidebar-link active">
+  <a href="./01_introduction.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
   </div>
 </li>
@@ -192,7 +227,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09_double_difference.html" class="sidebar-item-text sidebar-link">
+  <a href="./09_double_difference.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Double différence</span></span></a>
   </div>
 </li>
@@ -218,8 +253,11 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#cadrage-général-pour-les-méthodes-dévaluation" id="toc-cadrage-général-pour-les-méthodes-dévaluation" class="nav-link active" data-scroll-target="#cadrage-général-pour-les-méthodes-dévaluation"><span class="header-section-number">1.1</span> Cadrage général pour les méthodes d’évaluation</a></li>
-  <li><a href="#revue-des-articles" id="toc-revue-des-articles" class="nav-link" data-scroll-target="#revue-des-articles"><span class="header-section-number">1.2</span> Revue des articles</a></li>
+  <li><a href="#méthode-des-doubles-différences" id="toc-méthode-des-doubles-différences" class="nav-link active" data-scroll-target="#méthode-des-doubles-différences"><span class="header-section-number">9.1</span> Méthode des doubles différences</a></li>
+  <li><a href="#application-aux-mailles-de-territoire" id="toc-application-aux-mailles-de-territoire" class="nav-link" data-scroll-target="#application-aux-mailles-de-territoire"><span class="header-section-number">9.2</span> Application aux mailles de territoire</a>
+  <ul class="collapse">
+  <li><a href="#estimation-des-effets-moyens-du-traitement" id="toc-estimation-des-effets-moyens-du-traitement" class="nav-link" data-scroll-target="#estimation-des-effets-moyens-du-traitement"><span class="header-section-number">9.2.1</span> Estimation des effets moyens du traitement</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -228,7 +266,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Double différence</span></h1>
 </div>
 
 
@@ -245,29 +283,179 @@ div.csl-indent {
 </header>
 
 
-<section id="cadrage-général-pour-les-méthodes-dévaluation" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="cadrage-général-pour-les-méthodes-dévaluation"><span class="header-section-number">1.1</span> Cadrage général pour les méthodes d’évaluation</h2>
-<iframe src="./slides/fr/Jour 1_Introduction_Fondamentaux.pdf" width="100%" height="400px"></iframe>
-<p><a href="./slides/fr/Jour 1_Introduction_Fondamentaux.pdf">Cliquer ici pour télécharger la présentation</a></p>
-<p>Mentionner également les enjeux de prise en compte du qualitatif.</p>
+<section id="méthode-des-doubles-différences" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="méthode-des-doubles-différences"><span class="header-section-number">9.1</span> Méthode des doubles différences</h2>
+<iframe src="slides/fr/TVM_Double_difference.pdf" width="100%" height="400px"></iframe>
+<p><a href="slides/fr/TVM_Double_difference.pdf">Cliquer ici pour télécharger la présentation</a>.</p>
+<p>Pour cette analyse, nous allons appliquer la méthode des doubles différences pour estimer l’impact des aires protégéesa déforestation à Madagascar entre 2000 et 2023. Cette méthode est particulièrement utile lorsque l’intervention (la création des aires protégées) a lieu à des dates différentes pour chaque unité d’observation, ce que l’on appelle doubles différences avec traitement échelonné dans le temps (staggered diff-in-diff). La méthode proposée par Callaway et Sant’Anna <span class="citation" data-cites="callaway2021">(<a href="11_references.html#ref-callaway2021" role="doc-biblioref">2021b</a>)</span> permet de gérer cette situation en utilisant une approche qui tient compte de ces dates de mise en œuvre différentes. Le package {did} <span class="citation" data-cites="did">(<a href="11_references.html#ref-did" role="doc-biblioref">Callaway and Sant’Anna 2021a</a>)</span> en R permet d’appliquer cette méthode facilement.</p>
 </section>
-<section id="revue-des-articles" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="revue-des-articles"><span class="header-section-number">1.2</span> Revue des articles</h2>
-<p>On va revoir deux articles récents qui emploient des méthodes semblables à celles que nous allons étudier pendant le cours :</p>
-<ul>
-<li>L’article “On track to achieve no net loss of forest at Madagascar’s biggest mine” de Devenish et al. <span class="citation" data-cites="devenish_track_2022">(<a href="#ref-devenish_track_2022" role="doc-biblioref">2022</a>)</span> paru dans <em>Nature Sustainability</em>.</li>
-<li>L’article “Collaborative management partnerships strongly decreased deforestation in the most at-risk protected areas in Africa since 2000”, de Desbureaux et al. <span class="citation" data-cites="desbureaux_collaborative_2025">(<a href="#ref-desbureaux_collaborative_2025" role="doc-biblioref">2025</a>)</span>, paru dans <em>Proceedings of the National Academy of Sciences</em>.</li>
-</ul>
+<section id="application-aux-mailles-de-territoire" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="application-aux-mailles-de-territoire"><span class="header-section-number">9.2</span> Application aux mailles de territoire</h2>
+<p>Dans cette section, nous appliquons la méthode des doubles différences aux mailles de territoire pour évaluer l’effet des aires protégées sur la réduction de la déforestation. Nous allons d’abord préparer les données afin de les rendre conformes aux exigences de la fonction <code>att_gt()</code> du package {did}.</p>
+<p>Nous travaillons avec un jeu de données spatial qui représente des mailles de 5 km² chacune, et nous avons des informations sur la couverture forestière pour chaque année. Le traitement consiste à identifier les mailles qui sont “intérieures” aux aires protégées (traitées) par rapport aux autres (non traitées).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(did) <span class="co"># Pour des doubles-différences échelonnées</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Pur faciliter la manipulation de données</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate) <span class="co"># Pour modifier les dates</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># Pour de jolis tableaux</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapme.biodiversity) <span class="co"># Pour réutiliser des fonctions portfolio_long</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf) <span class="co"># Pour des opérations spatiales sur vecteurs</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># On charge les données par mailles créées précédemment</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>grille_matched <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/grille_matched.rds"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Dans la version ci-dessus, on n'a gardé que les données de déforestation</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># par année. On va récupérer dans la version précédente, le calcul qu'on avait pour toutes les années</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>grille_mada_mapme <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/grille_mada_mapme.rds"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># On isole l'identifiant de la cellule et les indicateurs de perte de couvert forestier</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>treecover_data <span class="ot">&lt;-</span> grille_mada_mapme <span class="sc">%&gt;%</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(assetid, treecover_area)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># On incorpore les données détaillées de couvert forestier dans les données matchées</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>grille_matched <span class="ot">&lt;-</span> grille_matched <span class="sc">%&gt;%</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(treecover_data, <span class="at">by =</span> <span class="st">"assetid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Ici, nous avons associé les données sur la perte de couverture forestière à chaque maille correspondant aux aires protégées et aux zones non protégées.</p>
+<p>Ensuite, nous transformons les données en format long pour pouvoir suivre l’évolution de la couverture forestière au fil du temps. Cela permet de calculer le taux de déforestation annuel comme un pourcentage du couvert forestier initial pour chaque maille.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On va utiliser matchit pour "déplier" en mode long l'évolution du couvert forestier</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># On indique qu'il s'agit d'un objet de type mapme.biodiversity pour pouvoir </span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># utiliser la fonction portfolio_long</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(grille_matched) <span class="ot">&lt;-</span> <span class="fu">class</span>(grille_mada_mapme) </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># On passe maintenant en format long</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>grille_matched <span class="ot">&lt;-</span> grille_matched <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">portfolio_long</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">treecover =</span> value) <span class="sc">%&gt;%</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">years =</span> <span class="fu">year</span>(datetime)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(assetid, years) <span class="sc">%&gt;%</span> <span class="co"># On remet bien dans l'ordre pour que les années se suivent</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># On calcule le taux de déforestation en %</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tx_defor =</span> <span class="fu">ifelse</span>(assetid<span class="sc">!=</span> <span class="fu">lag</span>(assetid), <span class="cn">NA</span>, </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                           <span class="sc">-</span>((treecover <span class="sc">-</span> <span class="fu">lag</span>(treecover)) <span class="sc">/</span> </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">lag</span>(treecover))<span class="sc">*</span><span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<blockquote class="blockquote">
+<p><strong>Exercice</strong> :<br>
+- pour explorer le jeu de données grilles_matched, groupez les données par statut de traitement <code>traitement</code> et année de création <code>an_creation</code>. Que remarquez-vous ?</p>
+</blockquote>
+<section id="estimation-des-effets-moyens-du-traitement" class="level3" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="estimation-des-effets-moyens-du-traitement"><span class="header-section-number">9.2.1</span> Estimation des effets moyens du traitement</h3>
+<p>Nous utilisons la fonction att_gt() pour estimer l’effet moyen du traitement (ATT) sur le taux de déforestation au fil du temps. Les poids provenant du processus de matching sont utilisés pour ajuster les estimations.</p>
+<p>La fonction <code>ggdid()</code> permet de visualiser les résultats obtenus. Les graphiques suivants montrent l’évolution de l’ATM au fil du temps, ce qui nous permet d’observer l’impact des aires protégées sur la déforestation. <strong>Attention</strong> : il s’agit ici d’une première estimation à des fins didactiques, sans variables de contrôle.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Les mailles en dehors des aires protégées sont considérées comme jamais traitées</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>grille_matched <span class="ot">&lt;-</span> grille_matched <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time_treated =</span> <span class="fu">ifelse</span>(position_ap <span class="sc">==</span> <span class="st">"Intérieur"</span>, an_creation, <span class="dv">0</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculer le DID en utilisant la fonction `att_gt`</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>did_result <span class="ot">&lt;-</span> <span class="fu">att_gt</span>(<span class="at">yname =</span> <span class="st">"tx_defor"</span>, <span class="co"># variable de résultat</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">tname =</span> <span class="st">"years"</span>, <span class="co"># Variable de temps</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">idname =</span> <span class="st">"assetid"</span>, <span class="co"># ID des unités</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">gname =</span> <span class="st">"time_treated"</span>, <span class="co"># Temps de traitement </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">weightsname =</span> <span class="st">"weights"</span>, <span class="co"># Poids issus du matching</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> grille_matched,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                     <span class="at">panel =</span> <span class="cn">TRUE</span>) <span class="co"># panel veut dire qu'on suit les mêmes unités</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate the ATT results</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>agg_att_mailles <span class="ot">&lt;-</span> <span class="fu">aggte</span>(did_result, <span class="at">type =</span> <span class="st">"dynamic"</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the aggregated results</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(agg_att_mailles)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+aggte(MP = did_result, type = "dynamic")
+
+Reference: Callaway, Brantly and Pedro H.C. Sant'Anna.  "Difference-in-Differences with Multiple Time Periods." Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt; 
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-desbureaux_collaborative_2025" class="csl-entry" role="listitem">
-Desbureaux, Sébastien, Ibrahim Kabore, Giulia Vaglietti, Mujon Baghai, Peter Lindsey, Ashley Robson, Philippe Delacote, and Antoine Leblois. 2025. <span>“Collaborative Management Partnerships Strongly Decreased Deforestation in the Most at-Risk Protected Areas in <span>Africa</span> Since 2000.”</span> <em>Proceedings of the National Academy of Sciences</em> 122 (1): e2411348121. <a href="https://doi.org/10.1073/pnas.2411348121">https://doi.org/10.1073/pnas.2411348121</a>.
+Overall summary of ATT's based on event-study/dynamic aggregation:  
+     ATT    Std. Error     [ 95%  Conf. Int.]  
+ -0.6038        0.1244    -0.8476     -0.3599 *
+
+
+Dynamic Effects:
+ Event time Estimate Std. Error [95% Simult.  Conf. Band]  
+        -13   0.1535     0.0364        0.0411      0.2658 *
+        -12   0.0921     0.0463       -0.0507      0.2349  
+        -11  -0.1521     0.0404       -0.2768     -0.0275 *
+        -10   0.1907     0.0383        0.0725      0.3089 *
+         -9   0.3622     0.0475        0.2157      0.5086 *
+         -8  -0.2713     0.0736       -0.4982     -0.0445 *
+         -7   0.0891     0.0793       -0.1554      0.3336  
+         -6   0.0248     0.0852       -0.2380      0.2876  
+         -5  -0.1555     0.0788       -0.3987      0.0876  
+         -4  -0.3934     0.0775       -0.6326     -0.1543 *
+         -3   0.0927     0.0771       -0.1449      0.3303  
+         -2  -0.2609     0.0649       -0.4611     -0.0608 *
+         -1  -0.1315     0.0732       -0.3571      0.0941  
+          0   0.0233     0.0770       -0.2142      0.2608  
+          1  -0.4453     0.0805       -0.6936     -0.1970 *
+          2  -0.3679     0.1203       -0.7389      0.0031  
+          3   0.3815     0.1434       -0.0609      0.8238  
+          4   0.0381     0.1074       -0.2933      0.3694  
+          5  -0.3516     0.1009       -0.6629     -0.0404 *
+          6  -0.5031     0.1038       -0.8233     -0.1828 *
+          7  -0.6586     0.1064       -0.9868     -0.3304 *
+          8  -0.7840     0.1381       -1.2098     -0.3581 *
+          9  -1.2830     0.0635       -1.4789     -1.0870 *
+         10  -1.5345     0.0756       -1.7677     -1.3014 *
+         11  -2.0019     0.1131       -2.3506     -1.6532 *
+         12  -2.2578     0.1731       -2.7916     -1.7240 *
+         13  -2.0607     0.1549       -2.5383     -1.5831 *
+         14   1.4668     0.5784       -0.3169      3.2505  
+         15  -1.5404     0.3336       -2.5691     -0.5118 *
+         16  -1.5246     0.3133       -2.4906     -0.5586 *
+         17  -2.1570     0.2112       -2.8082     -1.5058 *
+         18  -0.9486     0.3983       -2.1769      0.2797  
+         19   0.6915     0.6227       -1.2287      2.6116  
+         20   1.4917     0.5862       -0.3161      3.2995  
+         21   1.0431     0.7148       -1.1611      3.2473  
+---
+Signif. codes: `*' confidence band does not cover 0
+
+Control Group:  Never Treated,  Anticipation Periods:  0
+Estimation Method:  Doubly Robust</code></pre>
 </div>
-<div id="ref-devenish_track_2022" class="csl-entry" role="listitem">
-Devenish, Katie, Sébastien Desbureaux, Simon Willcock, and Julia P. G. Jones. 2022. <span>“On Track to Achieve No Net Loss of Forest at <span>Madagascar</span>’s Biggest Mine.”</span> <em>Nature Sustainability</em> 5 (6): 498–508. <a href="https://doi.org/10.1038/s41893-022-00850-7">https://doi.org/10.1038/s41893-022-00850-7</a>.
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualisation du résultat</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdid</span>(agg_att_mailles) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">13</span>, <span class="dv">13</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="09_double_difference_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
+</div>
+<blockquote class="blockquote">
+<p><strong>Exercice</strong> : Analysez et commentez ce résultat.</p>
+</blockquote>
+<p>L’analyse précédente ne tient pas compte de certains facteurs dont on a vu qu’ils pouvaient influencer à la fois la sélection, mais aussi la déforestation, en particulier l’altitude, la pente, le temps de parcours à la ville la plus proche, ou encore la densité de population.</p>
+<blockquote class="blockquote">
+<p><strong>Exercice</strong> reprenez la fonction att_gt() ci-dessus et consultez la documentation pour voir comment ajouter des covariables. Ajoutez les covariables qui vous semblent pertinente et calculez puis interprétez les résultats.</p>
+</blockquote>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-did" class="csl-entry" role="listitem">
+Callaway, Brantly, and Pedro H. C. Sant’Anna. 2021a. <span>“Difference-in-Differences with Multiple Time Periods.”</span> <a href="https://doi.org/10.1016/j.jeconom.2020.12.001">https://doi.org/10.1016/j.jeconom.2020.12.001</a>.
+</div>
+<div id="ref-callaway2021" class="csl-entry" role="listitem">
+———. 2021b. <span>“Difference-in-Differences with Multiple Time Periods.”</span> <em>Journal of Econometrics</em>, Themed Issue: Treatment Effect 1, 225 (2): 200–230. <a href="https://doi.org/10.1016/j.jeconom.2020.12.001">https://doi.org/10.1016/j.jeconom.2020.12.001</a>.
+</div>
+</div>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -672,13 +860,13 @@ Devenish, Katie, Sébastien Desbureaux, Simon Willcock, and Julia P. G. Jones. 2
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./00_programme.html" class="pagination-link" aria-label="Programme">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Programme</span>
+      <a href="./08_appariement.html" class="pagination-link" aria-label="Méthodes d'appariement">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Méthodes d’appariement</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./02_bases_R.html" class="pagination-link" aria-label="Fondamentaux pour l'utilisation de R">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Fondamentaux pour l’utilisation de R</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./10_synthese.html" class="pagination-link" aria-label="Synthèse">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Synthèse</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
