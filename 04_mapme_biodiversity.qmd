@@ -92,6 +92,10 @@ Ces fonctions permettent de voir la liste des indicateurs et ressources que le p
 Nous allons maintenant acquérir les ressources spatiales nécessaires pour nos analyses. Le package *mapme.biodiversity* propose un large éventail de ressources, notamment des données d'altitude, de couvert forestier, et de temps de déplacement jusqu'à une ville.
 
 ```{r acquire_resources, eval=FALSE}
+AP_Vahatra <- AP_Vahatra %>%
+  get_nasa_srtm() %>%
+  calc_indicators(calc_elevation()
+
 # Acquérir les ressources pour l'élévation
 AP_Vahatra <- get_resources(
   x = AP_Vahatra,
@@ -177,7 +181,7 @@ AP_Vahatra %>%
   portfolio_long() %>%
   filter(variable == "elevation_mean") %>%
   tm_shape() +
-  tm_polygons(col = "value", title = "Altitude Moyenne (m)")
+  tm_polygons(fill = "value", fill.legend = tm_legend(title = "Altitude Moyenne (m)"))
 ```
 
 Nous avons maintenant une carte interactive qui nous permet de voir les différences d'élévation entre les différentes aires protégées de notre portefeuille.

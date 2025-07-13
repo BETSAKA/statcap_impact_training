@@ -1,0 +1,21 @@
+---
+title: "exercice_j9"
+editor: visual
+---
+
+### Exercice avancé
+
+Réaliser une nouvelle analyse des impacts des aires protégées en utilisant la méthode des doubles différences combinée à un appariement sur le score de propension : 
+
+1. Ajoutez la variable population/km² dans le modèle du score de propension en plus des variables du modèle précédent. 
+    
+2. Retirez les cellules de la grille qui se trouvent à cheval sur la frontière des aires protégées de l'analyse. 
+    
+3. Utilisez la méthode des plus proches voisins pour le matching en choisissant 2 voisins par unité traitée.
+
+
+
+
+
+
+

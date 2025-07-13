@@ -292,12 +292,10 @@ if (file.exists("data/grille_mada_summary_AP.rds")) {
 tmap_mode("plot")
 # Plot the classified map
 tm_shape(grille_mada_AP) +
-  tm_fill("position_ap", title = "par rapport aux aires protégées") +
-  tm_layout(
-    main.title = "Localisation des hexagones",
-    main.title.position = c("center", "top"),
-    main.title.size = 1,
-    legend.position = c("left", "top"),
-    legend.outside = FALSE)
+  tm_fill("position_ap", 
+          fill.legend = tm_legend(title = 
+                  "Localisation des hexagones par rapport aux aires protégées", 
+                                  position = tm_pos_out("right", "center"))) 
+
 ```
 

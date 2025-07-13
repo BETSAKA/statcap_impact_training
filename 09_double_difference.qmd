@@ -14,13 +14,13 @@ editor_options:
 
 [Cliquer ici pour télécharger la présentation](slides/fr/TVM_Double_difference.pdf).
 
-Pour cette analyse, nous allons appliquer la méthode des doubles différences pour estimer l'impact des aires protégées sur la déforestation à Madagascar entre 2000 et 2021. Cette méthode est particulièrement utile lorsque l'intervention (la création des aires protégées) a lieu à des dates différentes pour chaque unité d'observation, ce que l'on appelle un échelonnement (staggered diff-in-diff). La méthode proposée par Callaway et Sant'Anna [-@callaway2021] permet de gérer cette situation en utilisant une approche qui tient compte de ces dates de mise en œuvre différentes. Le package {did} [@did] en R permet d'appliquer cette méthode facilement.
+Pour cette analyse, nous allons appliquer la méthode des doubles différences pour estimer l'impact des aires protégéesa déforestation à Madagascar entre 2000 et 2023. Cette méthode est particulièrement utile lorsque l'intervention (la création des aires protégées) a lieu à des dates différentes pour chaque unité d'observation, ce que l'on appelle doubles différences avec traitement échelonné dans le temps (staggered diff-in-diff). La méthode proposée par Callaway et Sant'Anna [-@callaway2021] permet de gérer cette situation en utilisant une approche qui tient compte de ces dates de mise en œuvre différentes. Le package {did} [@did] en R permet d'appliquer cette méthode facilement.
 
 ## Application aux mailles de territoire
 
 Dans cette section, nous appliquons la méthode des doubles différences aux mailles de territoire pour évaluer l'effet des aires protégées sur la réduction de la déforestation. Nous allons d'abord préparer les données afin de les rendre conformes aux exigences de la fonction `att_gt()` du package {did}.
 
-Nous travaillons avec un jeu de données spatial qui représente des mailles de 1 km² chacune, et nous avons des informations sur la couverture forestière pour chaque année. Le traitement consiste à identifier les mailles qui sont "intérieures" aux aires protégées (traitées) par rapport aux autres (non traitées).
+Nous travaillons avec un jeu de données spatial qui représente des mailles de 5 km² chacune, et nous avons des informations sur la couverture forestière pour chaque année. Le traitement consiste à identifier les mailles qui sont "intérieures" aux aires protégées (traitées) par rapport aux autres (non traitées).
 
 ```{r}
 library(did) # Pour des doubles-différences échelonnées
@@ -67,17 +67,16 @@ grille_matched <- grille_matched %>%
 
 
 
-> **Exercice** : 
+> **Exercice** :    
 - pour explorer le jeu de données grilles_matched, groupez les données par statut de traitement `traitement` et année de création `an_creation`. Que remarquez-vous ?
 
 ### Estimation des effets moyens du traitement
 
 Nous utilisons la fonction att_gt() pour estimer l'effet moyen du traitement (ATT) sur le taux de déforestation au fil du temps. Les poids provenant du processus de matching sont utilisés pour ajuster les estimations.
 
-La fonction `ggdid()` permet de visualiser les résultats obtenus. Les graphiques suivants montrent l'évolution de l'ATT au fil du temps, ce qui nous permet d'observer l'impact des aires protégées sur la déforestation. **Attention** : il s'agit ici d'une première estimation à des fins didactiques, sans variables de contrôle.
+La fonction `ggdid()` permet de visualiser les résultats obtenus. Les graphiques suivants montrent l'évolution de l'ATM au fil du temps, ce qui nous permet d'observer l'impact des aires protégées sur la déforestation. **Attention** : il s'agit ici d'une première estimation à des fins didactiques, sans variables de contrôle.
 
 ```{r}
-#| fig-height: 20
 # Les mailles en dehors des aires protégées sont considérées comme jamais traitées
 grille_matched <- grille_matched %>%
   mutate(time_treated = ifelse(position_ap == "Intérieur", an_creation, 0))
@@ -91,29 +90,18 @@ did_result <- att_gt(yname = "tx_defor", # variable de résultat
                      data = grille_matched,
                      panel = TRUE) # panel veut dire qu'on suit les mêmes unités
 
-# Plot the results to visualize the ATT over time
-ggdid(did_result) +
-  theme(axis.text.x =  element_text(angle = 45, hjust = 1))
-```
-
-> **Exercice** : Analysez et commentez ce résultat.
-
-### Agrégation des résultats
-
-Nous pouvons également agréger les résultats pour obtenir une estimation globale des effets moyens du traitement par "cohorte" d'année de création des aires protégées.
-
-```{r}
 # Aggregate the ATT results
-agg_att_mailles <- aggte(did_result, type = "group")
+agg_att_mailles <- aggte(did_result, type = "dynamic")
 
 # Display the aggregated results
 summary(agg_att_mailles)
 
 # Visualisation du résultat
-ggdid(agg_att_mailles)
+ggdid(agg_att_mailles) +
+  xlim(-13, 13)
 ```
 
-> **Exercice** : Analysez et commentez ce résultat
+> **Exercice** : Analysez et commentez ce résultat.
 
 L'analyse précédente ne tient pas compte de certains facteurs dont on a vu qu'ils pouvaient influencer à la fois la sélection, mais aussi la déforestation, en particulier l'altitude, la pente, le temps de parcours à la ville la plus proche, ou encore la densité de population. 
 

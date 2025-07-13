@@ -1,1 +1,1 @@
-Sitemap: https://betsaka.github.io/impact_training_mapme/sitemap.xml
+Sitemap: https://github.com/BETSAKA/statcap_impact_training/sitemap.xml

@@ -1,8 +1,8 @@
 ---
 title: "Expérimentations par assignation aléatoire"
-subtitle: "Atelier Mapme : Evaluation d'impact sur données spatiales"
-author: "Florent Bédécarrats"
-date: "Octobre 2024"
+subtitle: "Atelier Statcap : Evaluation d'impact sur données spatiales"
+author: "Florent Bédécarrats & Thomas Thivillon"
+date: "Juillet 2025"
 format: 
   clean-revealjs:
     slide-number: true
@@ -146,7 +146,7 @@ generate_comparison_plot(1000)
 
 ## Pourquoi la randomisation?
 
-- **Attention !** L’hypothèse faite sur la validité du contrefactuel n’est valable qu’en moyenne (impossible de dire que \(X_i(1) = X_i(0)\) et que \(Y_i(1) = Y_i(0)\)).
+- **Attention !** L’hypothèse faite sur la validité du contrefactuel n’est valable qu’en moyenne (impossible de dire que $X_i(1) = X_i(0)$ et que $Y_i(1) = Y_i(0)$).
 
 - Nous pouvons uniquement essayer de mesurer l’**effet moyen** du programme qui est obtenu par :
 
@@ -161,9 +161,9 @@ generate_comparison_plot(1000)
   $$ Y_i = \alpha + \beta T_i + \epsilon_i $$
   avec :
   
-  - \( \beta \) : l’effet moyen du traitement
-  - \( \alpha \) : la moyenne de \( Y_i \) pour les non-traités
-  - \( \epsilon \) : le terme d’erreur
+  - $\beta$ : l’effet moyen du traitement
+  - $\alpha$ : la moyenne de $Y_i$ pour les non-traités
+  - $\epsilon$ : le terme d’erreur
 
 ## Comment randomiser?
 
@@ -180,26 +180,26 @@ Quel est le processus à suivre pour "randomiser" un projet/programme/interventi
 
 ::: {.columns}
 
-::: {.column width="40%"}
+::: {.column width="35%"}
 
 ```{mermaid, echo=FALSE}
 
 flowchart TD
-    A["Population éligible"] ---> AB(Faisabilité)
-    AB ---> B["Échantillon étudié"]
-    B ---> C("3. Assignation aléatoire")
-    C ---> D["Groupe de traitement"]
-    C ---> E["Groupe de contrôle"]
+    A["Population<br/>éligible"] --> AB(Faisabilité)
+    AB --> B["Échantillon<br/>étudié"]
+    B --> C("Assignation<br/>aléatoire")
+    C --> D["Groupe de<br/>traitement"]
+    C --> E["Groupe de<br/>contrôle"]
 
-    style A fill:#d3d3d3,stroke:#000000
-    style B fill:#d3d3d3,stroke:#000000
-    style D fill:#3cb371,stroke:#000000
-    style E fill:#ff6347,stroke:#000000
+    style A fill:#d3d3d3,color:#000000
+    style B fill:#d3d3d3,color:#000000
+    style D fill:#3cb371,color:#000000
+    style E fill:#ff6347,color:#000000
 ```
 
 :::
 
-::: {.column width="60%"}
+::: {.column width="65%"}
 
 ```{r, echo=FALSE, fig.height=10}
 suppressPackageStartupMessages(library(dplyr))
@@ -214,11 +214,11 @@ dataset <- bind_rows(
   base_grid %>% mutate(stage = "Population éligible", size = 0.1, color = "darkgrey"),
   base_grid %>% mutate(
     stage = "Échantillon d'étude",
-    size = ifelse(y <= 10, 0.2, 0.1),
+    size = ifelse(y <= 10, 0.3, 0.1),
     color = ifelse(y <= 10, "black", "darkgrey")),
   base_grid %>% mutate(
     stage = "Assignation aléatoire",
-    size = ifelse(y <= 10, 0.2, 0.1),
+    size = ifelse(y <= 10, 0.3, 0.1),
     color = ifelse(y <= 10, sample(c("red", "green"), n(), replace = TRUE), 
                    "darkgrey")))
 
@@ -380,3 +380,229 @@ La randomisation n’est pas la panacée : sa pertinence dépend du type d’int
   - Ajustement des comportements (Hawthorne effect, John Henry effect, Découragement).
 
 # Discussion et mise en pratique
+
+
+# Rappels sur les régressions
+
+## Principe de la régression linéaire simple
+
+- L'objectif de la régression linéaire simple est de modéliser la relation entre une variable dépendante $y$ et une variable indépendante $x$.
+- On fait l'hypothèse que cette relation est linéaire.
+- On recherche la ligne qui va minimiser la distance verticale entre chacun des points de données $(x_i, y_i)$ et elle_même.
+
+```{r}
+
+library(patchwork)  # Pour combiner les graphiques
+
+# Générer des données simulées
+set.seed(123)
+x <- seq(1, 20)
+y <- 2 + 0.5 * x + rnorm(20, sd = 2)
+df <- data.frame(x = x, y = y)
+
+# Ajuster un modèle linéaire
+mod <- lm(y ~ x, data = df)
+df$y_pred <- predict(mod)
+
+# Sans résidus
+p1 <- ggplot(df, aes(x = x, y = y)) +
+  geom_point(size = 2, color = "blue") +
+  labs(title = "(a) Nuage de points", x = "x", y = "y") +
+  theme_minimal(base_size = 14)
+
+# Avec résidus
+p2 <- ggplot(df, aes(x = x, y = y)) +
+  geom_point(size = 2, color = "blue") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  geom_segment(aes(x = x, xend = x, y = y, yend = y_pred),
+               linetype = "dotted", color = "gray40") +
+  labs(title = "(b) Nuage et ligne de régression", subtitle = "(résiduels en pointillés)", x = "x", y = "y") +
+  theme_minimal(base_size = 14)
+
+```
+
+::: {#fig-regression .center}
+```{r}
+p1 + p2
+```
+:::
+
+
+## Estimation de la régression linéaire
+
+- On cherche à estimer les coefficients $a$ et $b$ de la droite : 
+
+$$ \hat{y} = a + bx $$
+- Cette droite est notre estimateur de la relation entre $x$ et $y$ dans la population : 
+
+$$ y  = a + bx + u $$
+- Pour un individu $i$, on a :
+
+$$ y_i = a + bx_i + u_i $$
+
+## Estimation de la régression linéaire
+
+- On peut montrer que le coefficient $b$ est donné par la formule :
+
+$$ 
+\hat{b} = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2} 
+$$
+qui peut aussi s'écrire : 
+
+$$ 
+\hat{b} = \frac{Cov(x,y)}{Var(x)} 
+$$
+
+## Estimation de la régression linéaire
+
+- On peut ensuite utiliser le fait que la droite de régression passe nécessairement par le point moyen $(\bar{x}, \bar{y})$ pour en déduire la valeur de $a$ :
+
+$$ 
+\hat{a} = \bar{y} - \hat{b}\bar{x} 
+$$
+
+
+
+
+```{r}
+# Recalculer les éléments nécessaires
+x_bar <- mean(df$x)
+y_bar <- mean(df$y)
+intercept <- coef(mod)[1]
+
+# Créer le graphique enrichi
+p2 <- ggplot(df, aes(x = x, y = y)) +
+  geom_point(size = 2, color = "blue") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  
+  # Résidus
+  geom_segment(aes(x = x, xend = x, y = y, yend = y_pred),
+               linetype = "dotted", color = "gray40") +
+
+  # Centre de gravité
+  geom_point(aes(x = x_bar, y = y_bar),
+             color = "red", size = 4, shape = 4, stroke = 1.5) +
+  geom_text(aes(x = x_bar, y = y_bar, label = "(x̄, ȳ)"),
+            vjust = -1.2, hjust = 0.5, color = "red", size = 5) +
+
+  # Intercept
+  geom_point(aes(x = 0, y = intercept),
+             color = "darkgreen", size = 4, shape = 17) +
+  geom_text(aes(x = 0, y = intercept, label = "a"),
+            vjust = -1.2, hjust = -0.3, color = "darkgreen", size = 5) +
+  
+  labs(title = "(b) Nuage et droite de régression",
+       subtitle = "Résidus en pointillés, centre de gravité et intercept visibles",
+       x = "x", y = "y") +
+  theme_minimal(base_size = 14)
+
+```
+
+::: {#fig-regression .center}
+```{r}
+p2
+```
+:::
+
+
+## Exemple simplifié
+
+On modélise la relation entre la distance à la ville la plus proche et le taux de déforestation annuel de 4 aires protégées. 
+
+Voici la structure des données : 
+
+```{r}
+# Créer les données
+parcs <- data.frame(
+  nom = c("Aire 1", "Aire 2", "Aire 3", "Aire 4"),
+  distance_ville = c(20, 50, 80, 100),    # km
+  deforestation = c(3.5, 2.8, 1.9, 1.2)   # en %
+)
+
+knitr::kable(parcs, caption = "Données des 4 aires protégées")
+
+```
+
+## Calcul des moyennes
+
+
+```{r}
+# Créer les données
+parcs <- data.frame(
+  nom = c("Aire 1", "Aire 2", "Aire 3", "Aire 4"),
+  distance_ville = c(20, 50, 80, 100),    # km
+  deforestation = c(3.5, 2.8, 1.9, 1.2)   # en %
+)
+
+knitr::kable(parcs, caption = "Données des 4 aires protégées")
+
+```
+
+
+$$
+\bar{x} = \frac{20 + 50 + 80 + 100}{4} = \frac{250}{4} = 62.5
+$$
+
+$$
+\bar{y} = \frac{3.5 + 2.8 + 1.9 + 1.2}{4} = \frac{9.4}{4} = 2.35
+$$
+
+
+
+## Calculs intermédiaires
+
+| $x_i$ | $y_i$ | $x_i - \bar{x}$ | $y_i - \bar{y}$ | $(x_i - \bar{x})(y_i - \bar{y})$ | $(x_i - \bar{x})^2$ |
+|----------|-----------|---------------------|---------------------|--------------------------------------|-------------------------|
+| 20       | 3.5       | -42.5               | 1.15                | -48.875                              | 1806.25                 |
+| 50       | 2.8       | -12.5               | 0.45                | -5.625                               | 156.25                  |
+| 80       | 1.9       | 17.5                | -0.45               | -7.875                               | 306.25                  |
+| 100      | 1.2       | 37.5                | -1.15               | -43.125                              | 1406.25                 |
+
+$$\
+\sum (x_i - \bar{x})(y_i - \bar{y}) = -105.5 \quad ; \quad \sum (x_i - \bar{x})^2 = 3675
+$$
+
+
+
+## Calcul des coefficients
+
+$$\
+b = \frac{-105.5}{3675} ≈ -0.0287
+$$
+
+
+$$\
+a = \bar{y} - b \cdot \bar{x} = 2.35 - (-0.0287 \cdot 62.5) = 2.35 + 1.79375 ≈ 4.144
+$$
+
+
+## Équation de la droite de régression
+
+$$
+\hat{y} = 4.14 - 0.029 \cdot x
+$$
+
+```{r}
+
+# Modèle linéaire
+mod <- lm(deforestation ~ distance_ville, data = parcs)
+
+a <- coef(mod)[1]
+b <- coef(mod)[2]
+
+
+
+ggplot(parcs, aes(x = distance_ville, y = deforestation)) +
+  geom_point(size = 3, color = "forestgreen") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(
+    x = "Distance à la ville la plus proche (km)",
+    y = "Taux de déforestation annuel (%)"
+  ) +
+
+  theme_minimal(base_size = 14)
+
+```
+
+
+

@@ -154,7 +154,7 @@ div.csl-indent {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Evaluation d’impact de politiques et projets</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/BETSAKA/mapme_impact_training" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/BETSAKA/statcap_impact_training" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
@@ -257,7 +257,6 @@ div.csl-indent {
   <li><a href="#application-aux-mailles-de-territoire" id="toc-application-aux-mailles-de-territoire" class="nav-link" data-scroll-target="#application-aux-mailles-de-territoire"><span class="header-section-number">9.2</span> Application aux mailles de territoire</a>
   <ul class="collapse">
   <li><a href="#estimation-des-effets-moyens-du-traitement" id="toc-estimation-des-effets-moyens-du-traitement" class="nav-link" data-scroll-target="#estimation-des-effets-moyens-du-traitement"><span class="header-section-number">9.2.1</span> Estimation des effets moyens du traitement</a></li>
-  <li><a href="#agrégation-des-résultats" id="toc-agrégation-des-résultats" class="nav-link" data-scroll-target="#agrégation-des-résultats"><span class="header-section-number">9.2.2</span> Agrégation des résultats</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -288,12 +287,12 @@ div.csl-indent {
 <h2 data-number="9.1" class="anchored" data-anchor-id="méthode-des-doubles-différences"><span class="header-section-number">9.1</span> Méthode des doubles différences</h2>
 <iframe src="slides/fr/TVM_Double_difference.pdf" width="100%" height="400px"></iframe>
 <p><a href="slides/fr/TVM_Double_difference.pdf">Cliquer ici pour télécharger la présentation</a>.</p>
-<p>Pour cette analyse, nous allons appliquer la méthode des doubles différences pour estimer l’impact des aires protégées sur la déforestation à Madagascar entre 2000 et 2021. Cette méthode est particulièrement utile lorsque l’intervention (la création des aires protégées) a lieu à des dates différentes pour chaque unité d’observation, ce que l’on appelle un échelonnement (staggered diff-in-diff). La méthode proposée par Callaway et Sant’Anna <span class="citation" data-cites="callaway2021">(<a href="11_references.html#ref-callaway2021" role="doc-biblioref">2021b</a>)</span> permet de gérer cette situation en utilisant une approche qui tient compte de ces dates de mise en œuvre différentes. Le package {did} <span class="citation" data-cites="did">(<a href="11_references.html#ref-did" role="doc-biblioref">Callaway and Sant’Anna 2021a</a>)</span> en R permet d’appliquer cette méthode facilement.</p>
+<p>Pour cette analyse, nous allons appliquer la méthode des doubles différences pour estimer l’impact des aires protégéesa déforestation à Madagascar entre 2000 et 2023. Cette méthode est particulièrement utile lorsque l’intervention (la création des aires protégées) a lieu à des dates différentes pour chaque unité d’observation, ce que l’on appelle doubles différences avec traitement échelonné dans le temps (staggered diff-in-diff). La méthode proposée par Callaway et Sant’Anna <span class="citation" data-cites="callaway2021">(<a href="11_references.html#ref-callaway2021" role="doc-biblioref">2021b</a>)</span> permet de gérer cette situation en utilisant une approche qui tient compte de ces dates de mise en œuvre différentes. Le package {did} <span class="citation" data-cites="did">(<a href="11_references.html#ref-did" role="doc-biblioref">Callaway and Sant’Anna 2021a</a>)</span> en R permet d’appliquer cette méthode facilement.</p>
 </section>
 <section id="application-aux-mailles-de-territoire" class="level2" data-number="9.2">
 <h2 data-number="9.2" class="anchored" data-anchor-id="application-aux-mailles-de-territoire"><span class="header-section-number">9.2</span> Application aux mailles de territoire</h2>
 <p>Dans cette section, nous appliquons la méthode des doubles différences aux mailles de territoire pour évaluer l’effet des aires protégées sur la réduction de la déforestation. Nous allons d’abord préparer les données afin de les rendre conformes aux exigences de la fonction <code>att_gt()</code> du package {did}.</p>
-<p>Nous travaillons avec un jeu de données spatial qui représente des mailles de 1 km² chacune, et nous avons des informations sur la couverture forestière pour chaque année. Le traitement consiste à identifier les mailles qui sont “intérieures” aux aires protégées (traitées) par rapport aux autres (non traitées).</p>
+<p>Nous travaillons avec un jeu de données spatial qui représente des mailles de 5 km² chacune, et nous avons des informations sur la couverture forestière pour chaque année. Le traitement consiste à identifier les mailles qui sont “intérieures” aux aires protégées (traitées) par rapport aux autres (non traitées).</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -340,12 +339,13 @@ div.csl-indent {
 </details>
 </div>
 <blockquote class="blockquote">
-<p><strong>Exercice</strong> : - pour explorer le jeu de données grilles_matched, groupez les données par statut de traitement <code>traitement</code> et année de création <code>an_creation</code>. Que remarquez-vous ?</p>
+<p><strong>Exercice</strong> :<br>
+- pour explorer le jeu de données grilles_matched, groupez les données par statut de traitement <code>traitement</code> et année de création <code>an_creation</code>. Que remarquez-vous ?</p>
 </blockquote>
 <section id="estimation-des-effets-moyens-du-traitement" class="level3" data-number="9.2.1">
 <h3 data-number="9.2.1" class="anchored" data-anchor-id="estimation-des-effets-moyens-du-traitement"><span class="header-section-number">9.2.1</span> Estimation des effets moyens du traitement</h3>
 <p>Nous utilisons la fonction att_gt() pour estimer l’effet moyen du traitement (ATT) sur le taux de déforestation au fil du temps. Les poids provenant du processus de matching sont utilisés pour ajuster les estimations.</p>
-<p>La fonction <code>ggdid()</code> permet de visualiser les résultats obtenus. Les graphiques suivants montrent l’évolution de l’ATT au fil du temps, ce qui nous permet d’observer l’impact des aires protégées sur la déforestation. <strong>Attention</strong> : il s’agit ici d’une première estimation à des fins didactiques, sans variables de contrôle.</p>
+<p>La fonction <code>ggdid()</code> permet de visualiser les résultats obtenus. Les graphiques suivants montrent l’évolution de l’ATM au fil du temps, ce qui nous permet d’observer l’impact des aires protégées sur la déforestation. <strong>Attention</strong> : il s’agit ici d’une première estimation à des fins didactiques, sans variables de contrôle.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -362,9 +362,73 @@ div.csl-indent {
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> grille_matched,</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                     <span class="at">panel =</span> <span class="cn">TRUE</span>) <span class="co"># panel veut dire qu'on suit les mêmes unités</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the results to visualize the ATT over time</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdid</span>(did_result) <span class="sc">+</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span>  <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate the ATT results</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>agg_att_mailles <span class="ot">&lt;-</span> <span class="fu">aggte</span>(did_result, <span class="at">type =</span> <span class="st">"dynamic"</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the aggregated results</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(agg_att_mailles)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+aggte(MP = did_result, type = "dynamic")
+
+Reference: Callaway, Brantly and Pedro H.C. Sant'Anna.  "Difference-in-Differences with Multiple Time Periods." Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt; 
+
+
+Overall summary of ATT's based on event-study/dynamic aggregation:  
+     ATT    Std. Error     [ 95%  Conf. Int.]  
+ -0.6038        0.1244    -0.8476     -0.3599 *
+
+
+Dynamic Effects:
+ Event time Estimate Std. Error [95% Simult.  Conf. Band]  
+        -13   0.1535     0.0364        0.0411      0.2658 *
+        -12   0.0921     0.0463       -0.0507      0.2349  
+        -11  -0.1521     0.0404       -0.2768     -0.0275 *
+        -10   0.1907     0.0383        0.0725      0.3089 *
+         -9   0.3622     0.0475        0.2157      0.5086 *
+         -8  -0.2713     0.0736       -0.4982     -0.0445 *
+         -7   0.0891     0.0793       -0.1554      0.3336  
+         -6   0.0248     0.0852       -0.2380      0.2876  
+         -5  -0.1555     0.0788       -0.3987      0.0876  
+         -4  -0.3934     0.0775       -0.6326     -0.1543 *
+         -3   0.0927     0.0771       -0.1449      0.3303  
+         -2  -0.2609     0.0649       -0.4611     -0.0608 *
+         -1  -0.1315     0.0732       -0.3571      0.0941  
+          0   0.0233     0.0770       -0.2142      0.2608  
+          1  -0.4453     0.0805       -0.6936     -0.1970 *
+          2  -0.3679     0.1203       -0.7389      0.0031  
+          3   0.3815     0.1434       -0.0609      0.8238  
+          4   0.0381     0.1074       -0.2933      0.3694  
+          5  -0.3516     0.1009       -0.6629     -0.0404 *
+          6  -0.5031     0.1038       -0.8233     -0.1828 *
+          7  -0.6586     0.1064       -0.9868     -0.3304 *
+          8  -0.7840     0.1381       -1.2098     -0.3581 *
+          9  -1.2830     0.0635       -1.4789     -1.0870 *
+         10  -1.5345     0.0756       -1.7677     -1.3014 *
+         11  -2.0019     0.1131       -2.3506     -1.6532 *
+         12  -2.2578     0.1731       -2.7916     -1.7240 *
+         13  -2.0607     0.1549       -2.5383     -1.5831 *
+         14   1.4668     0.5784       -0.3169      3.2505  
+         15  -1.5404     0.3336       -2.5691     -0.5118 *
+         16  -1.5246     0.3133       -2.4906     -0.5586 *
+         17  -2.1570     0.2112       -2.8082     -1.5058 *
+         18  -0.9486     0.3983       -2.1769      0.2797  
+         19   0.6915     0.6227       -1.2287      2.6116  
+         20   1.4917     0.5862       -0.3161      3.2995  
+         21   1.0431     0.7148       -1.1611      3.2473  
+---
+Signif. codes: `*' confidence band does not cover 0
+
+Control Group:  Never Treated,  Anticipation Periods:  0
+Estimation Method:  Doubly Robust</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualisation du résultat</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdid</span>(agg_att_mailles) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">13</span>, <span class="dv">13</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -376,62 +440,6 @@ div.csl-indent {
 </div>
 <blockquote class="blockquote">
 <p><strong>Exercice</strong> : Analysez et commentez ce résultat.</p>
-</blockquote>
-</section>
-<section id="agrégation-des-résultats" class="level3" data-number="9.2.2">
-<h3 data-number="9.2.2" class="anchored" data-anchor-id="agrégation-des-résultats"><span class="header-section-number">9.2.2</span> Agrégation des résultats</h3>
-<p>Nous pouvons également agréger les résultats pour obtenir une estimation globale des effets moyens du traitement par “cohorte” d’année de création des aires protégées.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate the ATT results</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>agg_att_mailles <span class="ot">&lt;-</span> <span class="fu">aggte</span>(did_result, <span class="at">type =</span> <span class="st">"group"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the aggregated results</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(agg_att_mailles)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-aggte(MP = did_result, type = "group")
-
-Reference: Callaway, Brantly and Pedro H.C. Sant'Anna.  "Difference-in-Differences with Multiple Time Periods." Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt; 
-
-
-Overall summary of ATT's based on group/cohort aggregation:  
-     ATT    Std. Error     [ 95%  Conf. Int.]  
- -0.3733        0.0829    -0.5359     -0.2108 *
-
-
-Group Effects:
- Group Estimate Std. Error [95% Simult.  Conf. Band]  
-  2002  -0.3285     0.2171       -0.9077      0.2508  
-  2004  -1.4903     0.0379       -1.5914     -1.3891 *
-  2007  -1.8861     0.0843       -2.1111     -1.6611 *
-  2011  -0.0214     0.1779       -0.4960      0.4532  
-  2012  -1.0847     0.0709       -1.2740     -0.8955 *
-  2015  -0.2601     0.1080       -0.5483      0.0282  
----
-Signif. codes: `*' confidence band does not cover 0
-
-Control Group:  Never Treated,  Anticipation Periods:  0
-Estimation Method:  Doubly Robust</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualisation du résultat</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdid</span>(agg_att_mailles)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="09_double_difference_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<blockquote class="blockquote">
-<p><strong>Exercice</strong> : Analysez et commentez ce résultat</p>
 </blockquote>
 <p>L’analyse précédente ne tient pas compte de certains facteurs dont on a vu qu’ils pouvaient influencer à la fois la sélection, mais aussi la déforestation, en particulier l’altitude, la pente, le temps de parcours à la ville la plus proche, ou encore la densité de population.</p>
 <blockquote class="blockquote">
@@ -523,7 +531,7 @@ Callaway, Brantly, and Pedro H. C. Sant’Anna. 2021a. <span>“Difference-in-Di
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/betsaka\.github\.io\/impact_training_mapme\/");
+        var filterRegex = new RegExp("https:\/\/github\.com\/BETSAKA\/statcap_impact_training\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
