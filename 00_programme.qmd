@@ -6,8 +6,8 @@ editor:
 
 # Programme {.unnumbered}
 
-Voici une proposition de programme sur sept jours, visant une
-progression pédagogique pour commencer par les fondaments conceptuels et
+Voici une proposition de programme sur neuf jours, visant une
+progression pédagogique pour commencer par les fondements conceptuels et
 techniques et approfondir progressivement jusqu'à une maîtrise des bases
 de l'évaluation d'impact et une réflexion approfondie sur les
 applications possibles dans son environnement professionnel. La
@@ -48,7 +48,7 @@ incluant l'utilisation du logiciel R.
 
 -   Jour 6 (8 juillet) :
 
-    -   Matin : Comparaisons avant-après ; Clarifications sur les unités
+    -   Matin : Comparaisons avant-après ; Clarifications sur la définition et l’agrégation des unités d’analyse
         d’analyse
 
     -   Après-midi : Méthodes d’appariement (théorie)
