@@ -54,7 +54,7 @@
     "href": "01_introduction.html",
     "title": "1  Introduction",
     "section": "",
-    "text": "1.1 Cadrage général pour les méthodes d’évaluation\nCliquer ici pour télécharger la présentation\nMentionner également les enjeux de prise en compte du qualitatif.",
+    "text": "1.1 Cadrage général pour les méthodes d’évaluation\nCliquer ici pour télécharger la présentation",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
     ]
@@ -63,8 +63,8 @@
     "objectID": "01_introduction.html#revue-des-articles",
     "href": "01_introduction.html#revue-des-articles",
     "title": "1  Introduction",
-    "section": "1.2 Revue des articles",
-    "text": "1.2 Revue des articles\nOn va revoir deux articles récents qui emploient des méthodes semblables à celles que nous allons étudier pendant le cours :\n\nL’article “On track to achieve no net loss of forest at Madagascar’s biggest mine” de Devenish et al. (2022) paru dans Nature Sustainability.\nL’article “Collaborative management partnerships strongly decreased deforestation in the most at-risk protected areas in Africa since 2000”, de Desbureaux et al. (2025), paru dans Proceedings of the National Academy of Sciences.\n\n\n\n\n\nDesbureaux, Sébastien, Ibrahim Kabore, Giulia Vaglietti, Mujon Baghai, Peter Lindsey, Ashley Robson, Philippe Delacote, and Antoine Leblois. 2025. “Collaborative Management Partnerships Strongly Decreased Deforestation in the Most at-Risk Protected Areas in Africa Since 2000.” Proceedings of the National Academy of Sciences 122 (1): e2411348121. https://doi.org/10.1073/pnas.2411348121.\n\n\nDevenish, Katie, Sébastien Desbureaux, Simon Willcock, and Julia P. G. Jones. 2022. “On Track to Achieve No Net Loss of Forest at Madagascar’s Biggest Mine.” Nature Sustainability 5 (6): 498–508. https://doi.org/10.1038/s41893-022-00850-7.",
+    "section": "1.3 Revue des articles",
+    "text": "1.3 Revue des articles\nOn va revoir deux articles récents qui emploient des méthodes semblables à celles que nous allons étudier pendant le cours :\n\nL’article “On track to achieve no net loss of forest at Madagascar’s biggest mine” de Devenish et al. (2022) paru dans Nature Sustainability.\nL’article “Collaborative management partnerships strongly decreased deforestation in the most at-risk protected areas in Africa since 2000”, de Desbureaux et al. (2025), paru dans Proceedings of the National Academy of Sciences.\n\n\n\n\n\nDesbureaux, Sébastien, Ibrahim Kabore, Giulia Vaglietti, Mujon Baghai, Peter Lindsey, Ashley Robson, Philippe Delacote, and Antoine Leblois. 2025. “Collaborative Management Partnerships Strongly Decreased Deforestation in the Most at-Risk Protected Areas in Africa Since 2000.” Proceedings of the National Academy of Sciences 122 (1): e2411348121. https://doi.org/10.1073/pnas.2411348121.\n\n\nDevenish, Katie, Sébastien Desbureaux, Simon Willcock, and Julia P. G. Jones. 2022. “On Track to Achieve No Net Loss of Forest at Madagascar’s Biggest Mine.” Nature Sustainability 5 (6): 498–508. https://doi.org/10.1038/s41893-022-00850-7.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
     ]
@@ -437,6 +437,16 @@
     "text": "Tany Vao et le projet BETSAKA\nCe contenu a été initialement développé afin de servir de support pédagogique pour l’atelier “évaluation des politiques” de la session 2022 des Universités en sciences sociales Tany Vao. Les universités Tany Vao visent à dispenser une formation à la recherche de haut niveau à l’attention de doctorants et jeunes chercheurs de Madagascar et d’Afrique de l’Ouest. Cet atelier a été réitéré à l’Université d’Antananarivo en 2023 et 2024 dans le cadre du projet BETSAKA. Le projet BETSAKA vise à évaluer l’impact environnemental et socioéconomique des politiques de conservation à Madagascar, en priorisant le renforcement des capacités locales de recherche et le dialogue chercheurs-décideurs-opérationnels.",
     "crumbs": [
       "Preface"
+    ]
+  },
+  {
+    "objectID": "01_introduction.html#cadrage-sur-les-données",
+    "href": "01_introduction.html#cadrage-sur-les-données",
+    "title": "1  Introduction",
+    "section": "1.2 Cadrage sur les données",
+    "text": "1.2 Cadrage sur les données\n\nCliquer ici pour télécharger la présentation",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
     ]
   }
 ]

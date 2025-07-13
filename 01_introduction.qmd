@@ -9,7 +9,13 @@
 [Cliquer ici pour télécharger la présentation](/slides/fr/Jour 1_Introduction_Fondamentaux.pdf)
 
 
-Mentionner également les enjeux de prise en compte du qualitatif.
+## Cadrage sur les données
+
+```{=html}
+<iframe src="/slides/fr/Jour 3_Donnees.pdf" width="100%" height="400px"></iframe>
+```
+
+[Cliquer ici pour télécharger la présentation](/slides/fr/Jour 3_Donnees.pdf)
 
 ## Revue des articles
 
